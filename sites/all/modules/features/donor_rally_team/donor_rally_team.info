@@ -1,5 +1,6 @@
 core = "6.x"
-dependencies[] = "competitive_drive"
+dependencies[] = "auto_nodetitle"
+dependencies[] = "donor_rally"
 dependencies[] = "content_permissions"
 dependencies[] = "content_profile"
 dependencies[] = "content_profile_registration"

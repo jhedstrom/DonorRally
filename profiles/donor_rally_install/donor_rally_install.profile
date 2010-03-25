@@ -13,13 +13,11 @@ function donor_rally_install_profile_modules() {
     'help', 'menu', 'taxonomy', 'dblog', 'path',
 
     // Contributed modules.
-    'admin_menu',
+    'admin',
     'advanced_help',
     'better_formats',
     'ctools',
     'content',
-    // Date modules.
-    'date_api', 'date_timezone', 'date', 'date_repeat', 'date_popup',
     'features',
     'pathauto',
     'path_redirect',
@@ -49,8 +47,8 @@ function donor_rally_install_profile_modules() {
  */
 function donor_rally_install_profile_details() {
   return array(
-    'name' => 'Volunteer Rally',
-    'description' => st('Select this profile to enable a Volunteer Rally installation.'),
+    'name' => 'Donor Rally',
+    'description' => st('Select this profile to enable a Donor Rally installation.'),
   );
 }
 
@@ -346,28 +344,19 @@ function  _donor_rally_install_modules() {
   return array(
     // Modules required by the features below.
     'auto_nodetitle',
-    'calendar', 'jcalendar',
-    'cck_signup',
-    'cck_signup_group',
     'content_permissions',
+    'content_profile',
+    'content_profile_registration',
     'context',
-    'date',
-    'messaging',
-    'messaging_mail',
-    'node_repeat',
-    'nodeaccess',
-    'nodeaccess_userreference',
-    'nodereference',
-    'nodereference_url',
-    'notifications',
-    'notifications_cck_signup',
+    'donor_rally',
+    'field_group',
+    'imagefield',
+    'location_cck',
     'number',
-    'optionwidgets',
     'text',
-    'userreference',
 
-    // Volunteer Rally features.
-    'shift_signup', 'volunteer_shifts', 'volunteer_shifts_priority_capacity', 'volunteer_shifts_repeating', 'shift_signup_group',
+    // Donor Rally features.
+    'donor_rally_team',
   );
 }
 
