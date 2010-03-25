@@ -1,0 +1,158 @@
+<?php
+
+// $Id: os_custom.module 887 2009-09-24 15:51:14Z jhedstrom $
+
+/**
+ * @file
+ * OpenSourcery base customizations.
+ */
+
+/**
+ * Trigger our custom contexts
+ */
+function os_custom_init() {
+  // don't fire any contexts on the front page
+  if (drupal_is_front_page()) {
+    return;
+  }
+
+  global $user;
+  $context = 'os_custom_not_team_page';
+
+  // are we viewing a team page?
+  $node = menu_get_object();
+  if (arg(0) == 'node' && arg(2) == NULL && $node && $node->type == 'team') {
+    $context = 'os_custom_team_page';
+  }
+
+  foreach ($user->roles as $rid => $rname) {
+    //context_set_by_condition($context, $rid);
+  }
+}
+
+/**
+ * Implementation of hook_context_conditions().
+ */
+function os_custom_context_conditions() {
+  $items = array();
+  $items['os_custom_team_page'] = array(
+    '#title' => t('Roles (team page)'),
+    '#description'=> t('Set this context for any of the given roles--only if we are viewing a team page.'),
+    '#type' => 'checkboxes',
+    '#options' => user_roles(),
+  );
+  $items['os_custom_not_team_page'] = array(
+    '#title' => t('Roles (not team page)'),
+    '#description'=> t('Set this context for any of the given roles--only if we are NOT viewing a team page.'),
+    '#type' => 'checkboxes',
+    '#options' => user_roles(),
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ *
+ * - Sets the revisions as enabled for new content types.
+ */
+function os_custom_form_alter(&$form, $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_type_form':
+      if (!isset($form['#node_type']->orig_type)) {
+        $options = array();
+        // Set to published by default.
+        $options[] = 'status';
+        // Enable revisions by default.
+        $options[] = 'revision';
+        $form['workflow']['node_options']['#default_value'] = $options;
+      }
+      break;
+
+    case 'user_register':
+      if (!in_array('os_custom_user_register_submit', $form['#submit'])) {
+        $form['#submit'][] = 'os_custom_user_register_submit';
+      }
+      break;
+
+    case 'team_node_form':
+      break;
+  }
+}
+
+/**
+ * Callback for user_register form submission--send users directly to login
+ * page after registration.
+ */
+function os_custom_user_register_submit(&$form, &$form_state) {
+  $form_state['redirect'] = 'user/login';
+}
+
+/**
+ * Implementation of hook_imagecache_default_presets().
+ */
+function os_custom_imagecache_default_presets() {
+  module_load_include('imagecache.inc', 'os_custom');
+  return _os_custom_imagecache_default_presets();
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function os_custom_strongarm() {
+  $conf = array();
+
+  // Set front page here.
+  //$conf['site_frontpage'] = '';
+
+  if (module_exists('path_redirect')) {
+    // Pathauto.
+    $conf['pathauto_update_action'] = 3;
+  }
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function os_custom_user($op, &$edit, &$account, $category = NULL) {
+  if ($op != 'after_update') {
+    return;
+  }
+  
+  // when a team coordinator's been "approved," make his team's node published...
+  if ($node = content_profile_load('team', $account->uid)) {
+    if (in_array('team lead', $account->roles)) {
+      // if we're saving a team lead and their team is published but they're
+      // blocked, or they're active but their team is unpublished, fix it.
+      if ($account->status != $node->status) {
+        $node->status = $account->status;
+        node_save($node);
+
+        global $user;
+        if (user_access('administer users')) {
+          drupal_set_message(t("User !name's team has been @what the competition", array('!name' => $account->name, '@what' => ($node->status ? t('put into') : t('excluded from')))));
+        }
+      }
+    }
+    else {
+      if ($node->status != 0) {
+        $node->status = 0;
+        node_save($node);
+        drupal_set_message(t("User !name's team has been @what the competition", array('!name' => $account->name, '@what' => t('excluded from'))) . t(' because the user does not have the "team lead" role'));
+      }
+    }
+  }
+}
+
+/**
+ * Preprocess page variables.
+ */
+function os_custom_preprocess_page(&$vars) {
+  if (isset($vars['footer_message'])) {
+    // Replace @year with current year.
+    $vars['footer_message'] = str_replace('@year', date('Y'), $vars['footer_message']);
+  }
+}
+

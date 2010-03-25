@@ -1,0 +1,241 @@
+<?php
+// $Id: autoassignrole.install,v 1.7.2.14 2009/08/25 13:04:44 cyberswat Exp $
+
+/**
+ * @file
+ *
+ * The autoassignrole.install file
+ *
+ * Installs the {autoassignrole} table and inserts default data as well as
+ * provides uninstall functionality.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function autoassignrole_install() {
+  drupal_install_schema('autoassignrole');
+  $sql = "INSERT into {autoassignrole} (arid,value) VALUES ('%s', '%s')";
+  db_query($sql, 'auto_roles', serialize(array()));
+  db_query($sql, 'auto_active', 0);
+  db_query($sql, 'user_active', 0);
+  db_query($sql, 'user_roles', serialize(array()));
+  db_query($sql, 'user_required', 0);
+  db_query($sql, 'user_multiple', 0);
+  db_query($sql, 'user_description', '');
+  db_query($sql, 'user_title', t("Role"));
+  db_query($sql, 'user_fieldset_title', t("User Roles"));
+  db_query($sql, 'user_sort', 'SORT_ASC');
+  db_query($sql, 'user_selection', 2);
+  db_query($sql, 'page_active', 0);
+  db_query($sql, 'auto_admin_active', 0);
+  db_query($sql, 'node_user_register', '');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function autoassignrole_uninstall() {
+  drupal_uninstall_schema('autoassignrole');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function autoassignrole_schema() {
+  $schema['autoassignrole'] = array(
+    'description' => t('Stores autoassignrole variables.'),
+    'fields' => array(
+      'arid'     => array(
+        'type' => 'varchar',
+        'length' => 38,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The id for this setting.'),
+      ),
+      'value' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => t('The value for this setting.'),
+      ),
+    ),
+    'primary key' => array('arid'),
+  );
+  $schema['autoassignrole_page'] = array(
+    'description' => t('Stores autoassignrole page information.'),
+    'fields' => array(
+      'rid'     => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => t('The rid for this page.'),
+      ),
+      'display' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => t('How to display the navigation to this page.'),
+      ),
+      'path' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('The path for this page.'),
+      ),
+      'menu' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('The default parent menu for this menu item.'),
+      ),
+      'title' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => t('The title for this page.'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => t('The description for this page.'),
+      ),
+      'format' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'description' => t('The filter format to use on the description.'),
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => t('The weight of this item.'),
+      ),
+      'registration' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => t('Should this item replace the default user registration page.'),
+      ),
+    ),
+    'primary key' => array('rid'),
+  );
+  return $schema;
+}
+function autoassignrole_update_6000() {
+  $items = array();
+  $sql = "SELECT name FROM {variable} WHERE name LIKE 'AUTOASSIGNROLE_%%'";
+  $vars = db_query($sql);
+  while ($var = db_fetch_object($vars)) {
+    variable_del($var->name);
+  }
+  $items[] = array("success" => 1, "query" => "Cleaned up old variables and installed new table");
+  
+  autoassignrole_install();
+  return $items;
+}
+
+function autoassignrole_update_6001() {
+  $ret = array();
+
+  // Rename the old contrib actions table if it exists so the contrib version
+  // of the module can do something with the old data.
+  if (!db_table_exists('autoassignrole_page')) {
+    $schema['autoassignrole_page'] = array(
+      'description' => t('Stores autoassignrole page information.'),
+      'fields' => array(
+        'rid'     => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'description' => t('The rid for this page.'),
+        ),
+        'display' => array(
+          'type' => 'text',
+          'not null' => TRUE,
+          'description' => t('How to display the navigation to this page.'),
+        ),
+        'path' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => t('The path for this page.'),
+        ),
+        'menu' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => t('The default parent menu for this menu item.'),
+        ),
+        'title' => array(
+          'type' => 'text',
+          'not null' => TRUE,
+          'description' => t('The title for this page.'),
+        ),
+        'description' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+          'description' => t('The description for this page.'),
+        ),
+        'format' => array(
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => FALSE,
+          'description' => t('The filter format to use on the description.'),
+        ),
+        'weight' => array(
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => FALSE,
+          'default' => 0,
+          'description' => t('The weight of this item.'),
+        ),
+        'registration' => array(
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => FALSE,
+          'default' => 0,
+          'description' => t('Should this item replace the default user registration page.'),
+        ),
+      ),
+      'primary key' => array('rid'),
+    );
+  
+    db_create_table($ret, 'autoassignrole_page', $schema['autoassignrole_page']);
+  }
+
+  return $ret;
+}
+
+function autoassignrole_update_6002() {
+  $ret = array();
+  if (!db_column_exists('autoassignrole_page', 'menu')) {
+    $ret[] = update_sql('ALTER TABLE {autoassignrole_page} ADD menu VARCHAR(255)');
+  }
+  return $ret;
+}
+
+function autoassignrole_update_6003() {
+  $ret = array();
+  if (!db_column_exists('autoassignrole_page', 'registration')) {
+    $ret[] = update_sql('ALTER TABLE {autoassignrole_page} ADD registration TINYINT default 0');
+  }
+  return $ret;
+}
+
+function autoassignrole_update_6004() {
+  $value = db_fetch_object(db_query("SELECT arid FROM {autoassignrole} WHERE arid = '%s'", 'auto_admin_active'));
+  if (!$value->arid) {
+    $sql = "";
+    $ret[] = update_sql("INSERT into {autoassignrole} (arid,value) VALUES ('auto_admin_active', '0')");
+  }
+  return $ret;
+}
+function autoassignrole_update_6005() {
+  $value = db_fetch_object(db_query("SELECT arid FROM {autoassignrole} WHERE arid = '%s'", 'node_user_register'));
+  if (!$value->arid) {
+    $sql = "";
+    $ret[] = update_sql("INSERT into {autoassignrole} (arid,value) VALUES ('node_user_register', '')");
+  }
+  return $ret;
+}

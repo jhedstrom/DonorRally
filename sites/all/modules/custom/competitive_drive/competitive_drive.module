@@ -1,0 +1,522 @@
+<?php
+
+// $Id$
+
+/**
+ * @file
+ * Competitive Drive module. Allows teams/groups to "compete" in a food drive.
+ * See README.txt for more information.
+ */
+
+/* All the donations funnel through this donation page. We tack on a tracking
+ * code (Tracking_Code) in a GET parameter to classify each donation by which
+ * competitive drive team it's from.
+ */
+define('COMPETITIVE_DRIVE_DIA_DONATION_URL', 'https://org2.democracyinaction.org/o/5420/shop/custom.jsp?donate_page_KEY=1748');
+define('COMPETITIVE_DRIVE_DIA_REPORT_CASH_AGGREGATE', '88262');
+define('COMPETITIVE_DRIVE_CONTENT_PROFILE_TYPE', 'team'); /* Check os_custom module before changing */
+define('COMPETITIVE_DRIVE_TRACKING_CODE_PREFIX', 'FFTB2010-');
+
+/**
+ * Implements hook_menu().
+ */
+function competitive_drive_menu() {
+  $items = array();
+  $items['admin/settings/competitive-drive'] = array(
+    'title' => 'Competitive drive',
+    'description' => 'Global settings for Competitive Drive',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('competitive_drive_settings_form'),
+    'access arguments' => array('administer competitive drive'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'competitive_drive.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_perm().
+ */
+function competitive_drive_perm() {
+  return array('administer competitive drive');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function competitive_drive_theme($existing, $type, $theme, $path) {
+  $base = array(
+    'arguments' => array('vars' => array())
+  );
+  return array(
+    'competitive_drive_team_progress_thermometer' => array(
+      'template' => 'competitive-drive-team-progress-thermometer',
+    ) + $base,
+    'competitive_drive_team_progress_stats' => array(
+      'template' => 'competitive-drive-team-progress-stats',
+    ) + $base,
+    'competitive_drive_team_donate_button' => $base,
+    'competitive_drive_team_leaderboard_button' => $base,
+    'competitive_drive_team_page_button' => $base,
+    'competitive_drive_new_blog_post_button' => $base,
+    'competitive_drive_team_coordinator_login_button' => $base,
+    'competitive_drive_team_coordinator_account_button' => $base,
+  );
+}
+
+/**
+ * Implements hook_profile_alter().
+ */
+function competitive_drive_profile_alter(&$account) {
+  if ($node = content_profile_load(COMPETITIVE_DRIVE_CONTENT_PROFILE_TYPE, $account->uid)) {
+    $account->content['competitive-drive-team-info'] = array(
+      '#type' => 'user_profile_category',
+      '#title' => t('Team information'),
+      '#attributes' => array('class' => 'competitive-drive-profile-team-info'),
+    );
+    $account->content['competitive-drive-team-info']['link'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Team Page link&mdash;give this to your team'),
+      '#value' => '<span class="competitive-drive-raw-url">'.
+        url('node/'. $node->nid, array('absolute' => TRUE)) .
+        '</span>',
+    );
+    unset($account->content['summary']);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function competitive_drive_cron() {
+  competitive_drive_refresh_all();
+}
+
+/**
+ * Refreshes all teams' points and statistics by querying Salsa and
+ * recalculating totals.
+ */
+function competitive_drive_refresh_all() {
+  $report = _competitive_drive_query_cash_aggregate();
+
+  $salsa_cash = array();
+  if (variable_get('competitive_drive_debug', FALSE)) {
+    /* We're debugging; use the aliases to map the cash values */
+    $aliases = variable_get('competitive_drive_debug_aliases', array());
+    foreach ($report as $tracking_code => $cash) {
+      if (isset($aliases['by-name'][$tracking_code])) {
+        $salsa_cash[$aliases['by-name'][$tracking_code]] = $cash;
+      }
+    }
+  }
+  else {
+    /* Production: Use the Tracking_Code field from the report */
+    $prefix = COMPETITIVE_DRIVE_TRACKING_CODE_PREFIX;
+    $regex = "/^{$prefix}(\d+)$/";
+    foreach ($report as $tracking_code => $cash) {
+      if (preg_match($regex, $tracking_code, $matches) === 1) {
+        $team_nid = $matches[1];
+        $salsa_cash[$team_nid] = $cash;
+      }
+      else {
+        // @todo: record the error?
+      }
+    }
+  }
+
+  $cash_scale = (float)variable_get('competitive_drive_cash_scale', 1.0);
+  $food_scale = (float)variable_get('competitive_drive_food_scale', 1.0);
+  $volunteer_scale = (float)variable_get('competitive_drive_volunteer_scale', 1.0);
+
+  $current_all = _competitive_drive_fetch_current_team_stats();
+  foreach ($current_all as $nid => $now) {
+    if (isset($salsa_cash[$nid])) {
+      $now['cash'] = $salsa_cash[$nid];
+    }
+    else {
+      // no-op; we didn't get an online cash value from Salsa for this team, so
+      // just use the current value for calculating new totals
+    }
+    db_query(
+      'UPDATE {content_type_team} SET ' .
+        'field_cash_value = %f, ' .
+        'field_total_points_value = (%f+%f)*%f + (%f+%f)*%f + (%f+%f)*%f, ' .
+        'field_points_per_capita_value = ((%f+%f)*%f + (%f+%f)*%f + (%f+%f)*%f) / %d ' .
+      'WHERE nid = %d',
+      array(
+        $now['cash'],
+        $now['cash'], $now['offline_cash'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
+        $now['cash'], $now['offline_cash'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
+        $now['size'],
+        $nid
+      )
+    );
+  }
+  drupal_flush_all_caches();
+}
+
+/**
+ * Fetches current size, cash values, food values, volunteer values for all
+ * teams (from the database).
+ */
+function _competitive_drive_fetch_current_team_stats() {
+  $result = db_query(
+    'SELECT nid, ' .
+    'field_cash_value AS cash, ' .
+    'field_food_value AS food, ' .
+    'field_volunteer_value AS volunteer, ' .
+    'field_offline_cash_value AS offline_cash, ' .
+    'field_offline_food_value AS offline_food, ' .
+    'field_offline_volunteer_value AS offline_volunteer, ' .
+    'field_size_value AS size ' .
+    'FROM {content_type_team}'
+  );
+  $team_stats = array();
+  while ($current = db_fetch_array($result)) {
+    $nid = $current['nid'];
+    $team_stats[$nid] = $current;
+    unset($team_stats[$nid]['nid']);
+    foreach ($team_stats[$nid] as $field => $value) {
+      if (empty($value)) {
+        $team_stats[$nid][$field] = 0.0;
+      }
+    }
+  }
+  return $team_stats;
+}
+
+/**
+ * Queries DIA aggregate report of donation totals for each team and returns
+ * results in a nicer format.
+ */
+function _competitive_drive_query_cash_aggregate() {
+  $cash_aggregate_query = array(
+    '#script' => 'getReport.sjs',
+    '#fields' => COMPETITIVE_DRIVE_DIA_REPORT_CASH_AGGREGATE,
+  );
+  $result = salsa_api_query($cash_aggregate_query);
+  $team_stats = array();
+
+  // The report comes in a different format when there's only one. (Sigh.)
+  if (isset($result['report']['row']['tracking_code'])) {
+    $result['report']['row'] = array(
+      array(
+        'tracking_code' => $result['report']['row']['tracking_code'],
+        'amount' => $result['report']['row']['amount'],
+      )
+    );
+  }
+
+  foreach ($result['report']['row'] as $item) {
+    if (!empty($item['tracking_code'])) {
+      $team_stats[$item['tracking_code']] = $item['amount'];
+    }
+  }
+  return $team_stats;
+}
+
+/**
+ * Set up Salsa Tracking_Code aliases for debugging.
+ */
+function _competitive_drive_set_debug_aliases() {
+  $team_stats = _competitive_drive_query_cash_aggregate();
+  $team_names = array_keys($team_stats);
+
+  // Find all team node ids and assign nids to each entry in $team_names.
+  $team_aliases = array();
+  $result = db_query("SELECT nid, title FROM {node} WHERE type = 'team'");
+  $i = 0;
+  while ($node = db_fetch_object($result)) {
+    if (!isset($team_names[$i])) {
+      break;
+    }
+    $team_aliases['by-nid'][$node->nid] = $team_names[$i];
+    $team_aliases['by-name'][$team_names[$i]] = $node->nid;
+    $i++;
+  }
+  drupal_set_message("Aliased $i out of " . count($team_names) . " teams...<br />" . dpr($team_aliases, true));
+  variable_set('competitive_drive_debug_aliases', $team_aliases);
+}
+
+/**
+ * Formats a value (points or raw) for display.
+ */
+function _competitive_drive_format_value($value) {
+  return number_format($value, 0, '.', ',');
+}
+
+/**
+ * Generate Salsa Tracking_Code field for a team, given its node.
+ */
+function _competitive_drive_team_tracking_code($node) {
+  return COMPETITIVE_DRIVE_TRACKING_CODE_PREFIX . $node->nid;
+}
+
+/**
+ * Calculate a team's statistics directly from node values.
+ */
+function competitive_drive_team_stats($node) {
+  $point_scales = array(
+    'cash' => variable_get('competitive_drive_cash_scale', 1.0),
+    'food' => variable_get('competitive_drive_food_scale', 1.0),
+    'volunteer' => variable_get('competitive_drive_volunteer_scale', 1.0),
+  );
+
+  $stats = array();
+  $stats['total'] = 0.0;
+  $stats['total_goal'] = 0.0;
+  foreach (array('cash', 'food', 'volunteer') as $type) {
+    // raw values (USD, pounds, shifts, etc.); points (scaled raw)
+    $stats[$type .'_raw'] = $node->{'field_'. $type}[0]['value'] + $node->{'field_offline_' .$type}[0]['value'];
+    $stats[$type .'_raw_goal'] = $node->{'field_'. $type .'_goal'}[0]['value'];
+
+    // points values
+    $stats[$type] = $stats[$type .'_raw'] * $point_scales[$type];
+    $stats[$type .'_goal'] = $stats[$type .'_raw_goal'] * $point_scales[$type];
+
+    // totals
+    $stats['total'] += $stats[$type];
+    $stats['total_goal'] += $stats[$type .'_goal'];
+  }
+
+  // provide a formatted version as well
+  foreach ($stats as $k => $v) {
+    $stats[$k .'_view'] = _competitive_drive_format_value($v);
+  }
+
+  $stats['per_capita'] = $stats['total'] / $node->field_size[0]['value']; 
+  return $stats;
+}
+
+/**
+ * Implements hook_init().
+ */
+function competitive_drive_init() {
+  /* We need our css occasionally on pages without our blocks on 'em...so just include it always */
+  drupal_add_css(drupal_get_path('module', 'competitive_drive') .'/competitive_drive.css', 'module');
+}
+
+/**
+ * Implements hook_block().
+ */
+function competitive_drive_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+     return array(
+       0 => array(
+         'info' => t('Team Progress Thermometer'),
+         'cache' => BLOCK_NO_CACHE,
+       ),
+       1 => array(
+         'info' => t('Donate Button'),
+         'cache' => BLOCK_CACHE_PER_PAGE,
+       ),
+       2 => array(
+         'info' => t('Leaderboard Button'),
+         'cache' => BLOCK_CACHE_GLOBAL,
+       ),
+       3 => array(
+         'info' => t('Team Progress Statistics'),
+         'cache' => BLOCK_NO_CACHE,
+       ),
+       4 => array(
+         'info' => t('Team Page Button'),
+         'cache' => BLOCK_CACHE_PER_PAGE,
+       ),
+       5 => array(
+         'info' => t('New Team Blog Post'),
+         'cache' => BLOCK_CACHE_PER_PAGE,
+       ),
+       6 => array(
+         'info' => t('Team Coordinator Log in Button'),
+         'cache' => BLOCK_CACHE_GLOBAL,
+       ),
+       7 => array(
+         'info' => t('Team Coordinator Dashboard Button'),
+         'cache' => BLOCK_NO_CACHE,
+       ),
+     );
+    case 'configure':
+      return array();
+    case 'view':
+      global $user;
+      $node = content_profile_load(COMPETITIVE_DRIVE_CONTENT_PROFILE_TYPE, $user->uid);
+      if (!$node) {
+        $node = menu_get_object();
+        if ($node && $node->type != COMPETITIVE_DRIVE_CONTENT_PROFILE_TYPE) {
+          $node = NULL;
+        }
+      }
+
+      $vars = array();
+      if ($node) {
+        $vars = competitive_drive_team_stats($node);
+        $vars['node'] = $node;
+      }
+      
+      $theme_functions = array(
+        0 => 'competitive_drive_team_progress_thermometer',
+        1 => 'competitive_drive_team_donate_button',
+        2 => 'competitive_drive_team_leaderboard_button',
+        3 => 'competitive_drive_team_progress_stats',
+        4 => 'competitive_drive_team_page_button',
+        5 => 'competitive_drive_new_blog_post_button',
+        6 => 'competitive_drive_team_coordinator_login_button',
+        7 => 'competitive_drive_team_coordinator_account_button',
+      );
+      if (isset($theme_functions[$delta])) {
+        return array('subject' => '', 'content' => theme($theme_functions[$delta], $vars));
+      }
+  }
+  return array('subject' => '', 'content' => '');
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function competitive_drive_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'competitive_drive'),
+  );
+}
+
+/**
+ * Implementation of hook_context_default_contexts().
+ */
+function competitive_drive_context_default_contexts() {
+  module_load_include('context.inc', 'competitive_drive');
+  return _competitive_drive_context_default_contexts();
+}
+
+/**
+ * Preprocess thermometer vars for theming
+ */
+function competitive_drive_preprocess_competitive_drive_team_progress_thermometer(&$variables) {
+  $vars = $variables['vars'];
+  unset($variables['vars']);
+  if ($vars['total_goal'] == 0.0) {
+    return;
+  }
+
+  $total_height = 188; /* Fairly arbitrary */
+  $top_margin = 0;
+  $top_halfheight = $bottom_halfheight = 52 / 2;
+  $font_halfheight = 9; /* half of "line-height" for the style goal/points style */
+
+  $vars['complete'] = $vars['total'] / $vars['total_goal'];
+  $vars['success'] = $vars['complete'] >= 1.0;
+
+  $vars['filled_height'] = (int)($total_height * min(1.0, $vars['complete']) + 0.5);
+  $vars['empty_height'] = $total_height - $vars['filled_height'];
+
+  if (!$vars['success']) {
+    $vars['empty_top_top'] = $top_margin;
+    $vars['empty_middle_top'] = $top_margin + $top_halfheight;
+    $vars['empty_bottom_top'] = $vars['empty_middle_top'] + $vars['empty_height'];
+  }
+
+  $vars['filled_top_top'] = $top_margin /* + $top_halfheight - $top_halfheight */ + $vars['empty_height'];
+  $vars['filled_middle_top'] = $vars['filled_top_top'] + $top_halfheight;
+  $vars['filled_bottom_top'] = $vars['filled_middle_top'] + $vars['filled_height'];
+
+  $vars['goal_top'] = $top_margin + $top_halfheight - $font_halfheight;
+  $vars['points_top'] = max($vars['goal_top'] + $font_halfheight*2, $vars['goal_top'] + $vars['empty_height']);
+  $variables += $vars;
+}
+
+/**
+ * Preprocess variables for statistics block theming
+ */
+function competitive_drive_preprocess_competitive_drive_team_progress_stats(&$variables) {
+  $variables += $variables['vars'];
+  unset($variables['vars']);
+}
+
+/**
+ * Helper that constructs button markup.
+ */
+function competitive_drive_theme_button($class, $text, $link, $attr = array()) {
+  return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'competitive-drive-button '.$class) + $attr));
+}
+
+/**
+ * Theme the "donate" button block
+ */
+function theme_competitive_drive_team_donate_button($vars) {
+  return competitive_drive_theme_button(
+    'competitive-drive-donate-button',
+    t('Donate Now'),
+    COMPETITIVE_DRIVE_DIA_DONATION_URL .'&track='. _competitive_drive_team_tracking_code($vars['node']),
+    array('target' => '_blank')
+  );
+}
+
+
+/**
+ * Theme the "leaderboard" button block
+ */
+function theme_competitive_drive_team_leaderboard_button($vars) {
+  return competitive_drive_theme_button(
+    'competitive-drive-leaderboard-button',
+    t('Firm Ranking'),
+    '<front>',
+    array('target' => '_blank')
+  );
+}
+
+/**
+ * Theme the "team page" button block
+ */
+function theme_competitive_drive_team_page_button($vars) {
+  return competitive_drive_theme_button(
+    'competitive-drive-team-page-button',
+    t('Team Page'),
+    'node/'. $vars['node']->nid
+  );
+}
+
+/**
+ * Theme the "new blog post" button block
+ */
+function theme_competitive_drive_new_blog_post_button($vars) {
+  if (user_access('create team_blog_post content')) {
+    return '<div class="competitive-drive-new-blog-post-button">'.
+      l(t('Write a new blog post'), 'node/add/team-blog-post') .
+      '</div>';
+  }
+  return '';
+}
+
+/**
+ * Theme the "Team coordinator login" button block
+ */
+function theme_competitive_drive_team_coordinator_login_button($vars) {
+  global $user;
+  if ($user->uid != 0) {
+    return;
+  }
+
+  return competitive_drive_theme_button(
+    'competitive-drive-team-coordinator-login-button',
+    t('Team Coordinator Login'),
+    'user/login'
+  );
+}
+
+/**
+ * Theme the "Team coordinator account/dashboard" button block
+ */
+function theme_competitive_drive_team_coordinator_account_button($vars) {
+  global $user;
+  if (!isset($vars['node']) || $vars['node']->uid != $user->uid) {
+    return;
+  }
+
+  return competitive_drive_theme_button(
+    'competitive-drive-team-coordinator-account-button',
+    t('Team Dashboard'),
+    'user'
+  );
+}

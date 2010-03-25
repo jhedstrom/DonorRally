@@ -1,0 +1,9 @@
+; $Id$
+name = Competitive Drive
+description = Competitive Donations Drive
+dependencies[] = salsa_api
+dependencies[] = views_or
+dependencies[] = content_profile
+package = Other
+core = 6.x
+php = 5.0

@@ -1,0 +1,6 @@
+; $Id$
+name = Competitive Drive IO
+description = Import/Export utilities for the Competitive Drive module.
+dependencies[] = competitive_drive
+dependencies[] = views_bonus_export
+core = 6.x

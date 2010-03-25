@@ -1,0 +1,9 @@
+<?php
+
+// $Id: simpletest_clone.module 762 2009-05-04 22:44:04Z jhedstrom $
+
+/**
+ * @file
+ * SimpleTest Clone placeholder file, left intentionally empty, but required for
+ * module initialization.
+ */

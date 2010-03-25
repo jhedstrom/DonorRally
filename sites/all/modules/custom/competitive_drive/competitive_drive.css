@@ -1,0 +1,159 @@
+/** Thermometer **/
+.competitive-drive-thermometer {
+  background-color: white;
+  position: relative;
+  height: 256px;
+}
+
+.competitive-drive-thermometer span {
+  position: absolute;
+}
+
+.thermometer-goal,
+.thermometer-points {
+  right: 127px;
+  text-align: right;
+}
+
+/* Tops */
+.thermometer-empty-top,
+.thermometer-filled-top {
+  height: 53px;
+  width: 112px;
+  right: 0;
+}
+
+.thermometer-empty-middle,
+.thermometer-filled-middle {
+  width: 112px;
+  right: 0;
+}
+
+.thermometer-empty-bottom,
+.thermometer-filled-bottom {
+  height: 25px;
+  width: 112px;
+  right: 0;
+}
+
+.thermometer-empty-top {
+  background: transparent url(images/thermometer-empty-ends.png) no-repeat scroll top left;
+  z-index: 100;
+}
+.thermometer-empty-middle {
+  background: transparent url(images/thermometer-empty-middle.png) repeat-y scroll top left;
+  z-index: 80;
+}
+.thermometer-empty-bottom {
+  background: transparent url(images/thermometer-empty-ends.png) no-repeat 0 -53px;
+  z-index: 60;
+}
+
+.thermometer-filled-top {
+  background: transparent url(images/thermometer-filled-ends.png) no-repeat scroll top left;
+  z-index: 50;
+} 
+.thermometer-filled-middle {
+  background: transparent url(images/thermometer-filled-middle.png) repeat-y scroll top left;
+  z-index: 40;
+}
+.thermometer-filled-bottom {
+  background: transparent url(images/thermometer-filled-ends.png) no-repeat 0 -53px;
+  z-index: 40;
+}
+
+
+/** Team Stats **/
+table.competitive-drive-team-stats {
+  border: 1px solid #ccc;
+  margin-bottom: 0;
+}
+
+table.competitive-drive-team-stats tbody th {
+  border-bottom: none;
+  border-right: 1px solid #ccc;
+}
+
+table.competitive-drive-team-stats thead tr th:first-child {
+  border-bottom: none;
+}
+
+table.competitive-drive-team-stats thead th,
+table.competitive-drive-team-stats tbody td {
+  text-align: right;
+}
+
+/** Buttons **/
+a.competitive-drive-button {
+  text-align: center;
+  font-weight: bold;
+  display: block;
+  background-color: #aa5;
+  font-size: 1.5em;
+  padding: 0.5em 0;
+  border-bottom: solid 1px #666;
+  border-right: solid 1px #666;
+}
+a.competitive-drive-button:link,
+a.competitive-drive-button:visited,
+a.competitive-drive-button:hover {
+  color: #fff;
+  text-decoration: none;
+}
+a.competitive-drive-button:hover {
+  background-color: #bb6;
+}
+a.competitive-drive-button:active {
+  background-color: #989848;
+  border-top: solid 1px #666;
+  border-left: solid 1px #666;
+  border-bottom: 0 none;
+  border-right: 0 none;
+}
+ 
+/* Donate Now button */
+a.competitive-drive-donate-button {
+  padding: 1em 0;
+  font-size: 2em;
+  background-color: #c60;
+}
+a.competitive-drive-donate-button:hover {
+  background-color: #d70;
+}
+a.competitive-drive-donate-button:active {
+  background-color: #b85800;
+}
+
+
+/* Team coordinator login button -- make it not look like a button */
+a.competitive-drive-team-coordinator-login-button:link,
+a.competitive-drive-team-coordinator-login-button:visited {
+  padding: 0;
+  background-color: transparent;
+  border: 0 none;
+  color: #333;
+  font-size: 1em;
+}
+a.competitive-drive-team-coordinator-login-button:hover {
+  background-color: transparent;
+  text-decoration: underline;
+  color: #333;
+}
+
+/* Team link on user profile page */
+dl.competitive-drive-profile-team-info dd {
+  background-color: #f1f8e8;
+  padding: 1.25em;
+}
+.competitive-drive-raw-url {
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* Profile/team edit form */
+div#edit-field-captain-location-0-delete-location-wrapper,
+div#edit-field-location-0-delete-location-wrapper {
+  display: none;
+}
+

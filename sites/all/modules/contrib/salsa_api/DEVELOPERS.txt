@@ -1,0 +1,124 @@
+# $Id$
+
+Here's some quick info to get you started:
+
+There is one function that you will primarily deal with, salsa_api_query($query).
+
+This function takes an array, formats a query based on that array, runs the
+query on the salsa database and then returns an array containing the query results.
+
+Here's what it expects:
+
+$query = array(
+  '#script' => '',
+  '#tables' => '',
+  '#condition' => '',
+  '#limit' => '',
+  '#fields' => '',
+  '#order' => '',
+  '#group' => '',
+  '#links' => ''
+);
+
+Details (some info from the Salsa documentation pages http://dev.salsacommons.org/o/8001/p/salsa/commons/dev/docs/):
+
+#script:
+Required - What api script does this query need to run on?
+See below for available scripts.
+ex: '#script' => 'getLeftJoin.sjs'
+
+#tables:
+Required - What table or tables is the query being run against.
+If querying against multiple tables this should be a comma separated list and the tables must be joined in some way:
+ex: '#tables' => 'supporter,supporter_custom'
+
+#condition:
+Optional - What conditions should this query use.
+A condition should be in the format of "Condition=Value". If there are multiple conditions, this can be an array of conditions:
+'#condition' => array('condition' => 'value', 'condition2' => 'value2');
+
+#limit:
+Optional - How many rows should be returned. Can also offset the starting record.
+--------------------NOTE: The external api has a built in max limit of 500!---------------------
+Takes a number for the max number of records to return. If you want to offset the starting record, ie for pagination then it takes 2 numbers, the offset, a comma, and then the limit.
+Ex: limit of 5, offset by 10 (ie page 3): '#limit' => '10,5'
+
+#fields:
+Required for save, copy, delete, getObject.sjs, getCount.sjs, Optional for rest - What fields do you are using.
+(getLeftJoin.sjs, getObjects.sjs, getCounts.sjs)
+If this is not specified, all fields will be returned by default. This can increase query times so i suggest you provide only the fields you need.
+It takes a comma separated list of field names - ex: '#fields' => 'supporter_KEY,First_Name,Last_Name,Email'
+
+(getObject.sjs, getCount.sjs)
+Takes the value of the key you want returned. '#fields' => '1092967'
+
+(save)
+If saving data, this contains the field(s) and values that data is being saved to: '#fields' => 'First_Name=Joe'
+Can take an array of save fields: '#fields' => array('First_Name' => 'Joe', 'Last_Name' => 'Smith')
+
+(copy)
+If Copying data, this is the object key that is being copied, such as a supporter.
+
+(delete)
+If deleting data, this is the object key that is to be deleted.
+
+#order:
+Optional - What order should the records be in?
+Takes a field and ascending or descending.
+Ex: '#order' => 'First_Name ASC'
+
+#group:
+Optional - What field should the records be grouped by?
+This is useful if you are querying from more than one table. It takes a field name as a value:
+'#group' => 'State'
+
+#links:
+Required by save, Optional for rest - If saving to multiple tables at once, for instance creating a supporter and adding them to one or more groups.
+If only saving to one other table and value, then takes this format: '#links' => 'link=linkKey'
+If saving to more than one it takes an array: '#links' => array('link' => 'linkKey', 'link2' => 'linkKey2')
+
+
+Scripts:
+---------------------------
+Retreving Data
+---------------------------
+getLeftJoin.sjs (most powerful)
+Basically the same as getObjects.sjs, but allows information to be retrieved from more than one table at a time.
+
+getObject.sjs:
+Takes 2 parameters: object(#table) and key(#fields). Object is the name of the object, such as supporter. Key is the object key.
+ex:
+$query = array(
+  '#script' => 'getObject.sjs',
+  '#tables' => 'email_blast',
+  '#fields' => '1092967',
+);
+
+getObjects.sjs:
+The getObjects.sjs method is useful for returning many objects. It requires an object parameter. Other parameters are optional and limit the set of results to be returned. In its simplest form, getObjects.sjs will return an array all of the objects available.
+
+getCount.sjs:
+takes parameters: object, condition, countColumn and returns a simple count of items from the database. This example returns a count of the number of supporters with the email address chris@dia.org and a Last_Modified after May 5th, 2009.
+
+getCounts.sjs:
+takes parameters: object, groupBy, condition, countColumn, orderBy, limit
+
+Counts by group, or subset, is also a frequently used query. This is analogous to a SQL query with a "count(*)" , and one or many "group by" fields.
+
+getReport.sjs:
+Returns the results of a report that exists in salsa, ether an existing salsa report or one the user has created.
+takes paramameter: report_KEY(#fields), ex: query = array('#script' => 'getReport.sjs', '#fields' => '1234');
+
+---------------------------
+Saving Data
+---------------------------
+save:
+Accessible via the absolute url "/save" on any node, or via the relative url "save" in any package, the Save controller is the most commonly used controller in the system. It takes parameters that specify the object to save, the key to save to (or '0' for a new item), and then a listing of parameters that are saved to that object. It handles all security methods, and redirects once a method has completed. A successfully entry will redirect to the previous page with either the key that you supplied or a new key (?key=123).
+
+copy:
+To copy items, the standard Copy controller is provided
+
+delete:
+To delete items, the standard Delete controller is provided
+
+email: (to-do)

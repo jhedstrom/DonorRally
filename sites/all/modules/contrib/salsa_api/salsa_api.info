@@ -1,0 +1,12 @@
+; $Id$
+name = Salsa API
+description = Provides an API to allow drupal to communicate with Democracy in Action's Salsa Member Database.
+core = 6.x
+package = Salsa
+
+; Information added by drupal.org packaging script on 2009-07-23
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "salsa_api"
+datestamp = "1248308636"
+

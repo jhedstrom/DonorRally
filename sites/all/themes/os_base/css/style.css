@@ -1,0 +1,337 @@
+/** $Id: styles.css 897 2009-12-31 20:46:29Z jhedstrom $ **/
+
+body {
+  background-color: #f5f5de;
+  background-image: url(../images/pattern01.gif);
+  background-repeat: repeat;
+  color: #333;
+  font-family: Helvetica, Verdana, sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  padding-top: 18px;
+  background-color: #eee8C5;
+  width: 868px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  -webkit-border-top-left-radius: 12px;
+  -webkit-border-top-right-radius: 12px;
+  -moz-border-radius-topleft: 12px;
+  -moz-border-radius-topright: 12px;
+}
+
+/* Fix site background from being applied to tinymce's iframe */
+body#tinymce {
+  background-image: none;
+  background-color: #fff;
+}
+
+/** Header **/
+#header {
+  background-color: #fff;
+  height: 104px;
+  padding: 18px 0;
+  margin: 0px 20px 14px 20px;
+  border-radius: 12px;
+  -khtml-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+}
+
+/** Header logos **/
+#header a span {
+  float: left;
+  text-indent: -99999px;
+  position: relative;
+}
+
+#header .logo-sffb {
+  background: url(../images/header-logos-sprite.gif) no-repeat 0 0;
+  width: 88px;
+  height: 75px;
+  margin: 0 48px 0 50px; 
+  top: 4px;
+}
+
+#header .logo-fftb {
+  background: url(../images/header-logos-sprite.gif) no-repeat -88px 0;
+  width: 360px;
+  height: 76px;
+  margin-right: 48px;
+  top: 4px;
+}
+
+#header .logo-basf {
+  background: url(../images/header-logos-sprite.gif) no-repeat -448px 0;
+  width: 181px;
+  height: 41px;
+  top: 38px;
+}
+
+h1#logo {
+  text-indent: -99999px;
+}
+
+/** Primary navigation */
+#primary-nav {
+  padding: 11px 0;
+  margin: 14px 20px 14px 20px;
+  border-top: 2px #d89547 dotted;
+  border-bottom: 2px #d89547 dotted;
+}
+
+#primary-nav ul#nav {
+  text-align: center;
+}
+
+#primary-nav ul#nav li {
+  font-size: 11px;
+  padding: 0 19px;
+  background: url(../images/nav_bar_divider.gif) no-repeat 0px 3px;
+}
+
+#primary-nav ul#nav li.first {
+  background: none;
+}
+
+#primary-nav ul#nav li a:link,
+#primary-nav ul#nav li a:visited {
+  text-decoration: none;
+}
+
+#primary-nav ul#nav li a:hover {
+  text-decoration: underline;
+}
+
+/* Layout */
+.col-first {
+  margin-left: 20px;
+}
+
+.col-center {
+  background-color: #fff;
+  min-height: 512px;
+  border-radius: 12px;
+  -khtml-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+}
+
+/* match bottom of left-col buttons on user page*/
+.page-user .col-center {
+  min-height: 375px;
+}
+
+.col-inner {
+  padding: 18px 19px;
+}
+
+/** Vertical tabs */
+.vertical-tab-button {
+  list-style: none;
+}
+
+/** Links **/
+a:link, a:visited, a:hover, a:focus, a:active {
+  color: #30302f;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #357a4e;
+}
+
+/** Breadcrumbs **/
+.breadcrumb {
+  padding: 18px 0 0 0;
+}
+
+
+/** Tabs **/
+.tabs {
+  padding: 0;
+}
+
+.tabs ul.primary {
+  border: none;
+  padding: 0;
+}
+
+.tabs ul.primary li a {
+  border: 1px solid #333;
+}
+
+.tabs ul.primary li a:hover {
+  color: #c60;
+}
+
+.tabs ul.primary li.active a {
+  color: #fff;
+  background-color: #c60;
+}
+
+/** Typography **/
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  color: #c60;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+
+/** Tables **/
+tr.even td {
+  background-color: #f5f5de; 
+}
+
+/** Blocks **/
+
+.block,
+.competitive-drive-button {
+  border-radius: 12px;
+  -khtml-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+}
+
+/* By default, our blocks have no padding set; we override that just where needed */
+.block-user,
+.block-nodeblock {
+  background-color: #fff;
+  padding: 19px;
+}
+
+/* Remove line and extra spacing at bottom of nodeblocks */
+.block-nodeblock .content .node {
+  border: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* "Join" the thermometer block with the stats block below it */
+#block-competitive_drive-0 {
+  background-color: #fff;
+  padding: 19px 20px 0 20px;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-bottomright: 0;
+}
+
+#block-competitive_drive-3 {
+  background-color: #fff;
+  padding: 0 19px 19px 19px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topleft: 0;
+  -moz-border-radius-topright: 0;
+}
+
+#block-competitive_drive-3 table.competitive-drive-team-stats {
+  font-size: 11px;
+}
+
+.competitive-drive-button {
+
+}
+
+.front #block-competitive_drive-7 {
+  clear: both;
+  width: 198px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#block-menu-menu-team-lead-user-pages,
+#block-menu-menu-site-editor {
+  background-color: #fff;
+  padding: 19px;
+}
+
+#absolute-footer .block {
+  padding: 0;
+}
+
+#absolute-footer table {
+  margin: 0;
+  font-size: 11px;
+}
+
+/** Views **/
+
+/* Leaderboard */
+#block-views-leaderboard_top_ppc-block_1,
+#block-views-leaderboard_top-block_1 {
+  /* .span-12: */
+  float: left;
+  width: 389px; /* 408px; - 19px pad */
+  margin-right: 12px;
+}
+
+#block-views-leaderboard_top_ppc-block_1 {
+  margin-right: 0; /* .last */
+}
+
+.view-leaderboard-top td.views-field-counter,
+.view-leaderboard-top-ppc td.views-field-counter,
+.views-field-field-total-points-value,
+.views-field-field-points-per-capita-value {
+  text-align: right;
+}
+
+#block-views-team_blog-block li.views-row {
+  list-style-type: none;
+  list-style-image: none;
+}
+#block-views-team_blog-block ul {
+  margin: 0;
+}
+
+/** Team Page **/
+.team-name {
+  padding: 0 20px;  
+}
+
+#block-views-team_blog-block h2 {
+  font-size: 1.5em;
+}
+
+/** Service Links **/
+.service_links_facebook a, .service_links_twitter a {
+}
+
+/** Forms **/
+
+/* Hmm. http://drupal.org/node/491052 - the fix in BP theme 1.6 seems not to...fix the issue. So override it. */
+input[type=checkbox], input[type=radio], input.checkbox, input.radio {position:relative;top:.25em;}
+
+/* make the labels and inputs on location fields align better vertically */
+
+.location .form-item input {
+  margin: 0 0 .50em 0;
+}
+
+/* for the label */
+.location .form-item label {
+  margin-top: .25em;
+}
+
+#edit-field-location-0-phone,
+#edit-field-captain-location-0-phone {
+  margin-top: .75em;
+}
+
+/** Misc. **/
+
+/* Avoid potential HTTP request for the grid */
+.showgrid { background: none; }

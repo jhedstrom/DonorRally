@@ -1,0 +1,16 @@
+.DS_Store
+.DS\_Store
+*.sw?
+Makefile
+.vimrc
+*~
+app/drupal/sites/default/settings.php
+app/drupal/board/cache
+app/drupal/board/config.php
+app/drupal/sites/default/files
+app/drupal/sites/default/files/imagecache
+app/drupal/sites/default/files/css
+app/drupal/sites/default/files/js
+app/drupal/sites/default/files/resize
+app/drupal/sites/default/files/ctools
+

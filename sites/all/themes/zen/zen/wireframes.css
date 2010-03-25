@@ -1,0 +1,28 @@
+/* $Id: wireframes.css 511 2008-12-01 19:51:25Z jhedstrom $ */
+
+/*
+ * WIREFRAMES STYLE
+ *
+ * Add wireframes to the basic layout elements.
+ */
+
+
+  .with-wireframes #header-inner,
+  .with-wireframes #content-inner,
+  .with-wireframes #content-inner>*,
+  .with-wireframes #navbar-inner,
+  .with-wireframes #sidebar-left-inner,
+  .with-wireframes #sidebar-right-inner,
+  .with-wireframes #footer-inner
+  {
+    margin: 1px;
+    padding: 2px;
+    border: 1px solid #ccc;
+  }
+
+  .with-wireframes #closure-blocks
+  {
+    margin-top: 1px;
+    padding: 2px;
+    border: 1px solid #ccc;
+  }
