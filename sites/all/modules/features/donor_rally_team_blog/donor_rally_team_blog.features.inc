@@ -35,3 +35,12 @@ function donor_rally_team_blog_strongarm() {
   $args = func_get_args();
   return call_user_func_array('_donor_rally_team_blog_strongarm', $args);
 }
+
+/**
+ * Implementation of hook_views_default_views().
+ */
+function donor_rally_team_blog_views_default_views() {
+  module_load_include('inc', 'donor_rally_team_blog', 'donor_rally_team_blog.features.views');
+  $args = func_get_args();
+  return call_user_func_array('_donor_rally_team_blog_views_default_views', $args);
+}
