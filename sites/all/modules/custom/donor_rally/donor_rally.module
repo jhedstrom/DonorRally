@@ -387,14 +387,6 @@ function donor_rally_views_api() {
 }
 
 /**
- * Implementation of hook_context_default_contexts().
- */
-function donor_rally_context_default_contexts() {
-  module_load_include('context.inc', 'donor_rally');
-  return _donor_rally_context_default_contexts();
-}
-
-/**
  * Preprocess thermometer vars for theming
  */
 function donor_rally_preprocess_donor_rally_team_progress_thermometer(&$variables) {
