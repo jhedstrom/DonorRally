@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Implementation of hook_default_box().
+ */
+function donor_rally_team_default_box() {
+  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_donor_rally_team_default_box', $args);
+}
+
+/**
  * Implementation of hook_content_default_fields().
  */
 function donor_rally_team_content_default_fields() {

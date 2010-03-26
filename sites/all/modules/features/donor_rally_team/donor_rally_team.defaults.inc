@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Helper to implementation of hook_default_box().
+ */
+function _donor_rally_team_default_box() {
+  $export = array();
+  $box = new stdClass;
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
+  $box->delta = 'donor_rally_welcome';
+  $box->title = 'Welcome';
+  $box->description = 'Donor Rally Welcome Box';
+  $box->body = 'Some introduction help text.';
+  $box->format = 1;
+
+  $export['donor_rally_welcome'] = $box;
+  return $export;
+}
+
+/**
  * Helper to implementation of hook_content_default_fields().
  */
 function _donor_rally_team_content_default_fields() {
@@ -1261,213 +1279,42 @@ function _donor_rally_team_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'competitive_drive-section-team_lead_pages';
-  $context->description = 'Pages seen by team coordinators';
-  $context->tag = '';
-  $context->conditions = array();
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'menu-menu-team-lead-user-pages' => array(
-          'module' => 'menu',
-          'delta' => 'menu-team-lead-user-pages',
-          'weight' => 20,
-          'region' => 'left',
-          'status' => '0',
-          'label' => 'Team Navigation',
-          'type' => 'context_ui',
-          'bid' => 'menu_menu-team-lead-user-pages',
-        ),
-        'competitive_drive-4' => array(
-          'module' => 'competitive_drive',
-          'delta' => '4',
-          'weight' => 21,
-          'region' => 'left',
-          'status' => '0',
-          'label' => 'Team Page Button',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_4',
-        ),
-        'competitive_drive-2' => array(
-          'module' => 'competitive_drive',
-          'delta' => '2',
-          'weight' => 22,
-          'region' => 'left',
-          'status' => '0',
-          'label' => 'Leaderboard Button',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_2',
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  $translatables['competitive_drive-section-team_lead_pages'] = array(
-    t('Pages seen by team coordinators'),
-  );
-
-  $export['competitive_drive-section-team_lead_pages'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'competitive_drive-section-team_pages';
-  $context->description = 'Team Pages';
-  $context->tag = '';
+  $context->name = 'leaderboard';
+  $context->description = 'Donor Rally Leader Board';
+  $context->tag = 'Donor Rally';
   $context->conditions = array(
-    'path' => array(
+    'views' => array(
       'values' => array(
-        'team/*' => 'team/*',
+        'leaderboard_top:page_1' => 'leaderboard_top:page_1',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
-    'theme' => array(
-      'title' => 'team_page',
-    ),
     'block' => array(
       'blocks' => array(
-        'views-a0834de87587a506ffd1ef2e47374548' => array(
+        'views-leaderboard_top_ppc-block_1' => array(
           'module' => 'views',
-          'delta' => 'a0834de87587a506ffd1ef2e47374548',
-          'weight' => -22,
-          'region' => 'left',
-          'status' => '0',
-          'label' => 'Team Logo',
-          'type' => 'context_ui',
-          'bid' => 'views_a0834de87587a506ffd1ef2e47374548',
-        ),
-        'nodeblock-8' => array(
-          'module' => 'nodeblock',
-          'delta' => '8',
-          'weight' => -21,
-          'region' => 'left',
-          'status' => '0',
-          'label' => 'Food from the Bar makes the difference (nodeblock)',
-          'type' => 'context_ui',
-          'bid' => 'nodeblock_8',
-        ),
-        'competitive_drive-6' => array(
-          'module' => 'competitive_drive',
-          'delta' => '6',
-          'weight' => -20,
-          'region' => 'left',
-          'status' => '0',
-          'label' => 'Team Coordinator Log in Button',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_6',
-        ),
-        'competitive_drive-1' => array(
-          'module' => 'competitive_drive',
-          'delta' => '1',
-          'weight' => 19,
+          'delta' => 'leaderboard_top_ppc-block_1',
           'region' => 'right',
-          'status' => '0',
-          'label' => 'Donate Button',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_1',
+          'weight' => 0,
         ),
-        'competitive_drive-0' => array(
-          'module' => 'competitive_drive',
-          'delta' => '0',
-          'weight' => 20,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'Team Progress Thermometer',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_0',
-        ),
-        'competitive_drive-3' => array(
-          'module' => 'competitive_drive',
-          'delta' => '3',
-          'weight' => 21,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'Team Progress Statistics',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_3',
-        ),
-        'nodeblock-60' => array(
-          'module' => 'nodeblock',
-          'delta' => '60',
-          'weight' => 22,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'Explanation of points (nodeblock)',
-          'type' => 'context_ui',
-          'bid' => 'nodeblock_60',
-        ),
-        'competitive_drive-2' => array(
-          'module' => 'competitive_drive',
-          'delta' => '2',
-          'weight' => 23,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'Leaderboard Button',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_2',
-        ),
-        'competitive_drive-7' => array(
-          'module' => 'competitive_drive',
-          'delta' => '7',
-          'weight' => 24,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'Team Coordinator Dashboard Button',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_7',
-        ),
-        'nodeblock-9' => array(
-          'module' => 'nodeblock',
-          'delta' => '9',
-          'weight' => 25,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'Where Your Money Goes (nodeblock)',
-          'type' => 'context_ui',
-          'bid' => 'nodeblock_9',
-        ),
-        'views-team_information-block_1' => array(
-          'module' => 'views',
-          'delta' => 'team_information-block_1',
-          'weight' => 19,
-          'region' => 'content_top',
-          'status' => '0',
-          'label' => 'team_information: Block',
-          'type' => 'context_ui',
-          'bid' => 'views_team_information-block_1',
-        ),
-        'competitive_drive-5' => array(
-          'module' => 'competitive_drive',
-          'delta' => '5',
-          'weight' => 20,
-          'region' => 'content_top',
-          'status' => '0',
-          'label' => 'New Team Blog Post',
-          'type' => 'context_ui',
-          'bid' => 'competitive_drive_5',
-        ),
-        'views-team_blog-block' => array(
-          'module' => 'views',
-          'delta' => 'team_blog-block',
-          'weight' => 19,
-          'region' => 'content_bottom',
-          'status' => '0',
-          'label' => 'team_blog: Block',
-          'type' => 'context_ui',
-          'bid' => 'views_team_blog-block',
+        'boxes-donor_rally_welcome' => array(
+          'module' => 'boxes',
+          'delta' => 'donor_rally_welcome',
+          'region' => 'content',
+          'weight' => 0,
         ),
       ),
     ),
   );
   $context->condition_mode = 0;
 
-  $translatables['competitive_drive-section-team_pages'] = array(
-    t('Team Pages'),
+  $translatables['leaderboard'] = array(
+    t('Donor Rally Leader Board'),
+    t('Donor Rally'),
   );
 
-  $export['competitive_drive-section-team_pages'] = $context;
+  $export['leaderboard'] = $context;
   return $export;
 }
 
@@ -1478,7 +1325,10 @@ function _donor_rally_team_ctools_plugin_api() {
   $args = func_get_args();
   $module = array_shift($args);
   $api = array_shift($args);
-  if ($module == "context" && $api == "context") {
+  if ($module == "boxes" && $api == "box") {
+    return array("version" => 1);
+  }
+  else if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
   else if ($module == "strongarm" && $api == "strongarm") {
@@ -2087,7 +1937,7 @@ function _donor_rally_team_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_register';
-  $strongarm->value = '2';
+  $strongarm->value = 1;
 
   $export['user_register'] = $strongarm;
   return $export;
