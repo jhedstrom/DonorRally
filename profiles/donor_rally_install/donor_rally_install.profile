@@ -380,6 +380,9 @@ function _donor_rally_install_profile_batch_finished($success, $results) {
  * Clear and rebuild caches.
  */
 function _donor_rally_install_clean() {
+  // Remove 'profile' node type added by content_profile.
+  node_type_delete('profile');
+
   // Rebuild key tables/caches
   module_rebuild_cache(); // Detects the newly added bootstrap modules
   node_access_rebuild();
