@@ -1361,7 +1361,7 @@ function _donor_rally_team_fieldgroup_default_groups() {
           'exclude' => 1,
         ),
         'full' => array(
-          'format' => 'hidden',
+          'format' => 'no_style',
           'exclude' => 1,
         ),
         'description' => '',

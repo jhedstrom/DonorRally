@@ -4,14 +4,15 @@
 
 /**
  * @file
- * Competitive Drive module. Allows teams/groups to "compete" in a food drive.
+ * Donor Rally module. Allows teams/groups to "compete" in a food drive.
  * See README.txt for more information.
  */
 
 /* All the donations funnel through this donation page. We tack on a tracking
  * code (Tracking_Code) in a GET parameter to classify each donation by which
- * competitive drive team it's from.
+ * donor rally team it's from.
  */
+// @TODO Change this url to use whatever pluggable payment method is enabled.
 define('DONOR_RALLY_DIA_DONATION_URL', '');
 define('DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE', '');
 define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team'); /* Check os_custom module before changing */
@@ -23,11 +24,11 @@ define('DONOR_RALLY_TRACKING_CODE_PREFIX', 'donor-rally-');
 function donor_rally_menu() {
   $items = array();
   $items['admin/settings/donor-rally'] = array(
-    'title' => 'Competitive drive',
-    'description' => 'Global settings for Competitive Drive',
+    'title' => 'donor rally',
+    'description' => 'Global settings for Donor Rally',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('donor_rally_settings_form'),
-    'access arguments' => array('administer competitive drive'),
+    'access arguments' => array('administer donor rally'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'donor_rally.admin.inc',
   );
@@ -39,7 +40,7 @@ function donor_rally_menu() {
  * Implements hook_perm().
  */
 function donor_rally_perm() {
-  return array('administer competitive drive');
+  return array('administer donor rally');
 }
 
 /**
