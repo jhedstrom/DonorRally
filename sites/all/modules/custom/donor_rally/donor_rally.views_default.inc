@@ -10,7 +10,7 @@
 /**
  * Implementation of hook_views_default_views().
  */
-function competitive_drive_views_default_views() {
+function donor_rally_views_default_views() {
   /*
    * View 'team_blog'
    */
@@ -829,10 +829,10 @@ function competitive_drive_views_default_views() {
   $views[$view->name] = $view;
 
   /**
-   * View 'competitive_drive_team_logo'
+   * View 'donor_rally_team_logo'
    */
   $view = new view;
-  $view->name = 'competitive_drive_team_logo';
+  $view->name = 'donor_rally_team_logo';
   $view->description = 'Team page team logo';
   $view->tag = 'competitive drive';
   $view->view_php = '';
@@ -867,7 +867,7 @@ function competitive_drive_views_default_views() {
       'empty_zero' => 0,
       'link_to_node' => 0,
       'label_type' => 'none',
-      'format' => 'competitive_drive_team_logo_default',
+      'format' => 'donor_rally_team_logo_default',
       'multiple' => array(
         'group' => TRUE,
         'multiple_number' => '',

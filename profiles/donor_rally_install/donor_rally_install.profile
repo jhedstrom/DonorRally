@@ -24,6 +24,7 @@ function donor_rally_install_profile_modules() {
     'role_delegation',
     'strongarm',
     'token',
+    'vertical_tabs',
     'views',
 
     // Custom modules.
@@ -31,7 +32,6 @@ function donor_rally_install_profile_modules() {
 
     // Development modules.
     'devel',
-    'masquerade',
   );
 
   return $modules;
@@ -349,11 +349,20 @@ function  _donor_rally_install_modules() {
     'content_profile_registration',
     'context',
     'donor_rally',
+    'donor_rally_io',
     'field_group',
+    'filefield',
+    'image_resize_filter',
+    'imageapi',
+    'imageapi_gd',
+    'imagecache',
     'imagefield',
+    'imagefield_tokens',
     'location_cck',
     'number',
     'text',
+    'views_bonus_export',
+    'views_or',
 
     // Donor Rally features.
     'donor_rally_team',

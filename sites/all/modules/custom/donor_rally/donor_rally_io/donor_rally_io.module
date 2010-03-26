@@ -4,30 +4,30 @@
 
 /**
  * @file
- * Import/Export utilities for the Competitive Drive module.
+ * Import/Export utilities for Donor Rally.
  */
 
 /**
  * Implementation of hook_views_api().
  */
-function competitive_drive_io_views_api() {
+function donor_rally_io_views_api() {
   return array(
     'api' => 2,
-    'path' => drupal_get_path('module', 'competitive_drive_io'),
+    'path' => drupal_get_path('module', 'donor_rally_io'),
   );
 }
 
 /**
  * Implementation of hook_menu().
  */
-function competitive_drive_io_menu() {
+function donor_rally_io_menu() {
   $items['admin/content/competitive-drive/import'] = array(
     'type' => MENU_LOCAL_TASK,
     'title' => 'Import',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('competitive_drive_io_import_form'),
-    'access arguments' => array('administer competitive drive'),
-    'file' => 'competitive_drive_io.admin.inc',
+    'page arguments' => array('donor_rally_io_import_form'),
+    'access arguments' => array('administer donor rally'),
+    'file' => 'donor_rally_io.admin.inc',
   );
 
   return $items;

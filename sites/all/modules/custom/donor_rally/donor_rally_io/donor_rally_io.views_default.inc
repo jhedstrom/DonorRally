@@ -4,13 +4,13 @@
 
 /**
  * @file
- * Default views for the Competitive Drive IO module.
+ * Default views for Donor Rally.
  */
 
 /**
  * Implementation of hook_views_default_views().
  */
-function competitive_drive_io_views_default_views() {
+function donor_rally_io_views_default_views() {
   /*
    * View 'team_export'
    */

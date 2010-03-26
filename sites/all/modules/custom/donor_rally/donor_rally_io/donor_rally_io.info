@@ -1,6 +1,6 @@
 ; $Id$
-name = Competitive Drive IO
-description = Import/Export utilities for the Competitive Drive module.
-dependencies[] = competitive_drive
+name = Donor Rally IO
+description = Import/Export utilities for Donor Rally.
+dependencies[] = donor_rally
 dependencies[] = views_bonus_export
 core = 6.x

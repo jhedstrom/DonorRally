@@ -10,9 +10,9 @@
 /**
  * Helper implementation of hook_context_default_contexts().
  */
-function _competitive_drive_context_default_contexts() {
+function _donor_rally_context_default_contexts() {
   $items[] = array(
-    'namespace' => 'competitive_drive',
+    'namespace' => 'donor_rally',
     'attribute' => 'section',
     'value' => 'leaderboard',
     'system' => 0,
@@ -45,15 +45,15 @@ function _competitive_drive_context_default_contexts() {
          'type' => 'context_ui',
          'bid' => 'views_leaderboard_top_ppc-block_1',
       ),
-      'competitive_drive_7' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_7' => array(
+         'module' => 'donor_rally',
          'delta' => '7',
          'weight' => 18,
          'region' => 'content_bottom',
          'status' => '0',
          'label' => 'Team Coordinator Dashboard Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_7',
+         'bid' => 'donor_rally_7',
       ),
     ),
     'type' => 1,
@@ -61,7 +61,7 @@ function _competitive_drive_context_default_contexts() {
   );
 
   $items[] = array(
-    'namespace' => 'competitive_drive',
+    'namespace' => 'donor_rally',
     'attribute' => 'section',
     'value' => 'team_lead_pages',
     'system' => 0,
@@ -80,25 +80,25 @@ function _competitive_drive_context_default_contexts() {
          'type' => 'context_ui',
          'bid' => 'menu_menu-team-lead-user-pages',
       ),
-      'competitive_drive_4' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_4' => array(
+         'module' => 'donor_rally',
          'delta' => '4',
          'weight' => 21,
          'region' => 'left',
          'status' => '0',
          'label' => 'Team Page Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_4',
+         'bid' => 'donor_rally_4',
       ),
-      'competitive_drive_2' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_2' => array(
+         'module' => 'donor_rally',
          'delta' => '2',
          'weight' => 22,
          'region' => 'left',
          'status' => '0',
          'label' => 'Leaderboard Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_2',
+         'bid' => 'donor_rally_2',
       ),
     ),
     'type' => 1,
@@ -106,7 +106,7 @@ function _competitive_drive_context_default_contexts() {
   );
 
   $items[] = array(
-    'namespace' => 'competitive_drive',
+    'namespace' => 'donor_rally',
     'attribute' => 'section',
     'value' => 'team_pages',
     'system' => 0,
@@ -138,45 +138,45 @@ function _competitive_drive_context_default_contexts() {
          'type' => 'context_ui',
          'bid' => 'nodeblock_8',
       ),
-      'competitive_drive_6' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_6' => array(
+         'module' => 'donor_rally',
          'delta' => '6',
          'weight' => -20,
          'region' => 'left',
          'status' => '0',
          'label' => 'Team Coordinator Log in Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_6',
+         'bid' => 'donor_rally_6',
       ),
-      'competitive_drive_1' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_1' => array(
+         'module' => 'donor_rally',
          'delta' => '1',
          'weight' => 19,
          'region' => 'right',
          'status' => '0',
          'label' => 'Donate Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_1',
+         'bid' => 'donor_rally_1',
       ),
-      'competitive_drive_0' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_0' => array(
+         'module' => 'donor_rally',
          'delta' => '0',
          'weight' => 20,
          'region' => 'right',
          'status' => '0',
          'label' => 'Team Progress Thermometer',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_0',
+         'bid' => 'donor_rally_0',
       ),
-      'competitive_drive_3' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_3' => array(
+         'module' => 'donor_rally',
          'delta' => '3',
          'weight' => 21,
          'region' => 'right',
          'status' => '0',
          'label' => 'Team Progress Statistics',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_3',
+         'bid' => 'donor_rally_3',
       ),
       'nodeblock_60' => array(
          'module' => 'nodeblock',
@@ -188,25 +188,25 @@ function _competitive_drive_context_default_contexts() {
          'type' => 'context_ui',
          'bid' => 'nodeblock_60',
       ),
-      'competitive_drive_2' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_2' => array(
+         'module' => 'donor_rally',
          'delta' => '2',
          'weight' => 23,
          'region' => 'right',
          'status' => '0',
          'label' => 'Leaderboard Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_2',
+         'bid' => 'donor_rally_2',
       ),
-      'competitive_drive_7' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_7' => array(
+         'module' => 'donor_rally',
          'delta' => '7',
          'weight' => 24,
          'region' => 'right',
          'status' => '0',
          'label' => 'Team Coordinator Dashboard Button',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_7',
+         'bid' => 'donor_rally_7',
       ),
       'nodeblock_9' => array(
          'module' => 'nodeblock',
@@ -228,15 +228,15 @@ function _competitive_drive_context_default_contexts() {
          'type' => 'context_ui',
          'bid' => 'views_team_information-block_1',
       ),
-      'competitive_drive_5' => array(
-         'module' => 'competitive_drive',
+      'donor_rally_5' => array(
+         'module' => 'donor_rally',
          'delta' => '5',
          'weight' => 20,
          'region' => 'content_top',
          'status' => '0',
          'label' => 'New Team Blog Post',
          'type' => 'context_ui',
-         'bid' => 'competitive_drive_5',
+         'bid' => 'donor_rally_5',
       ),
       'views_team_blog-block' => array(
          'module' => 'views',
@@ -254,7 +254,7 @@ function _competitive_drive_context_default_contexts() {
   );
 
   $items[] = array(
-    'namespace' => 'competitive_drive',
+    'namespace' => 'donor_rally',
     'attribute' => 'section',
     'value' => 'site_editor_pages',
     'system' => 0,
