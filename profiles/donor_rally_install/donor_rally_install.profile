@@ -150,7 +150,6 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     // Admin theme.
     variable_set('admin_theme', 'rubik');
 
-
     // Create roles.
     _donor_rally_install_user_roles();
     // Assign sensible input filter defaults to roles.
