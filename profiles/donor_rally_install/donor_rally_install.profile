@@ -26,9 +26,6 @@ function donor_rally_install_profile_modules() {
     'vertical_tabs',
     'views',
 
-    // Custom modules.
-    'os_custom',
-
     // Development modules.
     'devel',
   );
@@ -150,6 +147,10 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     $theme_settings['toggle_node_info_page'] = FALSE;
     variable_set('theme_settings', $theme_settings);
 
+    // Admin theme.
+    variable_set('admin_theme', 'rubik');
+
+
     // Create roles.
     _donor_rally_install_user_roles();
     // Assign sensible input filter defaults to roles.
@@ -254,9 +255,6 @@ function _donor_rally_install_set_permissions() {
   $admin_rid = array_search('web admin', $roles);
   $admin_user_perms = array(
     'access administration menu',
-    'access fckeditor',
-    'administer fckeditor',
-    'allow fckeditor file uploads',
     'create url aliases',
     'administer menu',
     'administer nodes',
@@ -354,8 +352,11 @@ function  _donor_rally_install_modules() {
     'views_bonus_export',
     'views_or',
 
+    // Custom modules.
+    'os_custom',
+
     // Donor Rally features.
-    'donor_rally_team',
+    'donor_rally_team', 'donor_rally_team_blog',
   );
 }
 

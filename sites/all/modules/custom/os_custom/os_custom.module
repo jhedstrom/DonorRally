@@ -121,7 +121,7 @@ function os_custom_user($op, &$edit, &$account, $category = NULL) {
     return;
   }
   
-  // when a team coordinator's been "approved," make his team's node published...
+  // When a team coordinator's been "approved," make his team's node published...
   if ($node = content_profile_load('team', $account->uid)) {
     if (in_array('team lead', $account->roles)) {
       // if we're saving a team lead and their team is published but they're
