@@ -355,6 +355,7 @@ function  _donor_rally_install_modules() {
     'imagefield',
     'imagefield_tokens',
     'jquery_ui',
+    'location', // @TODO use something other than the location module.
     'location_cck',
     'number',
     'text',
