@@ -574,6 +574,8 @@ function _donor_rally_team_content_default_fields() {
     'allowed_values' => '',
     'allowed_values_php' => '',
     'widget' => array(
+      'rows' => 5,
+      'size' => '60',
       'default_value' => array(
         '0' => array(
           'value' => '',
@@ -581,8 +583,6 @@ function _donor_rally_team_content_default_fields() {
         ),
       ),
       'default_value_php' => NULL,
-      'rows' => 5,
-      'size' => '60',
       'label' => 'Firm name',
       'weight' => 0,
       'description' => '',
@@ -1240,7 +1240,6 @@ function _donor_rally_team_content_default_fields() {
     t('Email'),
     t('Firm name'),
     t('First name'),
-    t('IT help desk contact'),
     t('Last name'),
     t('Logo'),
     t('Points Per Capita'),
@@ -1966,16 +1965,6 @@ function _donor_rally_team_user_default_permissions() {
     ),
   );
 
-  // Exported permission: view field_it_help_desk_contact
-  $permissions[] = array(
-    'name' => 'view field_it_help_desk_contact',
-    'roles' => array(
-      '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
-    ),
-  );
-
   // Exported permission: view field_location
   $permissions[] = array(
     'name' => 'view field_location',
@@ -2087,5 +2076,12 @@ function _donor_rally_team_strongarm() {
   );
 
   $export['node_options_team'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_register';
+  $strongarm->value = 1;
+
+  $export['user_register'] = $strongarm;
   return $export;
 }
