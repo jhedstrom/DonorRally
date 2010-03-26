@@ -1179,7 +1179,7 @@ function _donor_rally_team_content_default_fields() {
       'size' => 60,
       'default_value' => array(
         '0' => array(
-          'value' => 'Thank you for participating in Food from the Bar 2010. Your contribution will directly aid people in need in our community. Please use this page to make your donations and track our progress. You can also see how we measure up against other participating firms by clicking on the Firm Ranking button below. Together we can make this the most successful Food from the Bar yet!',
+          'value' => 'Thank you for participating message. This should be changed',
           '_error_element' => 'default_value_widget][field_team_info][0][value',
         ),
       ),
@@ -1487,8 +1487,8 @@ function _donor_rally_team_fieldgroup_default_groups() {
  */
 function _donor_rally_team_imagecache_default_presets() {
   $items = array(
-    'competitive_drive_team_logo' => array(
-      'presetname' => 'competitive_drive_team_logo',
+    'donor_rally_team_logo' => array(
+      'presetname' => 'donor_rally_team_logo',
       'actions' => array(
         '0' => array(
           'weight' => '0',

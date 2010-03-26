@@ -1,11 +1,11 @@
 /** Thermometer **/
-.competitive-drive-thermometer {
+.donor-rally-thermometer {
   background-color: white;
   position: relative;
   height: 256px;
 }
 
-.competitive-drive-thermometer span {
+.donor-rally-thermometer span {
   position: absolute;
 }
 
@@ -64,27 +64,27 @@
 
 
 /** Team Stats **/
-table.competitive-drive-team-stats {
+table.donor-rally-team-stats {
   border: 1px solid #ccc;
   margin-bottom: 0;
 }
 
-table.competitive-drive-team-stats tbody th {
+table.donor-rally-team-stats tbody th {
   border-bottom: none;
   border-right: 1px solid #ccc;
 }
 
-table.competitive-drive-team-stats thead tr th:first-child {
+table.donor-rally-team-stats thead tr th:first-child {
   border-bottom: none;
 }
 
-table.competitive-drive-team-stats thead th,
-table.competitive-drive-team-stats tbody td {
+table.donor-rally-team-stats thead th,
+table.donor-rally-team-stats tbody td {
   text-align: right;
 }
 
 /** Buttons **/
-a.competitive-drive-button {
+a.donor-rally-button {
   text-align: center;
   font-weight: bold;
   display: block;
@@ -94,16 +94,16 @@ a.competitive-drive-button {
   border-bottom: solid 1px #666;
   border-right: solid 1px #666;
 }
-a.competitive-drive-button:link,
-a.competitive-drive-button:visited,
-a.competitive-drive-button:hover {
+a.donor-rally-button:link,
+a.donor-rally-button:visited,
+a.donor-rally-button:hover {
   color: #fff;
   text-decoration: none;
 }
-a.competitive-drive-button:hover {
+a.donor-rally-button:hover {
   background-color: #bb6;
 }
-a.competitive-drive-button:active {
+a.donor-rally-button:active {
   background-color: #989848;
   border-top: solid 1px #666;
   border-left: solid 1px #666;
@@ -112,40 +112,40 @@ a.competitive-drive-button:active {
 }
  
 /* Donate Now button */
-a.competitive-drive-donate-button {
+a.donor-rally-donate-button {
   padding: 1em 0;
   font-size: 2em;
   background-color: #c60;
 }
-a.competitive-drive-donate-button:hover {
+a.donor-rally-donate-button:hover {
   background-color: #d70;
 }
-a.competitive-drive-donate-button:active {
+a.donor-rally-donate-button:active {
   background-color: #b85800;
 }
 
 
 /* Team coordinator login button -- make it not look like a button */
-a.competitive-drive-team-coordinator-login-button:link,
-a.competitive-drive-team-coordinator-login-button:visited {
+a.donor-rally-team-coordinator-login-button:link,
+a.donor-rally-team-coordinator-login-button:visited {
   padding: 0;
   background-color: transparent;
   border: 0 none;
   color: #333;
   font-size: 1em;
 }
-a.competitive-drive-team-coordinator-login-button:hover {
+a.donor-rally-team-coordinator-login-button:hover {
   background-color: transparent;
   text-decoration: underline;
   color: #333;
 }
 
 /* Team link on user profile page */
-dl.competitive-drive-profile-team-info dd {
+dl.donor-rally-profile-team-info dd {
   background-color: #f1f8e8;
   padding: 1.25em;
 }
-.competitive-drive-raw-url {
+.donor-rally-raw-url {
   display: block;
   font-size: 1.5em;
   font-weight: bold;

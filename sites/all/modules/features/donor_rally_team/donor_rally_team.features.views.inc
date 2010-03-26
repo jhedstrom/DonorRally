@@ -10,7 +10,7 @@ function _donor_rally_team_views_default_views() {
   $view = new view;
   $view->name = 'donor_rally_team_logo';
   $view->description = 'Team page team logo';
-  $view->tag = 'competitive drive';
+  $view->tag = 'Donor Rally';
   $view->view_php = '';
   $view->base_table = 'node';
   $view->is_cacheable = FALSE;
@@ -149,7 +149,7 @@ function _donor_rally_team_views_default_views() {
   $view = new view;
   $view->name = 'leaderboard_top';
   $view->description = 'Leaderboard Top Points';
-  $view->tag = 'competitive drive';
+  $view->tag = 'Donor Rally';
   $view->view_php = '';
   $view->base_table = 'node';
   $view->is_cacheable = FALSE;
@@ -382,7 +382,7 @@ function _donor_rally_team_views_default_views() {
   $view = new view;
   $view->name = 'leaderboard_top_ppc';
   $view->description = 'Leaderboard Top PPC';
-  $view->tag = 'competitive drive';
+  $view->tag = 'Donor Rally';
   $view->view_php = '';
   $view->base_table = 'node';
   $view->is_cacheable = FALSE;
@@ -579,7 +579,7 @@ function _donor_rally_team_views_default_views() {
   $view = new view;
   $view->name = 'team_information';
   $view->description = 'Dear Team block';
-  $view->tag = 'competitive drive';
+  $view->tag = 'Donor Rally';
   $view->view_php = '';
   $view->base_table = 'node';
   $view->is_cacheable = FALSE;

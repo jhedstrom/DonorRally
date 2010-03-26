@@ -4,7 +4,7 @@
 
 /**
  * @file
- * Competitive Drive's administrator settings form.
+ * Donor Rally administrator settings form.
  */
 
 /**
@@ -13,6 +13,8 @@
 function donor_rally_settings_form($tid) {
   $form = array();
   if (user_access('administer salsa api')) {
+    // @TODO abstract out Salsa and replace with a general payment
+    // framework. Or, for now, replace with simple payment settings.
     $form['salsa'] = array(
       '#type'  => 'fieldset',
       '#title' => 'Salsa API settings',
@@ -32,6 +34,7 @@ function donor_rally_settings_form($tid) {
     '#default_value' => variable_get('donor_rally_cash_scale', 1.0),
     '#required' => TRUE,
   );
+  // @TODO move these to an in-kind module
   $form['point_scales']['food'] = array(
     '#title' => t('Food scale'),
     '#description' => t('Scaling factor to turn pounds of food into points'),

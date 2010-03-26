@@ -12,17 +12,17 @@
  * code (Tracking_Code) in a GET parameter to classify each donation by which
  * competitive drive team it's from.
  */
-define('DONOR_RALLY_DIA_DONATION_URL', 'https://org2.democracyinaction.org/o/5420/shop/custom.jsp?donate_page_KEY=1748');
-define('DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE', '88262');
+define('DONOR_RALLY_DIA_DONATION_URL', '');
+define('DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE', '');
 define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team'); /* Check os_custom module before changing */
-define('DONOR_RALLY_TRACKING_CODE_PREFIX', 'FFTB2010-');
+define('DONOR_RALLY_TRACKING_CODE_PREFIX', 'donor-rally-');
 
 /**
  * Implements hook_menu().
  */
 function donor_rally_menu() {
   $items = array();
-  $items['admin/settings/competitive-drive'] = array(
+  $items['admin/settings/donor-rally'] = array(
     'title' => 'Competitive drive',
     'description' => 'Global settings for Competitive Drive',
     'page callback' => 'drupal_get_form',
@@ -51,10 +51,10 @@ function donor_rally_theme($existing, $type, $theme, $path) {
   );
   return array(
     'donor_rally_team_progress_thermometer' => array(
-      'template' => 'competitive-drive-team-progress-thermometer',
+      'template' => 'donor-rally-team-progress-thermometer',
     ) + $base,
     'donor_rally_team_progress_stats' => array(
-      'template' => 'competitive-drive-team-progress-stats',
+      'template' => 'donor-rally-team-progress-stats',
     ) + $base,
     'donor_rally_team_donate_button' => $base,
     'donor_rally_team_leaderboard_button' => $base,
@@ -70,15 +70,15 @@ function donor_rally_theme($existing, $type, $theme, $path) {
  */
 function donor_rally_profile_alter(&$account) {
   if ($node = content_profile_load(DONOR_RALLY_CONTENT_PROFILE_TYPE, $account->uid)) {
-    $account->content['competitive-drive-team-info'] = array(
+    $account->content['donor-rally-team-info'] = array(
       '#type' => 'user_profile_category',
       '#title' => t('Team information'),
-      '#attributes' => array('class' => 'competitive-drive-profile-team-info'),
+      '#attributes' => array('class' => 'donor-rally-profile-team-info'),
     );
-    $account->content['competitive-drive-team-info']['link'] = array(
+    $account->content['donor-rally-team-info']['link'] = array(
       '#type' => 'user_profile_item',
       '#title' => t('Team Page link&mdash;give this to your team'),
-      '#value' => '<span class="competitive-drive-raw-url">'.
+      '#value' => '<span class="donor-rally-raw-url">'.
         url('node/'. $node->nid, array('absolute' => TRUE)) .
         '</span>',
     );
@@ -138,6 +138,8 @@ function donor_rally_refresh_all() {
       // no-op; we didn't get an online cash value from Salsa for this team, so
       // just use the current value for calculating new totals
     }
+    // @TODO, abstract this out to exclude food and volunteer hours
+    // unless the in-kind module/feature is enabled.
     db_query(
       'UPDATE {content_type_team} SET ' .
         'field_cash_value = %f, ' .
@@ -195,6 +197,7 @@ function _donor_rally_query_cash_aggregate() {
     '#script' => 'getReport.sjs',
     '#fields' => DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE,
   );
+  // @TODO abstract this, or simply replace with PayPal/Simple Payments.
   $result = salsa_api_query($cash_aggregate_query);
   $team_stats = array();
 
@@ -294,7 +297,7 @@ function donor_rally_team_stats($node) {
  */
 function donor_rally_init() {
   /* We need our css occasionally on pages without our blocks on 'em...so just include it always */
-  drupal_add_css(drupal_get_path('module', 'donor_rally') .'/donor_rally.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'donor_rally') .'/donor-rally.css', 'module');
 }
 
 /**
@@ -438,7 +441,7 @@ function donor_rally_preprocess_donor_rally_team_progress_stats(&$variables) {
  * Helper that constructs button markup.
  */
 function donor_rally_theme_button($class, $text, $link, $attr = array()) {
-  return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'competitive-drive-button '.$class) + $attr));
+  return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'donor-rally-button '.$class) + $attr));
 }
 
 /**
@@ -446,7 +449,7 @@ function donor_rally_theme_button($class, $text, $link, $attr = array()) {
  */
 function theme_donor_rally_team_donate_button($vars) {
   return donor_rally_theme_button(
-    'competitive-drive-donate-button',
+    'donor-rally-donate-button',
     t('Donate Now'),
     DONOR_RALLY_DIA_DONATION_URL .'&track='. _donor_rally_team_tracking_code($vars['node']),
     array('target' => '_blank')
@@ -459,7 +462,7 @@ function theme_donor_rally_team_donate_button($vars) {
  */
 function theme_donor_rally_team_leaderboard_button($vars) {
   return donor_rally_theme_button(
-    'competitive-drive-leaderboard-button',
+    'donor-rally-leaderboard-button',
     t('Firm Ranking'),
     '<front>',
     array('target' => '_blank')
@@ -471,7 +474,7 @@ function theme_donor_rally_team_leaderboard_button($vars) {
  */
 function theme_donor_rally_team_page_button($vars) {
   return donor_rally_theme_button(
-    'competitive-drive-team-page-button',
+    'donor-rally-team-page-button',
     t('Team Page'),
     'node/'. $vars['node']->nid
   );
@@ -482,7 +485,7 @@ function theme_donor_rally_team_page_button($vars) {
  */
 function theme_donor_rally_new_blog_post_button($vars) {
   if (user_access('create team_blog_post content')) {
-    return '<div class="competitive-drive-new-blog-post-button">'.
+    return '<div class="donor-rally-new-blog-post-button">'.
       l(t('Write a new blog post'), 'node/add/team-blog-post') .
       '</div>';
   }
@@ -499,7 +502,7 @@ function theme_donor_rally_team_coordinator_login_button($vars) {
   }
 
   return donor_rally_theme_button(
-    'competitive-drive-team-coordinator-login-button',
+    'donor-rally-team-coordinator-login-button',
     t('Team Coordinator Login'),
     'user/login'
   );
@@ -515,7 +518,7 @@ function theme_donor_rally_team_coordinator_account_button($vars) {
   }
 
   return donor_rally_theme_button(
-    'competitive-drive-team-coordinator-account-button',
+    'donor-rally-team-coordinator-account-button',
     t('Team Dashboard'),
     'user'
   );

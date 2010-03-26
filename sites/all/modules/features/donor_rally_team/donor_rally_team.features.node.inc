@@ -8,7 +8,7 @@ function _donor_rally_team_node_info() {
     'team' => array(
       'name' => t('Team'),
       'module' => 'features',
-      'description' => t('Competitive Drive Team'),
+      'description' => t('Donor Rally Team'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'has_body' => '0',
