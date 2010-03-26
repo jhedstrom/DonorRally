@@ -1301,7 +1301,7 @@ function _donor_rally_team_context_default_contexts() {
         'boxes-donor_rally_welcome' => array(
           'module' => 'boxes',
           'delta' => 'donor_rally_welcome',
-          'region' => 'content',
+          'region' => 'right',
           'weight' => 0,
         ),
       ),

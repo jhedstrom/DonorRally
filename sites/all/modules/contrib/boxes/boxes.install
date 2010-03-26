@@ -1,0 +1,66 @@
+<?php
+// $Id: boxes.install,v 1.1 2010/02/02 00:46:04 jmiccolis Exp $
+
+/**
+ * Implemenation of hook_install().
+ */
+function boxes_install() {
+  drupal_install_schema('boxes');
+}
+
+function boxes_uninstall() {
+  drupal_uninstall_schema('boxes');
+}
+
+function boxes_schema() {
+  $schema = array();
+  $schema['box'] = array(
+    'description' => 'Stores contents of custom-made blocks.',
+    'fields' => array(
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'description' => "The block's {blocks}.bid.",
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "Block title.",
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'description' => 'Block description.',
+      ),
+     'body' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Block contents.',
+      ),
+      'format' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Block body's {filter_formats}.format; for example, 1 = Filtered HTML.",
+      )
+    ),
+    'primary key' => array('delta'),
+    'export' => array(
+      'key' => 'delta',
+      'identifier' => 'box',
+      //'default hook' => 'strongarm',
+      'api' => array(
+        'owner' => 'boxes',
+        'api' => 'box',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+  );
+  return $schema;
+}

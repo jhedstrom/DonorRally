@@ -150,6 +150,13 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     // Admin theme.
     variable_set('admin_theme', 'rubik');
 
+    // Set default theme. This needes some more set up on next page load
+    // We cannot do everything here because of _system_theme_data() static cache
+    system_theme_data();
+    db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
+    variable_set('theme_default', 'cube');
+    db_query("UPDATE {blocks} SET status = 0, region = ''"); // disable all DB blocks
+
     // Create roles.
     _donor_rally_install_user_roles();
     // Assign sensible input filter defaults to roles.
@@ -188,13 +195,6 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     variable_set('install_task', 'volunteer-management-modules-batch');
     batch_set($batch);
     batch_process($url, $url);
-
-    // Set default theme. This needes some more set up on next page load
-    // We cannot do everything here because of _system_theme_data() static cache
-    system_theme_data();
-    db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
-    variable_set('theme_default', 'cube');
-    db_query("UPDATE {blocks} SET status = 0, region = ''"); // disable all DB blocks
 
     // Jut for cli installs. We'll never reach here on interactive installs.
     return;
@@ -339,6 +339,7 @@ function  _donor_rally_install_modules() {
   return array(
     // Modules required by the features below.
     'auto_nodetitle',
+    'boxes',
     'content_permissions',
     'content_profile',
     'content_profile_registration',
@@ -353,6 +354,7 @@ function  _donor_rally_install_modules() {
     'imagecache',
     'imagefield',
     'imagefield_tokens',
+    'jquery_ui',
     'location_cck',
     'number',
     'text',
