@@ -1,19 +1,12 @@
 <?php
 
-// $Id$
-
 /**
- * @file
- * Default views for Donor Rally.
+ * Helper to implementation of hook_views_default_views().
  */
+function _donor_rally_team_io_views_default_views() {
+  $views = array();
 
-/**
- * Implementation of hook_views_default_views().
- */
-function donor_rally_io_views_default_views() {
-  /*
-   * View 'team_export'
-   */
+  // Exported view: team_export
   $view = new view;
   $view->name = 'team_export';
   $view->description = 'CSV export of team data';
@@ -394,6 +387,9 @@ function donor_rally_io_views_default_views() {
   ));
   $handler->override_option('sitename_title', FALSE);
   $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->override_option('header', 'Download and edit the <a href="/admin/content/competitive-drive/export/teams.csv">CSV file</a> in order to update offline cash, food and volunteer hours.');
+  $handler->override_option('header_format', '1');
+  $handler->override_option('header_empty', 0);
   $handler->override_option('path', 'admin/content/competitive-drive/export');
   $handler->override_option('menu', array(
     'type' => 'default tab',
@@ -408,9 +404,7 @@ function donor_rally_io_views_default_views() {
     'description' => '',
     'weight' => '0',
   ));
-  $handler->override_option('header', t('Download and edit the <a href="!url">CSV file</a> in order to update offline cash, food and volunteer hours.', array('!url' => url('admin/content/competitive-drive/export/teams.csv'))));
-  $handler->override_option('header_format', '1');
-  $handler->override_option('header_empty', 0);
+
   $views[$view->name] = $view;
 
   return $views;
