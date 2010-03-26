@@ -2080,7 +2080,7 @@ function _donor_rally_team_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'site_frontpage';
-  $strongarm->value = 'firm-ranking';
+  $strongarm->value = 'leaderboard';
 
   $export['site_frontpage'] = $strongarm;
   $strongarm = new stdClass;

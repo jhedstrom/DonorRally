@@ -322,6 +322,8 @@ function _donor_rally_team_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Top Points');
+  $handler->override_option('empty', 'No teams have been created.');
+  $handler->override_option('empty_format', '1');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
@@ -358,9 +360,21 @@ function _donor_rally_team_views_default_views() {
     'separator' => '',
     'hide_empty' => 0,
   ));
-  $handler = $view->new_display('block', 'Block', 'block_1');
-  $handler->override_option('block_description', 'Leaderboard Top Points');
-  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->override_option('path', 'leaderboard');
+  $handler->override_option('menu', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+  ));
 
   $views[$view->name] = $view;
 
