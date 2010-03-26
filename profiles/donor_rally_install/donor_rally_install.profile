@@ -20,7 +20,6 @@ function donor_rally_install_profile_modules() {
     'content',
     'features',
     'pathauto',
-    'path_redirect',
     'role_delegation',
     'strongarm',
     'token',
@@ -306,15 +305,6 @@ function _donor_rally_install_pathauto() {
   // pathauto will insert this default anyway.
   variable_del('pathauto_node_story_pattern');
 
-  // Path redirect settings.
-  $conf['path_redirect_allow_bypass'] = 0;
-  $conf['path_redirect_auto_redirect'] = 1;
-  $conf['path_redirect_default_status'] = '301';
-  $conf['path_redirect_purge_inactive'] = '31536000'; // 1 year.
-  $conf['path_redirect_redirect_warning'] = 0;
-  foreach ($conf as $var => $val) {
-    variable_set($var, $val);
-  }
 }
 
 /**
