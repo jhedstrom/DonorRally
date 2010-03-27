@@ -1024,6 +1024,64 @@ function _donor_rally_team_content_default_fields() {
     ),
   );
 
+  // Exported field: field_offline_cash
+  $fields[] = array(
+    'field_name' => 'field_offline_cash',
+    'type_name' => 'team',
+    'display_settings' => array(
+      'weight' => '55',
+      'parent' => '',
+      'label' => array(
+        'format' => 'hidden',
+      ),
+      'teaser' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'number_decimal',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'number',
+    'active' => '1',
+    'prefix' => '$',
+    'suffix' => '',
+    'min' => '',
+    'max' => '',
+    'allowed_values' => '',
+    'allowed_values_php' => '',
+    'precision' => '10',
+    'scale' => '2',
+    'decimal' => '.',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+          '_error_element' => 'default_value_widget][field_offline_cash][0][value',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Offline Cash',
+      'weight' => '56',
+      'description' => '',
+      'type' => 'number',
+      'module' => 'number',
+    ),
+  );
+
   // Exported field: field_points_per_capita
   $fields[] = array(
     'field_name' => 'field_points_per_capita',
@@ -1260,6 +1318,7 @@ function _donor_rally_team_content_default_fields() {
     t('First name'),
     t('Last name'),
     t('Logo'),
+    t('Offline Cash'),
     t('Points Per Capita'),
     t('Size'),
     t('Team greeting'),
