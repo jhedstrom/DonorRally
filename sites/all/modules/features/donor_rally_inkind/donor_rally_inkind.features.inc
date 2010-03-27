@@ -28,15 +28,6 @@ function donor_rally_inkind_fieldgroup_default_groups() {
 }
 
 /**
- * Implementation of hook_node_info().
- */
-function donor_rally_inkind_node_info() {
-  module_load_include('inc', 'donor_rally_inkind', 'donor_rally_inkind.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_inkind_node_info', $args);
-}
-
-/**
  * Implementation of hook_user_default_permissions().
  */
 function donor_rally_inkind_user_default_permissions() {

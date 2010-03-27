@@ -1528,14 +1528,6 @@ function _donor_rally_team_user_default_permissions() {
     ),
   );
 
-  // Exported permission: delete any team_blog_post content
-  $permissions[] = array(
-    'name' => 'delete any team_blog_post content',
-    'roles' => array(
-      '0' => 'web admin',
-    ),
-  );
-
   // Exported permission: delete own team content
   $permissions[] = array(
     'name' => 'delete own team content',
