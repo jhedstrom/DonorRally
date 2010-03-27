@@ -122,6 +122,122 @@ function _donor_rally_inkind_content_default_fields() {
     ),
   );
 
+  // Exported field: field_offline_food
+  $fields[] = array(
+    'field_name' => 'field_offline_food',
+    'type_name' => 'team',
+    'display_settings' => array(
+      'weight' => '54',
+      'parent' => '',
+      'label' => array(
+        'format' => 'hidden',
+      ),
+      'teaser' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'number_decimal',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'number',
+    'active' => '1',
+    'prefix' => '',
+    'suffix' => ' pound| pounds',
+    'min' => '0',
+    'max' => '',
+    'allowed_values' => '',
+    'allowed_values_php' => '',
+    'precision' => '12',
+    'scale' => '4',
+    'decimal' => '.',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '0',
+          '_error_element' => 'default_value_widget][field_offline_food][0][value',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Offline Food',
+      'weight' => '55',
+      'description' => '',
+      'type' => 'number',
+      'module' => 'number',
+    ),
+  );
+
+  // Exported field: field_offline_volunteer
+  $fields[] = array(
+    'field_name' => 'field_offline_volunteer',
+    'type_name' => 'team',
+    'display_settings' => array(
+      'weight' => '56',
+      'parent' => '',
+      'label' => array(
+        'format' => 'hidden',
+      ),
+      'teaser' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'number_decimal',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'number',
+    'active' => '1',
+    'prefix' => '',
+    'suffix' => '',
+    'min' => '',
+    'max' => '',
+    'allowed_values' => '',
+    'allowed_values_php' => '',
+    'precision' => '10',
+    'scale' => '2',
+    'decimal' => '.',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+          '_error_element' => 'default_value_widget][field_offline_volunteer][0][value',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Offline Volunteer Shifts',
+      'weight' => '57',
+      'description' => '',
+      'type' => 'number',
+      'module' => 'number',
+    ),
+  );
+
   // Exported field: field_volunteer
   $fields[] = array(
     'field_name' => 'field_volunteer',
@@ -242,6 +358,8 @@ function _donor_rally_inkind_content_default_fields() {
   array(
     t('Food'),
     t('Food Goal'),
+    t('Offline Food'),
+    t('Offline Volunteer Shifts'),
     t('Volunteer Shifts'),
     t('Volunteer Shifts Goal'),
   );
@@ -259,152 +377,6 @@ function _donor_rally_inkind_ctools_plugin_api() {
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
-}
-
-/**
- * Helper to implementation of hook_fieldgroup_default_groups().
- */
-function _donor_rally_inkind_fieldgroup_default_groups() {
-  $groups = array();
-
-  // Exported group: group_captain_info
-  $groups[] = array(
-    'group_type' => 'standard',
-    'type_name' => 'team',
-    'group_name' => 'group_captain_info',
-    'label' => 'Team Coordinator',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'weight' => '48',
-        'label' => 'hidden',
-        'teaser' => array(
-          'format' => 'hidden',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'hidden',
-          'exclude' => 1,
-        ),
-        'description' => '',
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-    ),
-    'weight' => '48',
-    'fields' => array(
-      '0' => 'field_captain_title',
-      '1' => 'field_captain_first_name',
-      '2' => 'field_captain_last_name',
-      '3' => 'field_captain_location',
-      '4' => 'field_captain_email',
-    ),
-  );
-
-  // Exported group: group_firm_info
-  $groups[] = array(
-    'group_type' => 'standard',
-    'type_name' => 'team',
-    'group_name' => 'group_firm_info',
-    'label' => 'Firm',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'weight' => '49',
-        'label' => 'hidden',
-        'teaser' => array(
-          'format' => 'hidden',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'hidden',
-          'exclude' => 1,
-        ),
-        'description' => '',
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-    ),
-    'weight' => '49',
-    'fields' => array(
-      '0' => 'field_firm_name',
-      '1' => 'field_location',
-      '2' => 'field_firm_website',
-      '3' => 'field_it_help_desk_contact',
-    ),
-  );
-
-  // Exported group: group_team_info
-  $groups[] = array(
-    'group_type' => 'standard',
-    'type_name' => 'team',
-    'group_name' => 'group_team_info',
-    'label' => 'Team',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'weight' => '50',
-        'label' => 'hidden',
-        'teaser' => array(
-          'format' => 'hidden',
-          'exclude' => 0,
-        ),
-        'full' => array(
-          'format' => 'hidden',
-          'exclude' => 0,
-        ),
-        'description' => '',
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-    ),
-    'weight' => '51',
-    'fields' => array(
-      '0' => 'field_size',
-      '1' => 'field_cash_goal',
-      '2' => 'field_food_goal',
-      '3' => 'field_volunteer_goal',
-      '4' => 'field_team_info',
-      '5' => 'field_logo',
-      '6' => 'field_raisers_edge_id',
-    ),
-  );
-
-  // Translatables
-  array(
-    t('Firm'),
-    t('Team'),
-    t('Team Coordinator'),
-  );
-
-  return $groups;
 }
 
 /**
@@ -500,24 +472,4 @@ function _donor_rally_inkind_user_default_permissions() {
   );
 
   return $permissions;
-}
-
-/**
- * Helper to implementation of hook_strongarm().
- */
-function _donor_rally_inkind_strongarm() {
-  $export = array();
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_extra_weights_team';
-  $strongarm->value = array(
-    'title' => '47',
-    'revision_information' => '62',
-    'menu' => '60',
-    'path' => '61',
-  );
-
-  $export['content_extra_weights_team'] = $strongarm;
-  return $export;
 }

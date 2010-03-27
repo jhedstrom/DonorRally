@@ -1,5 +1,6 @@
 core = "6.x"
 dependencies[] = "content_permissions"
+dependencies[] = "ctools"
 dependencies[] = "features"
 dependencies[] = "fieldgroup"
 dependencies[] = "imagefield"
