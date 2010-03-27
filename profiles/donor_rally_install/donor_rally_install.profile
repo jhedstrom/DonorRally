@@ -346,7 +346,7 @@ function  _donor_rally_install_modules() {
     'context',
     'donor_rally',
     'donor_rally_io',
-    'field_group',
+    'fieldgroup',
     'filefield',
     'image_resize_filter',
     'imageapi',
