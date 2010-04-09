@@ -1374,6 +1374,96 @@ function _donor_rally_team_context_default_contexts() {
   );
 
   $export['leaderboard'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'team_page';
+  $context->description = 'Team landing pages';
+  $context->tag = 'Donor Rally';
+  $context->conditions = array(
+    'node' => array(
+      'values' => array(
+        'team' => 'team',
+      ),
+      'options' => array(
+        'node_form' => 0,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-team_information-block_1' => array(
+          'module' => 'views',
+          'delta' => 'team_information-block_1',
+          'region' => 'content',
+          'weight' => 0,
+        ),
+        'views-team_blog-block' => array(
+          'module' => 'views',
+          'delta' => 'team_blog-block',
+          'region' => 'content',
+          'weight' => 1,
+        ),
+        'donor_rally-5' => array(
+          'module' => 'donor_rally',
+          'delta' => 5,
+          'region' => 'content',
+          'weight' => 2,
+        ),
+        'views-donor_rally_team_logo-block_1' => array(
+          'module' => 'views',
+          'delta' => 'donor_rally_team_logo-block_1',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+        'donor_rally-0' => array(
+          'module' => 'donor_rally',
+          'delta' => 0,
+          'region' => 'right',
+          'weight' => 1,
+        ),
+        'donor_rally-3' => array(
+          'module' => 'donor_rally',
+          'delta' => 3,
+          'region' => 'right',
+          'weight' => 2,
+        ),
+        'donor_rally-1' => array(
+          'module' => 'donor_rally',
+          'delta' => 1,
+          'region' => 'right',
+          'weight' => 3,
+        ),
+        'donor_rally-2' => array(
+          'module' => 'donor_rally',
+          'delta' => 2,
+          'region' => 'right',
+          'weight' => 4,
+        ),
+        'donor_rally-6' => array(
+          'module' => 'donor_rally',
+          'delta' => 6,
+          'region' => 'right',
+          'weight' => 5,
+        ),
+        'donor_rally-7' => array(
+          'module' => 'donor_rally',
+          'delta' => 7,
+          'region' => 'right',
+          'weight' => 6,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['team_page'] = array(
+    t('Donor Rally'),
+    t('Team landing pages'),
+  );
+
+  $export['team_page'] = $context;
   return $export;
 }
 

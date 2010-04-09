@@ -68,7 +68,7 @@ function _donor_rally_team_views_default_views() {
       'breadcrumb' => '',
       'default_argument_type' => 'node',
       'default_argument' => '',
-      'validate_type' => 'none',
+      'validate_type' => 'node',
       'validate_fail' => 'not found',
       'break_phrase' => 0,
       'not' => 0,
@@ -88,8 +88,10 @@ function _donor_rally_team_views_default_views() {
       'default_argument_fixed' => '',
       'default_argument_php' => '',
       'validate_argument_node_type' => array(
+        'team' => 'team',
+        'admin_blog_post' => 0,
+        'team_blog_post' => 0,
         'page' => 0,
-        'team' => 0,
       ),
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
@@ -98,6 +100,9 @@ function _donor_rally_team_views_default_views() {
       'validate_argument_transform' => 0,
       'validate_user_restrict_roles' => 0,
       'validate_argument_php' => '',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
   ));
   $handler->override_option('filters', array(
