@@ -1970,7 +1970,8 @@ function _donor_rally_team_strongarm() {
     'registration_use' => 1,
     'admin_user_create_use' => 1,
     'registration_hide' => array(
-      '0' => 'field_logo',
+      '0' => 'title',
+      '1' => 'field_logo',
     ),
   );
 
