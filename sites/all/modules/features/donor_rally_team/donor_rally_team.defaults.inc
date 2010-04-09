@@ -1482,7 +1482,6 @@ function _donor_rally_team_fieldgroup_default_groups() {
       '0' => 'field_firm_name',
       '1' => 'field_location',
       '2' => 'field_firm_website',
-      '3' => 'field_it_help_desk_contact',
     ),
   );
 
@@ -1523,11 +1522,8 @@ function _donor_rally_team_fieldgroup_default_groups() {
     'fields' => array(
       '0' => 'field_size',
       '1' => 'field_cash_goal',
-      '2' => 'field_food_goal',
-      '3' => 'field_volunteer_goal',
-      '4' => 'field_team_info',
-      '5' => 'field_logo',
-      '6' => 'field_raisers_edge_id',
+      '2' => 'field_team_info',
+      '3' => 'field_logo',
     ),
   );
 
@@ -1964,6 +1960,24 @@ function _donor_rally_team_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'content_profile_team';
+  $strongarm->value = array(
+    'weight' => '0',
+    'user_display' => 'full',
+    'edit_link' => 0,
+    'edit_tab' => 'sub',
+    'add_link' => 1,
+    'registration_use' => 1,
+    'admin_user_create_use' => 1,
+    'registration_hide' => array(
+      '0' => 'field_logo',
+    ),
+  );
+
+  $export['content_profile_team'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'content_profile_use_team';
   $strongarm->value = 1;
 
@@ -1977,6 +1991,13 @@ function _donor_rally_team_strongarm() {
   );
 
   $export['node_options_team'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_team_pattern';
+  $strongarm->value = 'teams/[title-raw]';
+
+  $export['pathauto_node_team_pattern'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;

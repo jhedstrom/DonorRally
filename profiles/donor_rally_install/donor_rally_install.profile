@@ -282,8 +282,6 @@ function _donor_rally_install_set_permissions() {
 
   $site_editor_rid = array_search('site editor', $roles);
   $site_editor_user_perms = array(
-    'access fckeditor',
-    'allow fckeditor file uploads',
     'create url aliases',
     'create page content',
     'delete own page content',
@@ -383,6 +381,10 @@ function _donor_rally_install_profile_batch_finished($success, $results) {
 function _donor_rally_install_clean() {
   // Remove 'profile' node type added by content_profile.
   node_type_delete('profile');
+
+  // Since content_profile adds a value for this variable during
+  // install, we must delete it here.
+  variable_del('content_profile_profile');
 
   // Rebuild key tables/caches
   module_rebuild_cache(); // Detects the newly added bootstrap modules
