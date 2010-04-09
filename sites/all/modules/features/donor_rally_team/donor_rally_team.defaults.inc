@@ -15,6 +15,16 @@ function _donor_rally_team_default_box() {
   $box->format = 1;
 
   $export['donor_rally_welcome'] = $box;
+  $box = new stdClass;
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
+  $box->delta = 'team_page_common';
+  $box->title = '';
+  $box->description = 'Team landing page common text';
+  $box->body = 'This text is common across all team landing pages.';
+  $box->format = 1;
+
+  $export['team_page_common'] = $box;
   return $export;
 }
 
@@ -1417,41 +1427,47 @@ function _donor_rally_team_context_default_contexts() {
           'region' => 'right',
           'weight' => 0,
         ),
+        'boxes-team_page_common' => array(
+          'module' => 'boxes',
+          'delta' => 'team_page_common',
+          'region' => 'right',
+          'weight' => 1,
+        ),
         'donor_rally-0' => array(
           'module' => 'donor_rally',
           'delta' => 0,
           'region' => 'right',
-          'weight' => 1,
+          'weight' => 2,
         ),
         'donor_rally-3' => array(
           'module' => 'donor_rally',
           'delta' => 3,
           'region' => 'right',
-          'weight' => 2,
+          'weight' => 3,
         ),
         'donor_rally-1' => array(
           'module' => 'donor_rally',
           'delta' => 1,
           'region' => 'right',
-          'weight' => 3,
+          'weight' => 4,
         ),
         'donor_rally-2' => array(
           'module' => 'donor_rally',
           'delta' => 2,
           'region' => 'right',
-          'weight' => 4,
+          'weight' => 5,
         ),
         'donor_rally-6' => array(
           'module' => 'donor_rally',
           'delta' => 6,
           'region' => 'right',
-          'weight' => 5,
+          'weight' => 6,
         ),
         'donor_rally-7' => array(
           'module' => 'donor_rally',
           'delta' => 7,
           'region' => 'right',
-          'weight' => 6,
+          'weight' => 7,
         ),
       ),
     ),
