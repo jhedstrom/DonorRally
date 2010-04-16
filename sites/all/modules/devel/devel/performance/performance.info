@@ -1,12 +1,12 @@
-; $Id: performance.info 887 2009-09-24 15:51:14Z jhedstrom $
+; $Id: performance.info,v 1.2 2008/10/20 20:29:18 kbahey Exp $
 name = Performance Logging
 description = Logs detailed and/or summary page generation time and memory consumption for page requests.
 package = Development
 core = 6.x
 
-; Information added by drupal.org packaging script on 2009-09-23
-version = "6.x-1.18"
+; Information added by drupal.org packaging script on 2010-03-19
+version = "6.x-1.19"
 core = "6.x"
 project = "devel"
-datestamp = "1253731828"
+datestamp = "1268976904"
 

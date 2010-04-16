@@ -1,4 +1,4 @@
-$Id: README.txt 552 2009-01-12 22:11:50Z jhedstrom $
+$Id: README.txt,v 1.1 2008/10/20 19:33:59 kbahey Exp $
 
 By Khalid Baheyeldin
 

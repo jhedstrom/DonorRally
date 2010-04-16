@@ -1,7 +1,7 @@
 /**
 * JavaScript routines for Krumo
 *
-* @version $Id: krumo.js 510 2008-12-01 19:47:20Z jhedstrom $
+* @version $Id: krumo.js,v 1.1.2.2 2008/06/03 20:36:03 weitzman Exp $
 * @link http://sourceforge.net/projects/krumo
 */
 
