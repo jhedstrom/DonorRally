@@ -48,6 +48,72 @@ function donor_rally_salsa_donor_rally_donate_button(&$vars) {
 }
 
 /**
+ * Implementation of hook_donor_rally_online_cash().
+ */
+function donor_rally_salsa_donor_rally_online_cash() {
+
+  $report = _donor_rally_salsa_query_cash_aggregate();
+
+  $salsa_cash = array();
+  if (variable_get('donor_rally_debug', FALSE)) {
+    // We're debugging; use the aliases to map the cash values.
+    $aliases = variable_get('donor_rally_debug_aliases', array());
+    foreach ($report as $tracking_code => $cash) {
+      if (isset($aliases['by-name'][$tracking_code])) {
+        $salsa_cash[$aliases['by-name'][$tracking_code]] = $cash;
+      }
+    }
+  }
+  else {
+    // Production: Use the Tracking_Code field from the report.
+    $prefix = variable_get('donor_rally_salsa_tracking_code_prefix', '');
+    $regex = "/^{$prefix}(\d+)$/";
+    foreach ($report as $tracking_code => $cash) {
+      if (preg_match($regex, $tracking_code, $matches) === 1) {
+        $team_nid = $matches[1];
+        $salsa_cash[$team_nid] = $cash;
+      }
+      else {
+        // @todo: record the error?
+      }
+    }
+  }
+
+  return $salsa_cash;
+}
+
+/**
+ * Queries DIA aggregate report of donation totals for each team and returns
+ * results in a nicer format.
+ */
+function _donor_rally_salsa_query_cash_aggregate() {
+  $cash_aggregate_query = array(
+    '#script' => 'getReport.sjs',
+    '#fields' => DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE,
+  );
+  // @TODO abstract this, or simply replace with PayPal/Simple Payments.
+  $result = salsa_api_query($cash_aggregate_query);
+  $team_stats = array();
+
+  // The report comes in a different format when there's only one. (Sigh.)
+  if (isset($result['report']['row']['tracking_code'])) {
+    $result['report']['row'] = array(
+      array(
+        'tracking_code' => $result['report']['row']['tracking_code'],
+        'amount' => $result['report']['row']['amount'],
+      )
+    );
+  }
+
+  foreach ($result['report']['row'] as $item) {
+    if (!empty($item['tracking_code'])) {
+      $team_stats[$item['tracking_code']] = $item['amount'];
+    }
+  }
+  return $team_stats;
+}
+
+/**
  * Generate Salsa Tracking_Code field for a team, given its node.
  */
 function _donor_rally_salsa_team_tracking_code($node) {

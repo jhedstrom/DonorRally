@@ -8,13 +8,10 @@
  * See README.txt for more information.
  */
 
-/* All the donations funnel through this donation page. We tack on a tracking
- * code (Tracking_Code) in a GET parameter to classify each donation by which
- * donor rally team it's from.
+/**
+ * Team content type.
  */
-// @TODO Change this url to use whatever pluggable payment method is enabled.
-define('DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE', '');
-define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team'); /* Check os_custom module before changing */
+define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team');
 
 /**
  * Implements hook_menu().
@@ -98,36 +95,11 @@ function donor_rally_cron() {
 }
 
 /**
- * Refreshes all teams' points and statistics by querying Salsa and
- * recalculating totals.
+ * Refreshes all teams' points and statistics by querying the payment
+ * gateway and recalculating totals.
  */
 function donor_rally_refresh_all() {
-  $report = _donor_rally_query_cash_aggregate();
-
-  $salsa_cash = array();
-  if (variable_get('donor_rally_debug', FALSE)) {
-    /* We're debugging; use the aliases to map the cash values */
-    $aliases = variable_get('donor_rally_debug_aliases', array());
-    foreach ($report as $tracking_code => $cash) {
-      if (isset($aliases['by-name'][$tracking_code])) {
-        $salsa_cash[$aliases['by-name'][$tracking_code]] = $cash;
-      }
-    }
-  }
-  else {
-    /* Production: Use the Tracking_Code field from the report */
-    $prefix = DONOR_RALLY_TRACKING_CODE_PREFIX;
-    $regex = "/^{$prefix}(\d+)$/";
-    foreach ($report as $tracking_code => $cash) {
-      if (preg_match($regex, $tracking_code, $matches) === 1) {
-        $team_nid = $matches[1];
-        $salsa_cash[$team_nid] = $cash;
-      }
-      else {
-        // @todo: record the error?
-      }
-    }
-  }
+  $online_cash = module_invoke(variable_get('donor_rally_payment_gateway', 'donor_rally_salsa'), 'donor_rally_online_cash');
 
   $cash_scale = (float)variable_get('donor_rally_cash_scale', 1.0);
   $food_scale = (float)variable_get('donor_rally_food_scale', 1.0);
@@ -135,12 +107,13 @@ function donor_rally_refresh_all() {
 
   $current_all = _donor_rally_fetch_current_team_stats();
   foreach ($current_all as $nid => $now) {
-    if (isset($salsa_cash[$nid])) {
-      $now['cash'] = $salsa_cash[$nid];
+    if (isset($online_cash[$nid])) {
+      $now['cash'] = $online_cash[$nid];
     }
     else {
-      // no-op; we didn't get an online cash value from Salsa for this team, so
-      // just use the current value for calculating new totals
+      // no-op; we didn't get an online cash value from the payment
+      // gateway for this team, so just use the current value for
+      // calculating new totals
     }
     // @TODO, abstract this out to exclude food and volunteer hours
     // unless the in-kind module/feature is enabled.
@@ -187,37 +160,6 @@ function _donor_rally_fetch_current_team_stats() {
       if (empty($value)) {
         $team_stats[$nid][$field] = 0.0;
       }
-    }
-  }
-  return $team_stats;
-}
-
-/**
- * Queries DIA aggregate report of donation totals for each team and returns
- * results in a nicer format.
- */
-function _donor_rally_query_cash_aggregate() {
-  $cash_aggregate_query = array(
-    '#script' => 'getReport.sjs',
-    '#fields' => DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE,
-  );
-  // @TODO abstract this, or simply replace with PayPal/Simple Payments.
-  $result = salsa_api_query($cash_aggregate_query);
-  $team_stats = array();
-
-  // The report comes in a different format when there's only one. (Sigh.)
-  if (isset($result['report']['row']['tracking_code'])) {
-    $result['report']['row'] = array(
-      array(
-        'tracking_code' => $result['report']['row']['tracking_code'],
-        'amount' => $result['report']['row']['amount'],
-      )
-    );
-  }
-
-  foreach ($result['report']['row'] as $item) {
-    if (!empty($item['tracking_code'])) {
-      $team_stats[$item['tracking_code']] = $item['amount'];
     }
   }
   return $team_stats;
