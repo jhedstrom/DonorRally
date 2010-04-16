@@ -1,5 +1,5 @@
 <?php
-// $Id: image_resize_filter.install 890 2009-11-03 22:58:25Z jhedstrom $
+// $Id: image_resize_filter.install,v 1.7 2009/10/22 02:17:57 quicksketch Exp $
 
 /**
  * Implementation of hook_install().

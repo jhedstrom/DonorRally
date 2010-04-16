@@ -2,9 +2,9 @@ name = Image resize filter
 description = Filter to automatically scale images to their height and width dimensions.
 core = 6.x
 
-; Information added by drupal.org packaging script on 2009-11-16
-version = "6.x-1.6"
+; Information added by drupal.org packaging script on 2010-04-09
+version = "6.x-1.8"
 core = "6.x"
 project = "image_resize_filter"
-datestamp = "1258350634"
+datestamp = "1270825213"
 

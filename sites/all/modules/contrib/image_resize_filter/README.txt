@@ -1,4 +1,4 @@
-// $Id: README.txt 866 2009-07-15 17:48:47Z jhedstrom $
+// $Id: README.txt,v 1.2 2009/05/13 22:48:29 quicksketch Exp $
 
 This filter makes it easy to resize images, especially when combined with a
 WYSIWYG editor such as tinyMCE or FCKeditor. Users never have to worry about
