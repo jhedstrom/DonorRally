@@ -8,6 +8,13 @@
  */
 
 /**
+ * Implementation of hook_donor_rally_payment_gateway().
+ */
+function donor_rally_salsa_donor_rally_payment_gateway() {
+  return array('donor_rally_salsa' => t('Salsa Labs/Democracy in Action'));
+}
+
+/**
  * Implementation of hook_menu().
  */
 function donor_rally_salsa_menu() {

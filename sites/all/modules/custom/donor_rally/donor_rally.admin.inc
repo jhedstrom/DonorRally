@@ -13,6 +13,21 @@
 function donor_rally_settings_form($tid) {
   $form = array();
 
+  $options = module_invoke_all('donor_rally_payment_gateway');
+  if (empty($options)) {
+    drupal_set_message(t('No payment gateways found. Payment gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/build/modules'))), 'error');
+  }
+  else {
+    $form['payment_gateway'] = array(
+      '#title' => t('Donor Rally Payment Gateway'),
+      '#type' => 'select',
+      '#required' => TRUE,
+      '#options' => $options,
+      '#description' => t('Select payment gateway to use. Gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/build/modules'))),
+      '#default_value' => variable_get('donor_rally_payment_gateway', ''),
+    );
+  }
+
   $form['point_scales'] = array(
     '#type' => 'fieldset',
     '#title' => t('Point conversions'),
@@ -73,6 +88,9 @@ function donor_rally_settings_form_submit($form, &$form_state) {
   variable_set('donor_rally_cash_scale', $form_state['values']['cash']);
   variable_set('donor_rally_food_scale', $form_state['values']['food']);
   variable_set('donor_rally_volunteer_scale', $form_state['values']['volunteer']);
+  if (isset($form_state['values']['payment_gateway'])) {
+    variable_set('donor_rally_payment_gateway', $form_state['values']['payment_gateway']);
+  }
 
   if (variable_get('donor_rally_debug', FALSE)) {
     if ($form_state['values']['alias_teams'] === 'yes') {

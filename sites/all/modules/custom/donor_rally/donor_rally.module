@@ -13,6 +13,7 @@
  * donor rally team it's from.
  */
 // @TODO Change this url to use whatever pluggable payment method is enabled.
+define('DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE', '');
 define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team'); /* Check os_custom module before changing */
 
 /**

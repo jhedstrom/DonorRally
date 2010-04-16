@@ -1,0 +1,15 @@
+<?php
+
+// $Id$
+
+/**
+ * @file
+ * Supports using PayPal as the donation gateway for Donor Rally.
+ */
+
+/**
+ * Implementation of hook_donor_rally_payment_gateway().
+ */
+function donor_rally_paypal_donor_rally_payment_gateway() {
+  return array('donor_rally_paypal' => t('PayPal'));
+}
