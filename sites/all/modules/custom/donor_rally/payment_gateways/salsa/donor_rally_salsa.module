@@ -79,7 +79,7 @@ function donor_rally_salsa_configuration($form_state) {
   $form['donor_rally_salsa_report_cash_aggregate'] = array(
     '#type' => 'textfield',
     '#title' => t('Cash aggregate report ID.'),
-    '#description' => t('In order for Donor Rally to poll salsa for current team totals, an aggregate report needs to be created. Detailed instructions on this can be found <a href="!url">here</a>.', array('!url' => url('http://www.donorrally.org/help'))),
+    '#description' => t('In order for Donor Rally to poll salsa for current team totals, an aggregate report needs to be created. Detailed instructions on this can be found <a href="!url">here</a>.', array('!url' => url('http://www.donorrally.com/help'))),
     '#required' => TRUE,
     '#default_value' => variable_get('donor_rally_salsa_report_cash_aggregate', ''),
   );
