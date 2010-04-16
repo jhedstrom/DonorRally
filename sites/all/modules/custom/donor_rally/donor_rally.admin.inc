@@ -12,17 +12,7 @@
  */
 function donor_rally_settings_form($tid) {
   $form = array();
-  if (user_access('administer salsa api')) {
-    // @TODO abstract out Salsa and replace with a general payment
-    // framework. Or, for now, replace with simple payment settings.
-    $form['salsa'] = array(
-      '#type'  => 'fieldset',
-      '#title' => 'Salsa API settings',
-    );
-    $form['salsa']['link'] = array(
-      '#value' => l(t('Salsa API configuration'), 'admin/settings/salsa/api'),
-    );
-  }
+
   $form['point_scales'] = array(
     '#type' => 'fieldset',
     '#title' => t('Point conversions'),

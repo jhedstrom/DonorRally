@@ -13,10 +13,7 @@
  * donor rally team it's from.
  */
 // @TODO Change this url to use whatever pluggable payment method is enabled.
-define('DONOR_RALLY_DIA_DONATION_URL', '');
-define('DONOR_RALLY_DIA_REPORT_CASH_AGGREGATE', '');
 define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team'); /* Check os_custom module before changing */
-define('DONOR_RALLY_TRACKING_CODE_PREFIX', 'donor-rally-');
 
 /**
  * Implements hook_menu().
@@ -24,13 +21,19 @@ define('DONOR_RALLY_TRACKING_CODE_PREFIX', 'donor-rally-');
 function donor_rally_menu() {
   $items = array();
   $items['admin/settings/donor-rally'] = array(
-    'title' => 'donor rally',
+    'title' => 'Donor Rally',
     'description' => 'Global settings for Donor Rally',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('donor_rally_settings_form'),
     'access arguments' => array('administer donor rally'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'donor_rally.admin.inc',
+  );
+
+  $items['admin/settings/donor-rally/global'] = array(
+    'title' => 'Global settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
   );
 
   return $items;
@@ -57,7 +60,6 @@ function donor_rally_theme($existing, $type, $theme, $path) {
     'donor_rally_team_progress_stats' => array(
       'template' => 'donor-rally-team-progress-stats',
     ) + $base,
-    'donor_rally_team_donate_button' => $base,
     'donor_rally_team_leaderboard_button' => $base,
     'donor_rally_team_page_button' => $base,
     'donor_rally_new_blog_post_button' => $base,
@@ -251,13 +253,6 @@ function _donor_rally_format_value($value) {
 }
 
 /**
- * Generate Salsa Tracking_Code field for a team, given its node.
- */
-function _donor_rally_team_tracking_code($node) {
-  return DONOR_RALLY_TRACKING_CODE_PREFIX . $node->nid;
-}
-
-/**
  * Calculate a team's statistics directly from node values.
  */
 function donor_rally_team_stats($node) {
@@ -358,10 +353,18 @@ function donor_rally_block($op = 'list', $delta = 0, $edit = array()) {
         $vars = donor_rally_team_stats($node);
         $vars['node'] = $node;
       }
+
+      if ($delta === 1 ) {
+        // Allow payment gateway to set the button.
+        $button = module_invoke(variable_get('donor_rally_payment_gateway', 'donor_rally_salsa'), 'donor_rally_donate_button', $vars);
+        return array(
+          'subject' => '',
+          'content' => $button,
+        );
+      }
       
       $theme_functions = array(
         0 => 'donor_rally_team_progress_thermometer',
-        1 => 'donor_rally_team_donate_button',
         2 => 'donor_rally_team_leaderboard_button',
         3 => 'donor_rally_team_progress_stats',
         4 => 'donor_rally_team_page_button',
@@ -436,19 +439,6 @@ function donor_rally_preprocess_donor_rally_team_progress_stats(&$variables) {
 function donor_rally_theme_button($class, $text, $link, $attr = array()) {
   return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'donor-rally-button '.$class) + $attr));
 }
-
-/**
- * Theme the "donate" button block
- */
-function theme_donor_rally_team_donate_button($vars) {
-  return donor_rally_theme_button(
-    'donor-rally-donate-button',
-    t('Donate Now'),
-    DONOR_RALLY_DIA_DONATION_URL .'&track='. _donor_rally_team_tracking_code($vars['node']),
-    array('target' => '_blank')
-  );
-}
-
 
 /**
  * Theme the "leaderboard" button block

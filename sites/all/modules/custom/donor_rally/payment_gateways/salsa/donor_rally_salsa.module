@@ -1,0 +1,88 @@
+<?php
+
+// $Id$
+
+/**
+ * @file
+ * Supports the Salsa API as a Donor Rally payment gateway.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function donor_rally_salsa_menu() {
+  $items['admin/settings/donor-rally/salsa'] = array(
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('donor_rally_salsa_configuration'),
+    'access arguments' => array('administer donor rally'),
+    'title' => 'Salsa Payment Gateway',
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_donor_rally_donate_button().
+ */
+function donor_rally_salsa_donor_rally_donate_button(&$vars) {
+  $url = variable_get('donor_rally_salsa_donation_url', FALSE);
+
+  if (!$url) {
+    drupal_set_message(t('You need to first create a Donation Page at <a href="!url">SalsaLabs</a> and then set that url <a href="!set">here</a>.', array('!url' => url('http://salsalabs.com/democracyinaction'), '!set' => url('admin/settings/donorrally/salsa'))), 'error');
+  }
+
+  return donor_rally_theme_button(
+    'donor-rally-donate-button',
+    t('Donate Now'),
+    $url . '&track=' . _donor_rally_salsa_team_tracking_code($vars['node']),
+    array('target' => '_blank')
+  );
+}
+
+/**
+ * Generate Salsa Tracking_Code field for a team, given its node.
+ */
+function _donor_rally_salsa_team_tracking_code($node) {
+  return variable_get('donor_rally_salsa_tracking_code_prefix', '') . $node->nid;
+}
+
+/**
+ * Settings form.
+ */
+function donor_rally_salsa_configuration($form_state) {
+  if (user_access('administer salsa api')) {
+    $form['salsa'] = array(
+      '#type'  => 'fieldset',
+      '#title' => 'Salsa API settings',
+    );
+    $form['salsa']['link'] = array(
+      '#value' => l(t('Salsa API configuration'), 'admin/settings/salsa/api'),
+    );
+  }
+
+  $form['donor_rally_salsa_donation_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Salsa Labs/Democracy in Action donation form url'),
+    '#description' => t('You need to first create a Donation Page at <a href="!url">SalsaLabs</a> and then set that here. The url typically looks like this: %url', array('!url' => url('http://salsalabs.com/democracyinaction'), '%url' => 'https://org2.democracyinaction.org/o/0000/shop/custom.jsp?donate_page_KEY=000')),
+    '#default_value' => variable_get('donor_rally_salsa_donation_url', ''),
+    '#required' => TRUE,
+  );
+
+  $form['donor_rally_salsa_report_cash_aggregate'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cash aggregate report ID.'),
+    '#description' => t('In order for Donor Rally to poll salsa for current team totals, an aggregate report needs to be created. Detailed instructions on this can be found <a href="!url">here</a>.', array('!url' => url('http://www.donorrally.org/help'))),
+    '#required' => TRUE,
+    '#default_value' => variable_get('donor_rally_salsa_report_cash_aggregate', ''),
+  );
+
+  $form['donor_rally_salsa_tracking_code_prefix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tracking code prefix'),
+    '#description' => t('Optionally set a tracking code prefix. This will allow you to easily determine, from within Salsa Labs, which payments came from Donor Rally. If left blank, the tracking codes passed to Salsa will simply be the team ID.'),
+    '#default_value' => variable_get('donor_rally_salsa_tracking_code_prefix', ''),
+  );
+
+  return system_settings_form($form);
+}

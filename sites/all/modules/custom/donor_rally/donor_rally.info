@@ -1,9 +1,8 @@
 ; $Id$
 name = Donor Rally
 description = Donor Rally competitive donation
-dependencies[] = salsa_api
 dependencies[] = views_or
 dependencies[] = content_profile
-package = Other
+package = Donor Rally
 core = 6.x
 php = 5.0
