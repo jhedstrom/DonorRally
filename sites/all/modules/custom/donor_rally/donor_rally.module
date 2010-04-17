@@ -118,7 +118,7 @@ function donor_rally_refresh_all() {
     // @TODO, abstract this out to exclude food and volunteer hours
     // unless the in-kind module/feature is enabled.
     db_query(
-      'UPDATE {content_type_team} SET ' .
+      'UPDATE {' . _donor_rally_get_team_table() . '} SET ' .
         'field_cash_value = %f, ' .
         'field_total_points_value = (%f+%f)*%f + (%f+%f)*%f + (%f+%f)*%f, ' .
         'field_points_per_capita_value = ((%f+%f)*%f + (%f+%f)*%f + (%f+%f)*%f) / %d ' .
@@ -140,10 +140,7 @@ function donor_rally_refresh_all() {
  * teams (from the database).
  */
 function _donor_rally_fetch_current_team_stats() {
-  $field_cash = content_fields('field_cash');
-  $database_info = content_database_info($field_cash);
-
-  $result = db_query('SELECT * FROM {' . $database_info['table'] . '}');
+  $result = db_query('SELECT * FROM {' . _donor_rally_get_team_table() . '}');
 
   $team_stats = array();
   while ($current = db_fetch_array($result)) {
@@ -158,6 +155,15 @@ function _donor_rally_fetch_current_team_stats() {
   }
 
   return $team_stats;
+}
+
+/**
+ * Get table where team information is stored.
+ */
+function _donor_rally_get_team_table() {
+  $field_cash = content_fields('field_cash');
+  $database_info = content_database_info($field_cash);
+  return $database_info['table'];
 }
 
 /**
