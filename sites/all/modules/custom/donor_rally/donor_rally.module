@@ -99,16 +99,14 @@ function donor_rally_cron() {
  * gateway and recalculating totals.
  */
 function donor_rally_refresh_all() {
-  $online_cash = module_invoke(variable_get('donor_rally_payment_gateway', 'donor_rally_salsa'), 'donor_rally_online_cash');
-
   $cash_scale = (float)variable_get('donor_rally_cash_scale', 1.0);
   $food_scale = (float)variable_get('donor_rally_food_scale', 1.0);
   $volunteer_scale = (float)variable_get('donor_rally_volunteer_scale', 1.0);
 
   $current_all = _donor_rally_fetch_current_team_stats();
   foreach ($current_all as $nid => $now) {
-    if (isset($online_cash[$nid])) {
-      $now['cash'] = $online_cash[$nid];
+    if ($cash = module_invoke(variable_get('donor_rally_payment_gateway', 'donor_rally_salsa'), 'donor_rally_online_cash', $nid)) {
+      $now['cash'] = $cash;
     }
     else {
       // no-op; we didn't get an online cash value from the payment

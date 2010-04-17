@@ -24,7 +24,9 @@ function donor_rally_paypal_donor_rally_donate_button(&$vars) {
 /**
  * Implementation of hook_donor_rally_online_cash().
  */
-function donor_rally_paypal_donor_rally_online_cash() {
+function donor_rally_paypal_donor_rally_online_cash($nid) {
+  $result = db_result(db_query("SELECT SUM(amount) FROM {simple_payment} WHERE nid = %d AND module = 'donor_rally_paypal' AND processed GROUP BY nid", array(':nid' => $nid)));
+  return $result;
 }
 
 /**
@@ -33,6 +35,7 @@ function donor_rally_paypal_donor_rally_online_cash() {
 function donor_rally_paypal_donate_form($form_state, $vars) {
   drupal_add_css(drupal_get_path('module', 'donor_rally_paypal') . '/donor-rally-paypal.css');
 
+  global $user;
   $vars = array(
     'module' => 'donor_rally_paypal',
     'type' => 'donor rally donation',
@@ -40,6 +43,8 @@ function donor_rally_paypal_donate_form($form_state, $vars) {
     'item_name' => t('Donation for @site via @title', array('@title' => $vars['node']->title, '@site' => variable_get('site_name', t('Donor Rally')))),
     'no_shipping' => TRUE,
     'no_note' => TRUE,
+    'nid' => $vars['node']->nid,
+    'uid' => $user->uid,
     'return' => url('', array('absolute' => TRUE)),
   );
  
