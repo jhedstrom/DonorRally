@@ -13,3 +13,76 @@
 function donor_rally_paypal_donor_rally_payment_gateway() {
   return array('donor_rally_paypal' => t('PayPal'));
 }
+
+/**
+ * Implementation of hook_donor_rally_donate_button().
+ */
+function donor_rally_paypal_donor_rally_donate_button(&$vars) {
+  return drupal_get_form('donor_rally_paypal_donate_form', $vars);
+}
+
+/**
+ * Implementation of hook_donor_rally_online_cash().
+ */
+function donor_rally_paypal_donor_rally_online_cash() {
+}
+
+/**
+ * Donation form.
+ */
+function donor_rally_paypal_donate_form($form_state, $vars) {
+  drupal_add_css(drupal_get_path('module', 'donor_rally_paypal') . '/donor-rally-paypal.css');
+
+  $vars = array(
+    'module' => 'donor_rally_paypal',
+    'type' => 'donor rally donation',
+    'custom' => $vars['node']->nid,
+    'item_name' => t('Donation for @site via @title', array('@title' => $vars['node']->title, '@site' => variable_get('site_name', t('Donor Rally')))),
+    'no_shipping' => TRUE,
+    'no_note' => TRUE,
+    'return' => url('', array('absolute' => TRUE)),
+  );
+ 
+  $form = simple_payments_paypal_payment_form($vars);
+
+  $form['amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Amount ($)'),
+    '#default_value' => variable_get('donor_rally_paypal_default_amount', 15),
+  );
+
+  $form['button'] = array(
+    '#type' => 'button',
+    '#value' => t('Donate Now'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function donor_rally_paypal_form_donor_rally_settings_form_alter(&$form, $form_state) {
+  if (variable_get('donor_rally_payment_gateway', FALSE) == 'donor_rally_paypal' && !variable_get('simple_payments_paypal_account', FALSE)) {
+    drupal_set_message(t('You must <a href="!url">configure your PayPal account</a>.', array('!url' => url('admin/settings/simple-payments/paypal'))), 'error');
+  }
+
+  $form['donor_rally_paypal_default_amount'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('donor_rally_paypal_default_amount', 15),
+    '#title' => t('Default donation amount for PayPal'),
+    '#description' => t('This value will be used to pre-populate the donation button that goes to PayPal.'),
+    '#weight' => -1,
+  );
+
+  if (!in_array('_donor_rally_paypal_form_submit', $form['#submit'])) {
+    $form['#submit'][] = '_donor_rally_paypal_form_submit';
+  }
+}
+
+/**
+ * Set amount upon settings form submit.
+ */
+function _donor_rally_paypal_form_submit($form, &$form_state) {
+  variable_set('donor_rally_paypal_default_amount', $form_state['values']['donor_rally_paypal_default_amount']);
+}

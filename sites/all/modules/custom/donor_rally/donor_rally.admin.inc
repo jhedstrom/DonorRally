@@ -79,6 +79,9 @@ function donor_rally_settings_form_validate($form, &$form_state) {
       form_set_error($element, t('%element must be greater than or equal to zero.', array('%element' => $form['point_scales'][$element]['#title'])));
     }
   }
+  if ($form_state['values']['payment_gateway'] && !module_exists($form_state['values']['payment_gateway'])) {
+    form_set_error('payment_gateway', t('Payment gateway %module not found.', array('%module' => $form_state['values']['payment_gateway'])));
+  }
 }
 
 /**

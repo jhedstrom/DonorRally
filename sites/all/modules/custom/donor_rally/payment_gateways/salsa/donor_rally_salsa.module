@@ -53,6 +53,9 @@ function donor_rally_salsa_donor_rally_donate_button(&$vars) {
 function donor_rally_salsa_donor_rally_online_cash() {
 
   $report = _donor_rally_salsa_query_cash_aggregate();
+  if (!$report) {
+    return array();
+  }
 
   $salsa_cash = array();
   if (variable_get('donor_rally_debug', FALSE)) {
@@ -95,7 +98,7 @@ function _donor_rally_salsa_query_cash_aggregate() {
   $result = salsa_api_query($cash_aggregate_query);
   if (!$result) {
     watchdog('donor_rally', 'Failed to query Salsa API.', array(), WATCHDOG_ERROR);
-    return array();
+    return FALSE;
   }
 
   $team_stats = array();
