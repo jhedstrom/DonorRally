@@ -140,17 +140,11 @@ function donor_rally_refresh_all() {
  * teams (from the database).
  */
 function _donor_rally_fetch_current_team_stats() {
-  $result = db_query(
-    'SELECT nid, ' .
-    'field_cash_value AS cash, ' .
-    'field_food_value AS food, ' .
-    'field_volunteer_value AS volunteer, ' .
-    'field_offline_cash_value AS offline_cash, ' .
-    'field_offline_food_value AS offline_food, ' .
-    'field_offline_volunteer_value AS offline_volunteer, ' .
-    'field_size_value AS size ' .
-    'FROM {content_type_team}'
-  );
+  $field_cash = content_fields('field_cash');
+  $database_info = content_database_info($field_cash);
+
+  $result = db_query('SELECT * FROM {' . $database_info['table'] . '}');
+
   $team_stats = array();
   while ($current = db_fetch_array($result)) {
     $nid = $current['nid'];
@@ -162,6 +156,7 @@ function _donor_rally_fetch_current_team_stats() {
       }
     }
   }
+
   return $team_stats;
 }
 

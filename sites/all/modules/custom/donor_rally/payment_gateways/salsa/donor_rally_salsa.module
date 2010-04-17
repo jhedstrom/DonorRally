@@ -93,6 +93,11 @@ function _donor_rally_salsa_query_cash_aggregate() {
   );
   // @TODO abstract this, or simply replace with PayPal/Simple Payments.
   $result = salsa_api_query($cash_aggregate_query);
+  if (!$result) {
+    watchdog('donor_rally', 'Failed to query Salsa API.', array(), WATCHDOG_ERROR);
+    return array();
+  }
+
   $team_stats = array();
 
   // The report comes in a different format when there's only one. (Sigh.)
