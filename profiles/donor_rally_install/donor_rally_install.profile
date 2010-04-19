@@ -58,7 +58,9 @@ function donor_rally_install_profile_details() {
  *   task list.
  */
 function donor_rally_install_profile_task_list() {
-  $tasks['volunteer-management-modules-batch'] = st('Install volunteer rally modules');
+  $tasks['donor-rally-payment-gateway'] = st('Select Donor Rally payment gateway');
+  $tasks['donor-rally-modules-batch'] = st('Install Donor Rally modules');
+  $tasks['donor-rally-configure'] = st('Configure Donor Rally');
   return $tasks;
 }
 
@@ -114,7 +116,6 @@ function donor_rally_install_profile_task_list() {
  *   modify the $task, otherwise discarded.
  */
 function donor_rally_install_profile_tasks(&$task, $url) {
-
   if ($task == 'profile') {
     // Insert default user-defined node types into the database. For a complete
     // list of available node type attributes, refer to the node type API
@@ -168,17 +169,27 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     // Core configuration and tweaks.
     _donor_rally_install_core();
 
-    $task = 'volunteer-management-modules';
+    $task = 'donor-rally-payment-gateway';
  }
+
+  if ($task == 'donor-rally-payment-gateway') {
+    $output = drupal_get_form('donor_rally_install_payment_gateway_form', $url); 
+    if (!variable_get('donor_rally_payment_gateway', FALSE)) {
+      drupal_set_title(st('Select Donor Rally Payment Gateway'));
+      return $output;
+    }
+    $task = 'donor-rally-modules';
+  }
 
   // We are running a batch task for this profile so basically do
   // nothing and return page.
-  if (in_array($task, array('volunteer-management-modules-batch'))) {
+  if (in_array($task, array('donor-rally-modules-batch'))) {
     include_once 'includes/batch.inc';
     $output = _batch_page();
+    return $output;
   }
 
-  if ($task == 'volunteer-management-modules') {
+  if ($task == 'donor-rally-modules') {
     $modules = _donor_rally_install_modules();
     $files = module_rebuild_cache();
     // Create batch
@@ -190,9 +201,7 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     $batch['title'] = st('Installing @drupal', array('@drupal' => drupal_install_profile_name()));
     $batch['error_message'] = st('The installation has encountered an error.');
 
-    // Start a batch, switch to 'intranet-modules-batch' task. We need to
-    // set the variable here, because batch_process() redirects.
-    variable_set('install_task', 'volunteer-management-modules-batch');
+    variable_set('install_task', 'donor-rally-modules-batch');
     batch_set($batch);
     batch_process($url, $url);
 
@@ -200,7 +209,19 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     return;
   }
 
-  return $output;
+  if ($task == 'donor-rally-configure') {
+    $output = drupal_get_form('donor_rally_install_configure_form', $url);
+
+    if (!variable_get('donor_rally_install_configured', FALSE)) {
+      return $output;
+    }
+    else {
+      // Clean-up install profile variables.
+      variable_del('donor_rally_install_configured');
+      variable_set('install_task', 'profile-finished');
+      $task = 'profile-finished';
+    }
+  }
 }
 
 /**
@@ -334,7 +355,7 @@ function _donor_rally_install_core() {
  * Additional modules to enable.
  */
 function  _donor_rally_install_modules() {
-  return array(
+  $modules = array(
     // Modules required by the features below.
     'auto_nodetitle',
     'boxes',
@@ -366,13 +387,33 @@ function  _donor_rally_install_modules() {
     // Donor Rally features.
     'donor_rally_team', 'donor_rally_team_blog',
   );
+
+  // Enable selected Donor Rally payment gateway.
+  switch (variable_get('donor_rally_payment_gateway', '')) {
+    case 'donor_rally_paypal':
+      $modules += array(
+        'simple_payments',
+        'simple_payments_paypal',
+        'donor_rally_paypal',
+      );
+      break;
+
+    case 'donor_rally_salsa':
+      $modules += array(
+        'salsa_api',
+        'donor_rally_salsa',
+      );
+      break;
+  }
+    
+  return $modules;
 }
 
 /**
  * Finished callback.
  */
 function _donor_rally_install_profile_batch_finished($success, $results) {
-  variable_set('install_task', 'profile-finished');
+  variable_set('install_task', 'donor-rally-configure');
 }
 
 /**
@@ -397,4 +438,115 @@ function _donor_rally_install_clean() {
   menu_rebuild();       // Rebuild the menu.
   features_rebuild();   // Features rebuild scripts.
   node_access_needs_rebuild(FALSE);
+}
+
+/**
+ * Configuration form.
+ */
+function donor_rally_install_configure_form(&$form_state, $url) {
+  $form['#action'] = $url;
+  $form['#redirect'] = FALSE;
+
+  switch (variable_get('donor_rally_payment_gateway', FALSE)) {
+    case 'donor_rally_paypal':
+      drupal_set_title(st('Configure PayPal account'));
+      $form['simple_payments_paypal_account'] = array(
+        '#type' => 'textfield',
+        '#title' => st('PayPal account e-mail'),
+      );
+      $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => st('Continue'),
+      );
+
+      if (variable_get('simple_payments_paypal_account', FALSE)) {
+      }
+      return $form;
+
+      break;
+
+    case 'donor_rally_salsa':
+      // @TODO
+      drupal_set_title(st('Configure Salsa'));
+      $form['#value'] = st('Not yet supported during install time.');
+      return $form;
+      break;
+  }
+}
+
+/**
+ * Submit handler for the configuration form.
+ */
+function donor_rally_install_configure_form_submit($form, &$form_state) {
+  switch (variable_get('donor_rally_payment_gateway', FALSE)) {
+    case 'donor_rally_paypal':
+      variable_set('simple_payments_paypal_account', $form_state['values']['simple_payments_paypal_account']);
+      variable_set('donor_rally_install_configured', TRUE);
+      break;
+
+    case 'donor_rally_salsa':
+      // @TODO
+      variable_set('donor_rally_install_configured', TRUE);
+      break;
+
+    default:
+      // No gateway selected, move on.
+      variable_set('donor_rally_install_configured', TRUE);
+  }
+}
+
+/**
+ * Select the payment gateway.
+ */
+function donor_rally_install_payment_gateway_form(&$form_state, $url) {
+  $form['#action'] = $url;
+  $form['#redirect'] = FALSE;
+
+  $form['donor_rally_payment_gateway'] = array(
+    '#type' => 'select',
+    '#title' => st('Payment Gateway'),
+    '#description' => st('Select the payment gateway to use for donations and reporting.'),
+    '#required' => TRUE,
+    '#options' => _donor_rally_install_get_payment_gateways(),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Continue'),
+  );
+
+  return $form;
+}
+
+/**
+ * Validate form.
+ */
+function donor_rally_install_payment_gateway_form_validate($form, &$form_state) {
+  if (!in_array($form_state['values']['donor_rally_payment_gateway'], array_keys(_donor_rally_install_get_payment_gateways()))) {
+    form_set_error('donor_rally_payment_gateway', st('Invaled payment gateway: %gateway.', array('%gateway' => $form_state['values']['donor_rally_payment_gateway'])));
+  }
+}
+
+/**
+ * Configuration form submit handler.
+ */
+function donor_rally_install_payment_gateway_form_submit($form, &$form_state) {
+  drupal_set_message('Set Donor Rally payment gateway: %gateway', array('%gateway' => $form_state['values']['donor_rally_payment_gateway']));
+  variable_set('donor_rally_payment_gateway', $form_state['values']['donor_rally_payment_gateway']);
+}
+
+function _donor_rally_install_get_payment_gateways() {
+  return array(
+    'donor_rally_paypal' => st('PayPal'),
+    'donor_rally_salsa' => st('Salsa/Democracy in Action'),
+  );
+}
+
+/**
+ * Set Donor Rally as the default install profile.
+ */
+function system_form_install_select_profile_form_alter(&$form, $form_state) {
+  foreach($form['profile'] as $key => $element) {
+    $form['profile'][$key]['#value'] = 'donor_rally_install';
+  }
 }
