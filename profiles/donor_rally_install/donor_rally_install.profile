@@ -391,18 +391,18 @@ function  _donor_rally_install_modules() {
   // Enable selected Donor Rally payment gateway.
   switch (variable_get('donor_rally_payment_gateway', '')) {
     case 'donor_rally_paypal':
-      $modules += array(
+      $modules = array_merge($modules, array(
         'simple_payments',
         'simple_payments_paypal',
         'donor_rally_paypal',
-      );
+      ));
       break;
 
     case 'donor_rally_salsa':
-      $modules += array(
+      $modules = array_merge($modules, array(
         'salsa_api',
         'donor_rally_salsa',
-      );
+      ));
       break;
   }
     
