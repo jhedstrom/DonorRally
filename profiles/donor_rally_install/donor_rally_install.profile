@@ -155,7 +155,7 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     // We cannot do everything here because of _system_theme_data() static cache
     system_theme_data();
     db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
-    variable_set('theme_default', 'cube');
+    variable_set('theme_default', 'singular');
     db_query("UPDATE {blocks} SET status = 0, region = ''"); // disable all DB blocks
 
     // Create roles.
