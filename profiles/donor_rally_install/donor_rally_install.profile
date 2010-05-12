@@ -357,7 +357,6 @@ function _donor_rally_install_core() {
 function  _donor_rally_install_modules() {
   $modules = array(
     // Modules required by the features below.
-    'auto_nodetitle',
     'boxes',
     'content_permissions',
     'content_profile',
