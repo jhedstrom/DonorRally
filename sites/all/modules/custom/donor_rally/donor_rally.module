@@ -4,7 +4,7 @@
 
 /**
  * @file
- * Donor Rally module. Allows teams/groups to "compete" in a food drive.
+ * Donor Rally module. Allows teams/groups to "compete" in fundraising campaigns.
  * See README.txt for more information.
  */
 
@@ -195,35 +195,55 @@ function _donor_rally_format_value($value) {
 }
 
 /**
+ * Implementation of hook_donor_rally_team_stat_categories().
+ */
+function donor_rally_donor_rally_team_stat_categories() {
+  return array(
+    'cash' => t('Cash ($)'),
+  );
+}
+
+/**
+ * Implementation of hook_donor_rally_point_scales().
+ */
+function donor_rally_donor_rally_point_scales() {
+  return array(
+    'cash' => variable_get('donor_rally_cash_scale', 1.0),
+  );
+}
+
+/**
  * Calculate a team's statistics directly from node values.
  */
 function donor_rally_team_stats($node) {
-  $point_scales = array(
-    'cash' => variable_get('donor_rally_cash_scale', 1.0),
-    'food' => variable_get('donor_rally_food_scale', 1.0),
-    'volunteer' => variable_get('donor_rally_volunteer_scale', 1.0),
-  );
+  $point_scales = module_invoke_all('donor_rally_point_scales');
+  $categories = module_invoke_all('donor_rally_team_stat_categories');
 
-  $stats = array();
-  $stats['total'] = 0.0;
-  $stats['total_goal'] = 0.0;
-  foreach (array('cash', 'food', 'volunteer') as $type) {
-    // raw values (USD, pounds, shifts, etc.); points (scaled raw)
+  $stats['total_raw'] = 0.0;
+  $stats['total_raw_goal'] = 0.0;
+
+  foreach ($categories as $type => $label) {
+    // Raw values (USD, pounds, shifts, etc.); points (scaled raw).
     $stats[$type .'_raw'] = $node->{'field_'. $type}[0]['value'] + $node->{'field_offline_' .$type}[0]['value'];
     $stats[$type .'_raw_goal'] = $node->{'field_'. $type .'_goal'}[0]['value'];
 
-    // points values
+    // Points values.
     $stats[$type] = $stats[$type .'_raw'] * $point_scales[$type];
     $stats[$type .'_goal'] = $stats[$type .'_raw_goal'] * $point_scales[$type];
 
-    // totals
-    $stats['total'] += $stats[$type];
-    $stats['total_goal'] += $stats[$type .'_goal'];
+    // Totals.
+    $stats['total_raw'] += $stats[$type];
+    $stats['total_raw_goal'] += $stats[$type .'_goal'];
+
+    // Labels.
+    $stats[$type . '_label'] = $label;
   }
 
-  // provide a formatted version as well
+  // Provide a formatted version as well.
   foreach ($stats as $k => $v) {
-    $stats[$k .'_view'] = _donor_rally_format_value($v);
+    if (strpos($k, '_label') === FALSE) {
+      $stats[$k .'_view'] = _donor_rally_format_value($v);
+    }
   }
 
   $stats['per_capita'] = $stats['total'] / $node->field_size[0]['value']; 
@@ -335,7 +355,7 @@ function donor_rally_views_api() {
 function donor_rally_preprocess_donor_rally_team_progress_thermometer(&$variables) {
   $vars = $variables['vars'];
   unset($variables['vars']);
-  if ($vars['total_goal'] == 0.0) {
+  if ($vars['total_raw_goal'] == 0.0) {
     return;
   }
 
@@ -344,7 +364,7 @@ function donor_rally_preprocess_donor_rally_team_progress_thermometer(&$variable
   $top_halfheight = $bottom_halfheight = 52 / 2;
   $font_halfheight = 9; /* half of "line-height" for the style goal/points style */
 
-  $vars['complete'] = $vars['total'] / $vars['total_goal'];
+  $vars['complete'] = $vars['total'] / $vars['total_raw_goal'];
   $vars['success'] = $vars['complete'] >= 1.0;
 
   $vars['filled_height'] = (int)($total_height * min(1.0, $vars['complete']) + 0.5);
@@ -371,6 +391,10 @@ function donor_rally_preprocess_donor_rally_team_progress_thermometer(&$variable
 function donor_rally_preprocess_donor_rally_team_progress_stats(&$variables) {
   $variables += $variables['vars'];
   unset($variables['vars']);
+  $variables['categories'] = module_invoke_all('donor_rally_team_stat_categories');
+  if (count($variables['categories']) > 1) {
+    $variables['categories']['total'] = t('Total points');
+  }
 }
 
 /**

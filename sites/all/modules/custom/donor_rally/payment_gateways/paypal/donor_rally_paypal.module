@@ -17,7 +17,7 @@ function donor_rally_paypal_donor_rally_payment_gateway() {
 /**
  * Implementation of hook_donor_rally_donate_button().
  */
-function donor_rally_paypal_donor_rally_donate_button(&$vars) {
+function donor_rally_paypal_donor_rally_donate_button($vars) {
   return drupal_get_form('donor_rally_paypal_donate_form', $vars);
 }
 

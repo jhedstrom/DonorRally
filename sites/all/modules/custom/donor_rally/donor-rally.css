@@ -73,6 +73,13 @@ table.donor-rally-team-stats tbody th {
   border-right: 1px solid #ccc;
 }
 
+table.donor-rally-team-stats .odd {
+  background-color: #333;
+}
+table.donor-rally-team-stats .even {
+  background-color: #555;
+}
+
 table.donor-rally-team-stats thead tr th:first-child {
   border-bottom: none;
 }
@@ -87,7 +94,7 @@ a.donor-rally-button {
   text-align: center;
   font-weight: bold;
   display: block;
-  background-color: #aa5;
+  background-color: #555;
   font-size: 1.5em;
   padding: 0.5em 0;
   border-bottom: solid 1px #666;
@@ -100,7 +107,7 @@ a.donor-rally-button:hover {
   text-decoration: none;
 }
 a.donor-rally-button:hover {
-  background-color: #bb6;
+  background-color: #333;
 }
 a.donor-rally-button:active {
   background-color: #989848;

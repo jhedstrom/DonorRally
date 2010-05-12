@@ -1,6 +1,10 @@
-<table class="competitive-drive-team-stats">
+<?php
+// $Id$
+$odd = FALSE;
+?>
+<table class="donor-rally-team-stats">
   <thead>
-    <tr>
+    <tr class="even">
       <th>
       </th>
       <th>
@@ -12,49 +16,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr class="odd">
+    <?php foreach ($categories as $type => $label): 
+     $odd = !$odd;
+    ?>
+    <tr class="<?php print $odd ? 'odd' : 'even'; ?>">
       <th>
-        <?php print t('Cash ($)'); ?>
+        <?php print $label; ?>
       </th>
       <td>
-        <?php print $cash_raw_view; ?> 
+        <?php print ${$type . '_raw_view'}; ?> 
       </td>
       <td>
-        <?php print $cash_raw_goal_view; ?> 
+        <?php print ${$type . '_raw_goal_view'}; ?> 
       </td>
     </tr>
-    <tr class="even">
-      <th>
-        <?php print t('Food (lbs)'); ?>
-      </th>
-      <td>
-        <?php print $food_raw_view; ?> 
-      </td>
-      <td>
-        <?php print $food_raw_goal_view; ?> 
-      </td>
-    </tr>
-    <tr class="odd">
-      <th>
-        <?php print t('Volunteer shifts'); ?>
-      </th>
-      <td>
-        <?php print $volunteer_raw_view; ?> 
-      </td>
-      <td>
-        <?php print $volunteer_raw_goal_view; ?> 
-      </td>
-    </tr>
-    <tr class="even last">
-      <th>
-        <?php print t('Total points'); ?>
-      </th>
-      <td>
-        <?php print $total_view; ?> 
-      </td>
-      <td>
-        <?php print $total_goal_view; ?> 
-      </td>
-    </tr>
+    <?php endforeach; ?>
   </tbody>
 </table>

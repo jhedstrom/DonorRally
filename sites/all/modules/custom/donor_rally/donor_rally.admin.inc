@@ -10,7 +10,7 @@
 /**
  * Global competitive drive settings
  */
-function donor_rally_settings_form($tid) {
+function donor_rally_settings_form($form_state) {
   $form = array();
 
   $options = module_invoke_all('donor_rally_payment_gateway');
@@ -39,21 +39,6 @@ function donor_rally_settings_form($tid) {
     '#default_value' => variable_get('donor_rally_cash_scale', 1.0),
     '#required' => TRUE,
   );
-  // @TODO move these to an in-kind module
-  $form['point_scales']['food'] = array(
-    '#title' => t('Food scale'),
-    '#description' => t('Scaling factor to turn pounds of food into points'),
-    '#type' => 'textfield',
-    '#default_value' => variable_get('donor_rally_food_scale', 1.0),
-    '#required' => TRUE,
-  );
-  $form['point_scales']['volunteer'] = array(
-    '#title' => t('Volunteer scale'),
-    '#description' => t('Scaling factor to turn volunteer shifts into points'),
-    '#type' => 'textfield',
-    '#default_value' => variable_get('donor_rally_volunteer_scale', 1.0),
-    '#required' => TRUE,
-  );
 
   if (variable_get('donor_rally_debug', FALSE)) {
     $form['alias_teams'] = array(
@@ -74,6 +59,7 @@ function donor_rally_settings_form($tid) {
  * Validates our global settings form.
  */
 function donor_rally_settings_form_validate($form, &$form_state) {
+  // TODO abstract this out to donor_rally_inkind module.
   foreach (array('cash', 'food', 'volunteer') as $element) {
     if ((float)$form_state['values'][$element] < 0.0) {
       form_set_error($element, t('%element must be greater than or equal to zero.', array('%element' => $form['point_scales'][$element]['#title'])));
@@ -88,6 +74,7 @@ function donor_rally_settings_form_validate($form, &$form_state) {
  * Saves our global settings form.
  */
 function donor_rally_settings_form_submit($form, &$form_state) {
+  // TODO abstract this out to donor_rally_inkind module.
   variable_set('donor_rally_cash_scale', $form_state['values']['cash']);
   variable_set('donor_rally_food_scale', $form_state['values']['food']);
   variable_set('donor_rally_volunteer_scale', $form_state['values']['volunteer']);

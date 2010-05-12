@@ -1,0 +1,46 @@
+<?php
+
+// $Id$
+
+/**
+ * @file
+ * Requirements and update hooks.
+ */
+
+/**
+ * Implementation of hook_requirements().
+ */
+function donor_rally_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    // Check for payment gateway.
+    $options = module_invoke_all('donor_rally_payment_gateway');
+    if (empty($options)) {
+      $requirements['donor_rally_payment_gateway'] = array(
+        'title' => $t('Donor Rally payment gateway'),
+        'value' => $t('No payment gateways enabled'),
+        'description' => $t('No payment gateways found. Payment gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/build/modules'))),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    elseif (!$gateway = variable_get('donor_rally_payment_gateway', FALSE)) {
+      $requirements['donor_rally_payment_gateway'] = array(
+        'title' => $t('Donor Rally payment gateway'),
+        'value' => $t('No payment gateway selected'),
+        'description' => $t('Payment gateway must be set <a href="!url">here</a>.', array('!url' => url('admin/settings/donor-rally'))),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    else {
+      $requirements['donor_rally_payment_gateway'] = array(
+        'title' => $t('Donor Rally payment gateway'),
+        'value' => $t('Payment gateway: <a href="!url">%gateway</a>.', array('%gateway' => $options[$gateway], '!url' => url('admin/settings/donor-rally'))),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+  }
+
+  return $requirements;
+}
