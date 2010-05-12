@@ -42,7 +42,7 @@ function vertical_tabs_add_node_type_options(&$form, $node_type) {
     $node_form_state,
     $node
   );
-  $node_form = call_user_func_array('drupal_retrieve_form', $args);
+  $node_form = drupal_retrieve_form($node_form_id, $node_form_state, $node);
   $node_form['#post'] = $node_form_state['values'];
   drupal_prepare_form($node_form_id, $node_form, $node_form_state);
   uasort($node_form, 'element_sort');
