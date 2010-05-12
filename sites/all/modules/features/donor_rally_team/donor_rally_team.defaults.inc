@@ -39,18 +39,18 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_captain_email',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '43',
-      'parent' => 'group_captain_info',
+      'weight' => '52',
+      'parent' => 'group_team_coordinator',
       'label' => array(
         'format' => 'hidden',
       ),
       'teaser' => array(
-        'format' => 'default',
+        'format' => 'hidden',
         'exclude' => 1,
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 1,
+        'exclude' => 0,
       ),
       '4' => array(
         'format' => 'default',
@@ -82,7 +82,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Email',
-      'weight' => '43',
+      'weight' => '52',
       'description' => '',
       'type' => 'text_textfield',
       'module' => 'text',
@@ -94,8 +94,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_captain_first_name',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '40',
-      'parent' => 'group_captain_info',
+      'weight' => '50',
+      'parent' => 'group_team_coordinator',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -104,8 +104,8 @@ function _donor_rally_team_content_default_fields() {
         'exclude' => 1,
       ),
       'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
+        'format' => 'default',
+        'exclude' => 0,
       ),
       '4' => array(
         'format' => 'default',
@@ -137,7 +137,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'First name',
-      'weight' => '40',
+      'weight' => '50',
       'description' => '',
       'type' => 'text_textfield',
       'module' => 'text',
@@ -149,8 +149,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_captain_last_name',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '41',
-      'parent' => 'group_captain_info',
+      'weight' => '51',
+      'parent' => 'group_team_coordinator',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -159,8 +159,8 @@ function _donor_rally_team_content_default_fields() {
         'exclude' => 1,
       ),
       'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
+        'format' => 'default',
+        'exclude' => 0,
       ),
       '4' => array(
         'format' => 'default',
@@ -192,7 +192,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Last name',
-      'weight' => '41',
+      'weight' => '51',
       'description' => '',
       'type' => 'text_textfield',
       'module' => 'text',
@@ -204,8 +204,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_captain_location',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '42',
-      'parent' => 'group_captain_info',
+      'weight' => '53',
+      'parent' => 'group_team_coordinator',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -214,8 +214,8 @@ function _donor_rally_team_content_default_fields() {
         'exclude' => 1,
       ),
       'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
+        'format' => 'default',
+        'exclude' => 0,
       ),
       '4' => array(
         'format' => 'default',
@@ -386,65 +386,10 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Address',
-      'weight' => '42',
+      'weight' => '53',
       'description' => '',
       'type' => 'location',
       'module' => 'location_cck',
-    ),
-  );
-
-  // Exported field: field_captain_title
-  $fields[] = array(
-    'field_name' => 'field_captain_title',
-    'type_name' => 'team',
-    'display_settings' => array(
-      'weight' => '39',
-      'parent' => 'group_captain_info',
-      'label' => array(
-        'format' => 'hidden',
-      ),
-      'teaser' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '6',
-    'allowed_values' => '',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'rows' => 5,
-      'size' => '6',
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-          '_error_element' => 'default_value_widget][field_captain_title][0][value',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Title',
-      'weight' => '39',
-      'description' => '',
-      'type' => 'text_textfield',
-      'module' => 'text',
     ),
   );
 
@@ -453,7 +398,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_cash',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '52',
+      'weight' => '58',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -499,7 +444,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Cash',
-      'weight' => '53',
+      'weight' => '58',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -511,8 +456,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_cash_goal',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '3',
-      'parent' => 'group_team_info',
+      'weight' => '55',
+      'parent' => '',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -557,410 +502,10 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Cash Goal',
-      'weight' => '3',
+      'weight' => '55',
       'description' => 'Each dollar donated is 1 point.  Your goal includes on-line giving, individual and company gifts, and any matches you submit.',
       'type' => 'number',
       'module' => 'number',
-    ),
-  );
-
-  // Exported field: field_firm_name
-  $fields[] = array(
-    'field_name' => 'field_firm_name',
-    'type_name' => 'team',
-    'display_settings' => array(
-      'weight' => 0,
-      'parent' => 'group_firm_info',
-      'label' => array(
-        'format' => 'hidden',
-      ),
-      'teaser' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '1',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '160',
-    'allowed_values' => '',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'rows' => 5,
-      'size' => '60',
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-          '_error_element' => 'default_value_widget][field_firm_name][0][value',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Firm name',
-      'weight' => 0,
-      'description' => '',
-      'type' => 'text_textfield',
-      'module' => 'text',
-    ),
-  );
-
-  // Exported field: field_firm_website
-  $fields[] = array(
-    'field_name' => 'field_firm_website',
-    'type_name' => 'team',
-    'display_settings' => array(
-      'weight' => '3',
-      'parent' => 'group_firm_info',
-      'label' => array(
-        'format' => 'hidden',
-      ),
-      'teaser' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '256',
-    'allowed_values' => '',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'rows' => 5,
-      'size' => '40',
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-          '_error_element' => 'default_value_widget][field_firm_website][0][value',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Web site',
-      'weight' => '2',
-      'description' => '',
-      'type' => 'text_textfield',
-      'module' => 'text',
-    ),
-  );
-
-  // Exported field: field_location
-  $fields[] = array(
-    'field_name' => 'field_location',
-    'type_name' => 'team',
-    'display_settings' => array(
-      'weight' => '1',
-      'parent' => 'group_firm_info',
-      'label' => array(
-        'format' => 'hidden',
-      ),
-      'teaser' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'hidden',
-        'exclude' => 1,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'location',
-    'required' => '1',
-    'multiple' => '0',
-    'module' => 'location_cck',
-    'active' => '1',
-    'location_settings' => array(
-      'form' => array(
-        'fields' => array(
-          'name' => array(
-            'collect' => '0',
-            'default' => '',
-            'weight' => '2',
-          ),
-          'street' => array(
-            'collect' => '2',
-            'default' => '',
-            'weight' => '4',
-          ),
-          'additional' => array(
-            'collect' => '1',
-            'default' => '',
-            'weight' => '6',
-          ),
-          'city' => array(
-            'collect' => '2',
-            'default' => '',
-            'weight' => '8',
-          ),
-          'province' => array(
-            'collect' => '2',
-            'default' => '',
-            'weight' => '10',
-          ),
-          'postal_code' => array(
-            'collect' => '2',
-            'default' => '',
-            'weight' => '12',
-          ),
-          'country' => array(
-            'collect' => '4',
-            'default' => 'us',
-            'weight' => '14',
-          ),
-          'locpick' => array(
-            'collect' => '0',
-            'weight' => '20',
-          ),
-          'phone' => array(
-            'collect' => '2',
-            'default' => '',
-            'weight' => '25',
-          ),
-        ),
-      ),
-      'display' => array(
-        'hide' => array(
-          'country' => 'country',
-          'locpick' => 'locpick',
-          'province_name' => 'province_name',
-          'country_name' => 'country_name',
-          'map_link' => 'map_link',
-          'coords' => 'coords',
-          'name' => 0,
-          'street' => 0,
-          'additional' => 0,
-          'city' => 0,
-          'province' => 0,
-          'postal_code' => 0,
-          'phone' => 0,
-        ),
-      ),
-    ),
-    'widget' => array(
-      'default_value' => array(
-        '0' => array(
-          'name' => '',
-          'street' => '',
-          'additional' => '',
-          'city' => '',
-          'province' => '',
-          'postal_code' => '',
-          'phone' => '',
-          'cck_preview_in_progress' => TRUE,
-          'location_settings' => array(
-            'form' => array(
-              'fields' => array(
-                'name' => array(
-                  'default' => '',
-                  'collect' => '1',
-                  'weight' => '2',
-                ),
-                'street' => array(
-                  'default' => '',
-                  'collect' => 1,
-                  'weight' => '4',
-                ),
-                'additional' => array(
-                  'default' => '',
-                  'collect' => '1',
-                  'weight' => '6',
-                ),
-                'city' => array(
-                  'default' => '',
-                  'collect' => 1,
-                  'weight' => '8',
-                ),
-                'province' => array(
-                  'default' => '',
-                  'collect' => 1,
-                  'weight' => '10',
-                ),
-                'postal_code' => array(
-                  'default' => '',
-                  'collect' => 1,
-                  'weight' => '12',
-                ),
-                'country' => array(
-                  'default' => 'us',
-                  'collect' => '4',
-                  'weight' => '14',
-                ),
-                'locpick' => array(
-                  'default' => array(
-                    'user_latitude' => '',
-                    'user_longitude' => '',
-                  ),
-                  'collect' => '0',
-                  'weight' => '20',
-                  'nodiff' => TRUE,
-                ),
-                'phone' => array(
-                  'default' => '',
-                  'collect' => 1,
-                  'weight' => '25',
-                ),
-                'cck_preview_in_progress' => array(
-                  'default' => TRUE,
-                ),
-                'location_settings' => array(
-                  'default' => array(
-                    'form' => array(
-                      'fields' => array(
-                        'lid' => array(
-                          'default' => FALSE,
-                        ),
-                        'name' => array(
-                          'default' => '',
-                          'collect' => 1,
-                          'weight' => 2,
-                        ),
-                        'street' => array(
-                          'default' => '',
-                          'collect' => 1,
-                          'weight' => 4,
-                        ),
-                        'additional' => array(
-                          'default' => '',
-                          'collect' => 1,
-                          'weight' => 6,
-                        ),
-                        'city' => array(
-                          'default' => '',
-                          'collect' => 0,
-                          'weight' => 8,
-                        ),
-                        'province' => array(
-                          'default' => '',
-                          'collect' => 0,
-                          'weight' => 10,
-                        ),
-                        'postal_code' => array(
-                          'default' => '',
-                          'collect' => 0,
-                          'weight' => 12,
-                        ),
-                        'country' => array(
-                          'default' => 'us',
-                          'collect' => 1,
-                          'weight' => 14,
-                        ),
-                        'locpick' => array(
-                          'default' => FALSE,
-                          'collect' => 1,
-                          'weight' => 20,
-                          'nodiff' => TRUE,
-                        ),
-                        'latitude' => array(
-                          'default' => 0,
-                        ),
-                        'longitude' => array(
-                          'default' => 0,
-                        ),
-                        'source' => array(
-                          'default' => 0,
-                        ),
-                        'is_primary' => array(
-                          'default' => 0,
-                        ),
-                        'delete_location' => array(
-                          'default' => FALSE,
-                          'nodiff' => TRUE,
-                        ),
-                        'phone' => array(
-                          'default' => '',
-                          'collect' => 0,
-                          'weight' => 25,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                'lid' => array(
-                  'default' => FALSE,
-                ),
-                'latitude' => array(
-                  'default' => 0,
-                ),
-                'longitude' => array(
-                  'default' => 0,
-                ),
-                'source' => array(
-                  'default' => 0,
-                ),
-                'is_primary' => array(
-                  'default' => 0,
-                ),
-                'delete_location' => array(
-                  'default' => FALSE,
-                  'nodiff' => TRUE,
-                ),
-              ),
-            ),
-            'display' => array(
-              'hide' => array(
-                'locpick' => 'locpick',
-                'province_name' => 'province_name',
-                'country_name' => 'country_name',
-                'map_link' => 'map_link',
-                'coords' => 'coords',
-                'name' => 0,
-                'street' => 0,
-                'additional' => 0,
-                'city' => 0,
-                'province' => 0,
-                'postal_code' => 0,
-                'country' => 0,
-                'phone' => 0,
-              ),
-            ),
-          ),
-          'country' => 'us',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Address',
-      'weight' => '1',
-      'description' => '',
-      'type' => 'location',
-      'module' => 'location_cck',
     ),
   );
 
@@ -969,8 +514,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_logo',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '7',
-      'parent' => 'group_team_info',
+      'weight' => '57',
+      'parent' => '',
       'label' => array(
         'format' => 'inline',
       ),
@@ -1027,7 +572,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'use_default_image' => 1,
       'label' => 'Logo',
-      'weight' => '7',
+      'weight' => '57',
       'description' => 'Please upload your firm logo, or team logo, or a picture of your choosing. This image will be displayed on your team page.',
       'type' => 'imagefield_widget',
       'module' => 'imagefield',
@@ -1039,7 +584,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_offline_cash',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '55',
+      'weight' => '59',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -1085,7 +630,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Offline Cash',
-      'weight' => '56',
+      'weight' => '59',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -1097,7 +642,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_points_per_capita',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '57',
+      'weight' => '60',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -1143,7 +688,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Points Per Capita',
-      'weight' => '58',
+      'weight' => '60',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -1155,8 +700,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_size',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '2',
-      'parent' => 'group_team_info',
+      'weight' => '54',
+      'parent' => '',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -1198,7 +743,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Size',
-      'weight' => '2',
+      'weight' => '54',
       'description' => 'How many people work with the firm?',
       'type' => 'number',
       'module' => 'number',
@@ -1210,8 +755,8 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_team_info',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '6',
-      'parent' => 'group_team_info',
+      'weight' => '56',
+      'parent' => '',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -1253,7 +798,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Team greeting',
-      'weight' => '6',
+      'weight' => '56',
       'description' => 'Please write a short message to inspire your team. This paragraph will remain at the top center of your team’s page through the drive.  You will also have the opportunity to write blog entries, published to your team page, informing your team of accomplishments and events related to your effort.  You can create blog entries or edit this “Dear Team” text on your management page.',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -1265,7 +810,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_total_points',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '58',
+      'weight' => '61',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -1311,7 +856,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Total Points',
-      'weight' => '59',
+      'weight' => '61',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -1324,7 +869,6 @@ function _donor_rally_team_content_default_fields() {
     t('Cash'),
     t('Cash Goal'),
     t('Email'),
-    t('Firm name'),
     t('First name'),
     t('Last name'),
     t('Logo'),
@@ -1332,9 +876,7 @@ function _donor_rally_team_content_default_fields() {
     t('Points Per Capita'),
     t('Size'),
     t('Team greeting'),
-    t('Title'),
     t('Total Points'),
-    t('Web site'),
   );
 
   return $fields;
@@ -1507,55 +1049,12 @@ function _donor_rally_team_ctools_plugin_api() {
 function _donor_rally_team_fieldgroup_default_groups() {
   $groups = array();
 
-  // Exported group: group_captain_info
+  // Exported group: group_team_coordinator
   $groups[] = array(
     'group_type' => 'standard',
     'type_name' => 'team',
-    'group_name' => 'group_captain_info',
-    'label' => 'Team Coordinator',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'weight' => '48',
-        'label' => 'hidden',
-        'teaser' => array(
-          'format' => 'hidden',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'no_style',
-          'exclude' => 1,
-        ),
-        'description' => '',
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-    ),
-    'weight' => '48',
-    'fields' => array(
-      '0' => 'field_captain_title',
-      '1' => 'field_captain_first_name',
-      '2' => 'field_captain_last_name',
-      '3' => 'field_captain_location',
-      '4' => 'field_captain_email',
-    ),
-  );
-
-  // Exported group: group_firm_info
-  $groups[] = array(
-    'group_type' => 'standard',
-    'type_name' => 'team',
-    'group_name' => 'group_firm_info',
-    'label' => 'Firm',
+    'group_name' => 'group_team_coordinator',
+    'label' => 'Team coordinator',
     'settings' => array(
       'form' => array(
         'style' => 'fieldset',
@@ -1563,14 +1062,14 @@ function _donor_rally_team_fieldgroup_default_groups() {
       ),
       'display' => array(
         'weight' => '49',
-        'label' => 'hidden',
+        'label' => 'above',
         'teaser' => array(
           'format' => 'hidden',
-          'exclude' => 1,
+          'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'hidden',
-          'exclude' => 1,
+          'format' => 'simple',
+          'exclude' => 0,
         ),
         'description' => '',
         '4' => array(
@@ -1585,59 +1084,16 @@ function _donor_rally_team_fieldgroup_default_groups() {
     ),
     'weight' => '49',
     'fields' => array(
-      '0' => 'field_firm_name',
-      '1' => 'field_location',
-      '2' => 'field_firm_website',
-    ),
-  );
-
-  // Exported group: group_team_info
-  $groups[] = array(
-    'group_type' => 'standard',
-    'type_name' => 'team',
-    'group_name' => 'group_team_info',
-    'label' => 'Team',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'weight' => '50',
-        'label' => 'hidden',
-        'teaser' => array(
-          'format' => 'hidden',
-          'exclude' => 0,
-        ),
-        'full' => array(
-          'format' => 'hidden',
-          'exclude' => 0,
-        ),
-        'description' => '',
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-    ),
-    'weight' => '51',
-    'fields' => array(
-      '0' => 'field_size',
-      '1' => 'field_cash_goal',
-      '2' => 'field_team_info',
-      '3' => 'field_logo',
+      '0' => 'field_captain_first_name',
+      '1' => 'field_captain_last_name',
+      '2' => 'field_captain_email',
+      '3' => 'field_captain_location',
     ),
   );
 
   // Translatables
   array(
-    t('Firm'),
-    t('Team'),
-    t('Team Coordinator'),
+    t('Team coordinator'),
   );
 
   return $groups;
@@ -1749,17 +1205,6 @@ function _donor_rally_team_user_default_permissions() {
     ),
   );
 
-  // Exported permission: edit field_captain_title
-  $permissions[] = array(
-    'name' => 'edit field_captain_title',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
-    ),
-  );
-
   // Exported permission: edit field_cash
   $permissions[] = array(
     'name' => 'edit field_cash',
@@ -1771,39 +1216,6 @@ function _donor_rally_team_user_default_permissions() {
   // Exported permission: edit field_cash_goal
   $permissions[] = array(
     'name' => 'edit field_cash_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
-    ),
-  );
-
-  // Exported permission: edit field_firm_name
-  $permissions[] = array(
-    'name' => 'edit field_firm_name',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
-    ),
-  );
-
-  // Exported permission: edit field_firm_website
-  $permissions[] = array(
-    'name' => 'edit field_firm_website',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
-    ),
-  );
-
-  // Exported permission: edit field_location
-  $permissions[] = array(
-    'name' => 'edit field_location',
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'site editor',
@@ -1910,16 +1322,6 @@ function _donor_rally_team_user_default_permissions() {
     ),
   );
 
-  // Exported permission: view field_captain_title
-  $permissions[] = array(
-    'name' => 'view field_captain_title',
-    'roles' => array(
-      '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
-    ),
-  );
-
   // Exported permission: view field_cash
   $permissions[] = array(
     'name' => 'view field_cash',
@@ -1941,40 +1343,6 @@ function _donor_rally_team_user_default_permissions() {
       '2' => 'site editor',
       '3' => 'team lead',
       '4' => 'web admin',
-    ),
-  );
-
-  // Exported permission: view field_firm_name
-  $permissions[] = array(
-    'name' => 'view field_firm_name',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
-    ),
-  );
-
-  // Exported permission: view field_firm_website
-  $permissions[] = array(
-    'name' => 'view field_firm_website',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
-    ),
-  );
-
-  // Exported permission: view field_location
-  $permissions[] = array(
-    'name' => 'view field_location',
-    'roles' => array(
-      '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
     ),
   );
 
@@ -2047,26 +1415,12 @@ function _donor_rally_team_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'ant_pattern_team';
-  $strongarm->value = '[field_firm_name-raw]';
-
-  $export['ant_pattern_team'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'ant_team';
-  $strongarm->value = '2';
-
-  $export['ant_team'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'content_extra_weights_team';
   $strongarm->value = array(
-    'title' => '47',
-    'revision_information' => '62',
-    'menu' => '60',
-    'path' => '61',
+    'title' => '48',
+    'revision_information' => '64',
+    'menu' => '62',
+    'path' => '63',
   );
 
   $export['content_extra_weights_team'] = $strongarm;
@@ -2082,10 +1436,7 @@ function _donor_rally_team_strongarm() {
     'add_link' => 1,
     'registration_use' => 1,
     'admin_user_create_use' => 1,
-    'registration_hide' => array(
-      '0' => 'title',
-      '1' => 'field_logo',
-    ),
+    'registration_hide' => array(),
   );
 
   $export['content_profile_team'] = $strongarm;
@@ -2126,5 +1477,28 @@ function _donor_rally_team_strongarm() {
   $strongarm->value = 1;
 
   $export['user_register'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'vertical_tabs_forms';
+  $strongarm->value = array(
+    'team_node_form' => array(
+      'menu' => 'menu',
+      'revision_information' => 'revision_information',
+      'author' => 'author',
+      'options' => 'options',
+      'path' => 'path',
+      'group_team_coordinator' => 0,
+    ),
+  );
+
+  $export['vertical_tabs_forms'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'vertical_tabs_node_type_settings';
+  $strongarm->value = 1;
+
+  $export['vertical_tabs_node_type_settings'] = $strongarm;
   return $export;
 }

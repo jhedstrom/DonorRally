@@ -10,7 +10,7 @@ function _donor_rally_team_node_info() {
       'module' => 'features',
       'description' => t('Donor Rally Team'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Team name'),
       'has_body' => '0',
       'body_label' => '',
       'min_word_count' => '0',
