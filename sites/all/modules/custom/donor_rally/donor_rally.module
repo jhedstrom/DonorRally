@@ -281,8 +281,6 @@ function donor_rally_block($op = 'list', $delta = 0, $edit = array()) {
     case 'configure':
       return array();
     case 'view':
-      global $user;
-      $node = content_profile_load(DONOR_RALLY_CONTENT_PROFILE_TYPE, $user->uid);
       if (!$node) {
         $node = menu_get_object();
         if ($node && $node->type != DONOR_RALLY_CONTENT_PROFILE_TYPE) {
@@ -388,9 +386,8 @@ function donor_rally_theme_button($class, $text, $link, $attr = array()) {
 function theme_donor_rally_team_leaderboard_button($vars) {
   return donor_rally_theme_button(
     'donor-rally-leaderboard-button',
-    t('Firm Ranking'),
-    '<front>',
-    array('target' => '_blank')
+    t('Team Ranking'),
+    'topdanceteams'
   );
 }
 

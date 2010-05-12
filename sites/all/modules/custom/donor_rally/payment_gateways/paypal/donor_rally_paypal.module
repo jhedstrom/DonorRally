@@ -25,7 +25,7 @@ function donor_rally_paypal_donor_rally_donate_button(&$vars) {
  * Implementation of hook_donor_rally_online_cash().
  */
 function donor_rally_paypal_donor_rally_online_cash($nid) {
-  $result = db_result(db_query("SELECT SUM(amount) FROM {simple_payment} WHERE nid = %d AND module = 'donor_rally_paypal' AND processed GROUP BY nid", array(':nid' => $nid)));
+  $result = db_result(db_query("SELECT SUM(amount)/100 FROM {simple_payment} WHERE nid = %d AND module = 'donor_rally_paypal' GROUP BY nid", array(':nid' => $nid)));
   return $result;
 }
 
@@ -54,6 +54,12 @@ function donor_rally_paypal_donate_form($form_state, $vars) {
     '#type' => 'textfield',
     '#title' => t('Amount ($)'),
     '#default_value' => variable_get('donor_rally_paypal_default_amount', 15),
+  );
+
+  // Set payment type to _donations.
+  $form['cmd'] = array(
+    '#type' => 'hidden',
+    '#value' => '_donations',
   );
 
   $form['button'] = array(
