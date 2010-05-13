@@ -398,9 +398,7 @@ function _donor_rally_team_inkind_user_default_permissions() {
     'name' => 'edit field_food_goal',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -417,9 +415,7 @@ function _donor_rally_team_inkind_user_default_permissions() {
     'name' => 'edit field_volunteer_goal',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -429,9 +425,6 @@ function _donor_rally_team_inkind_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -441,9 +434,6 @@ function _donor_rally_team_inkind_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -453,9 +443,6 @@ function _donor_rally_team_inkind_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -465,9 +452,6 @@ function _donor_rally_team_inkind_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 

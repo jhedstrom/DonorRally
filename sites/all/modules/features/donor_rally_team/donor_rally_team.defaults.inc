@@ -444,7 +444,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Cash',
-      'weight' => '58',
+      'weight' => '14',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -502,7 +502,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Cash Goal',
-      'weight' => '55',
+      'weight' => '9',
       'description' => 'Each dollar donated is 1 point.  Your goal includes on-line giving, individual and company gifts, and any matches you submit.',
       'type' => 'number',
       'module' => 'number',
@@ -572,7 +572,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'use_default_image' => 1,
       'label' => 'Logo',
-      'weight' => '57',
+      'weight' => '13',
       'description' => 'Please upload your firm logo, or team logo, or a picture of your choosing. This image will be displayed on your team page.',
       'type' => 'imagefield_widget',
       'module' => 'imagefield',
@@ -630,7 +630,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Offline Cash',
-      'weight' => '59',
+      'weight' => '17',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -688,7 +688,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Points Per Capita',
-      'weight' => '60',
+      'weight' => '20',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -743,7 +743,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Size',
-      'weight' => '54',
+      'weight' => '8',
       'description' => 'How many people work with the firm?',
       'type' => 'number',
       'module' => 'number',
@@ -798,7 +798,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Team greeting',
-      'weight' => '56',
+      'weight' => '12',
       'description' => 'Please write a short message to inspire your team. This paragraph will remain at the top center of your team’s page through the drive.  You will also have the opportunity to write blog entries, published to your team page, informing your team of accomplishments and events related to your effort.  You can create blog entries or edit this “Dear Team” text on your management page.',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -856,7 +856,7 @@ function _donor_rally_team_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Total Points',
-      'weight' => '61',
+      'weight' => '21',
       'description' => '',
       'type' => 'number',
       'module' => 'number',
@@ -1082,7 +1082,7 @@ function _donor_rally_team_fieldgroup_default_groups() {
         ),
       ),
     ),
-    'weight' => '49',
+    'weight' => '7',
     'fields' => array(
       '0' => 'field_captain_first_name',
       '1' => 'field_captain_last_name',
@@ -1157,7 +1157,8 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit any team content',
     'roles' => array(
-      '0' => 'web admin',
+      '0' => 'site editor',
+      '1' => 'web admin',
     ),
   );
 
@@ -1166,9 +1167,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_captain_email',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1177,9 +1176,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_captain_first_name',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1188,9 +1185,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_captain_last_name',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1199,9 +1194,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_captain_location',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1218,9 +1211,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_cash_goal',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1229,9 +1220,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_logo',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1248,9 +1237,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_size',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1259,9 +1246,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit field_team_info',
     'roles' => array(
       '0' => 'anonymous user',
-      '1' => 'site editor',
-      '2' => 'team lead',
-      '3' => 'web admin',
+      '1' => 'authenticated user',
     ),
   );
 
@@ -1277,8 +1262,7 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit own team content',
     'roles' => array(
-      '0' => 'team lead',
-      '1' => 'web admin',
+      '0' => 'authenticated user',
     ),
   );
 
@@ -1287,8 +1271,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_email',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
+      '1' => 'web admin',
     ),
   );
 
@@ -1297,8 +1280,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_first_name',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
+      '1' => 'web admin',
     ),
   );
 
@@ -1307,8 +1289,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_last_name',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
+      '1' => 'web admin',
     ),
   );
 
@@ -1317,8 +1298,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_location',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'web admin',
+      '1' => 'web admin',
     ),
   );
 
@@ -1328,9 +1308,6 @@ function _donor_rally_team_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -1340,9 +1317,6 @@ function _donor_rally_team_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -1352,9 +1326,6 @@ function _donor_rally_team_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -1364,9 +1335,6 @@ function _donor_rally_team_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -1386,9 +1354,6 @@ function _donor_rally_team_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -1398,9 +1363,6 @@ function _donor_rally_team_user_default_permissions() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'site editor',
-      '3' => 'team lead',
-      '4' => 'web admin',
     ),
   );
 
@@ -1417,10 +1379,10 @@ function _donor_rally_team_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'content_extra_weights_team';
   $strongarm->value = array(
-    'title' => '48',
-    'revision_information' => '64',
-    'menu' => '62',
-    'path' => '63',
+    'title' => '6',
+    'revision_information' => '24',
+    'menu' => '22',
+    'path' => '23',
   );
 
   $export['content_extra_weights_team'] = $strongarm;
