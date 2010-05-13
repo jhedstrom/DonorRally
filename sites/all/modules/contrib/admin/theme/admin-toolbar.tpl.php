@@ -9,8 +9,8 @@
     </div>
 
     <?php foreach ($blocks as $bid => $block): ?>
-      <div class='admin-block <?php if (isset($block['class'])) print $block['class'] ?>' id='block-<?php print $bid ?>'>
-        <div class='block-content clear-block'><?php print $block['content'] ?></div>
+      <div class='admin-block <?php if (isset($block->class)) print $block->class ?>' id='block-<?php print $bid ?>'>
+        <div class='block-content clear-block'><?php print $block->content ?></div>
       </div>
     <?php endforeach; ?>
   </div>

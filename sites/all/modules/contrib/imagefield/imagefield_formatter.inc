@@ -1,5 +1,5 @@
 <?php
-// $Id: imagefield_formatter.inc 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: imagefield_formatter.inc,v 1.12 2009/03/21 03:26:57 quicksketch Exp $
 
 /**
  * @file

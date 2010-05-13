@@ -1,5 +1,5 @@
 <?php
-// $Id: filefield_meta.install 843 2009-07-08 01:03:08Z jhedstrom $
+// $Id: filefield_meta.install,v 1.8 2009/05/22 21:14:52 quicksketch Exp $
 /**
  * @file
  * FileField Meta: Add Video Support to File Field.

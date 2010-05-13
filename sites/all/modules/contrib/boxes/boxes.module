@@ -1,18 +1,32 @@
 <?php
-// $Id: boxes.module,v 1.6 2010/03/17 16:59:51 alexb Exp $
+// $Id: boxes.module,v 1.10.2.2 2010/04/26 02:15:58 jmiccolis Exp $
 
 /**
  * Implementation of hook_menu().
  */
 function boxes_menu() {
   $items = array();
-  $items['admin/build/block/box-add'] = array(
-    'title' => 'Add box',
+  ctools_include('plugins');
+  $plugins = ctools_get_plugins('boxes', 'plugins');
+  foreach ($plugins as $key => $info) {
+    if (isset($info['title'])) {
+      $items['admin/build/block/box-add/'. $key] = array(
+        'title' => 'Add '. strtolower($info['title']),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('boxes_add_form', 4),
+        'access arguments' => array('administer blocks'),
+        'type' => MENU_LOCAL_TASK,
+        'file' => 'boxes.admin.inc',
+      );
+    }
+  }
+  $items['admin/build/block/configure/boxes/%boxes/delete'] = array(
+    'title' => 'Delete box',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('boxes_add_form'),
+    'page arguments' => array('boxes_delete_form', 5),
     'access arguments' => array('administer blocks'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'boxes.admin.inc',
+    'type' => MENU_CALLBACK,
+    'file' => 'boxes.admin.inc',   
   );
   $items['boxes/ajax-submit'] = array(
     'page callback' => 'boxes_box_ajax_submit',
@@ -85,39 +99,45 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
         $blocks[$box->delta]['cache'] = BLOCK_NO_CACHE;
       }
 
-      // 'add' block for editing a page inline
-      $blocks['add']['info'] = t('Add custom block');
-      $blocks['add']['cache'] = BLOCK_NO_CACHE;
+      // 'add' blocks for editing a page inline
+      ctools_include('plugins');
+      $plugins = ctools_get_plugins('boxes', 'plugins');
+      foreach ($plugins as $key => $info) {
+        if (isset($info['title'])) {
+          $blocks["add__$key"]['info'] = t('Add custom !title', array('!title' => strtolower($info['title'])));
+          $blocks["add__$key"]['cache'] = BLOCK_NO_CACHE;
+        }
+      }
       return $blocks;
 
     case 'configure':
-      if ($delta) {
-        $box = boxes_load($delta);
-      }
-      if (filter_access($box->format)) {
-        return boxes_box_form($box);
+      if ($delta && strpos($delta, 'add__') !== 0) {
+        if ($box = boxes_load($delta)) {
+          if ($box->options_form()) {
+            return boxes_box_form($box);
+          }
+        }
       }
       break;
 
     case 'save':
-      $box = new stdClass();
-      $box->delta = $delta;
-      $box->description = $edit['description'];
-      $box->title = $edit['title'];
-      $box->body = $edit['body'];
-      $box->format = $edit['format'];
-      boxes_save($box);
+      $edit['delta'] = $delta;
+      if (!$box = boxes_load($delta)) {
+        $box = boxes_create($edit['plugin_key']);
+      }
+      $box->set($edit);
+      $box->save();
       break;
 
     case 'view':
       // Add boxes JS.
       boxes_add_js();
 
-      $block = array();
       ctools_include('export');
 
       // If the 'add' box was requested, replace the delta with a unique delta.
-      if ($delta === 'add') {
+      if (strpos($delta, 'add__') === 0) {
+        $plugin_key = str_replace('add__', '', $delta);
         // Increment {$identifier}-$i until there is a free delta.
         $identifier = (module_exists('spaces') && $space = spaces_get_space()) ? "{$space->type}-{$space->id}" : 'box';
         $boxes = boxes_block('list');
@@ -126,11 +146,8 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
           $hash = dechex(crc32($user->sid . microtime()));
         }
         $delta = "{$identifier}-{$hash}";
-
-        $box = ctools_export_new_object('box');
-        $box->delta = $delta;
-        $box->new = TRUE;
-        $block['delta'] = $delta;
+        $box = boxes_create($plugin_key);
+        $box->set(array('delta' => $delta));
       }
       else {
         $box = boxes_load($delta);
@@ -140,7 +157,7 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
       if ($box) {
         // Generate content and provide an editing form if user has proper
         // permissions.
-        $box->content = !empty($box->body) ? check_markup($box->body, $box->format, FALSE) : '';
+        $block = $box->render();
 
         // If we are in the middle of an AJAX request, it's likely the block
         // is about to get dynamically inserted into the DOM. Ensure that there
@@ -151,16 +168,16 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
         $formats = array('xml', 'javascript', 'json');
         foreach ($formats as $format) {
           if (strpos($headers, $format) !== FALSE) {
-            if (filter_xss_admin($box->content) != $box->content) {
+            if (stripos($block['content'], '<script') !== FALSE) {
               $list = module_invoke('boxes', 'block', 'list');
               $text = !empty($list[$box->delta]['info']) ? $list[$box->delta]['info'] : t('Untitled');
-              $box->content = theme('boxes_script_placeholder', $text);
+              $block['content'] = theme('boxes_script_placeholder', $text);
             }
             break;
           }
         }
 
-        if (boxes_access_admin()) {
+        if (boxes_access_admin() && $box->options_form()) {
           module_load_include('inc', 'boxes', 'boxes.admin');
 
           // If we are in the middle of processing this very form (e.g. during
@@ -169,10 +186,10 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
           if (isset($_POST['form_id']) && $_POST['form_id'] === $form_id) {
             $form_id .= time();
           }
-          $box->content = drupal_get_form($form_id, $box);
+          $block['content'] = drupal_get_form($form_id, $box, $block);
         }
-        $block['content'] = $box->content;
-        $block['subject'] = isset($box->title) ? check_plain($box->title) : NULL;
+        // Avoid that block module overrides title and set both subject and title.
+        $block['title'] = $block['subject'];
         return $block;
       }
       break;
@@ -180,64 +197,54 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
 }
 
 /**
+ * Create a new box object.
+ */
+function boxes_create($plugin_key) {
+  module_load_include('inc', 'boxes', 'plugins/boxes_box');
+  return boxes_box::create($plugin_key);
+}
+
+/**
  * Loader for boxes.
  */
-function boxes_load($delta = NULL, $reset = FALSE) {
-  // todo cache!
-  ctools_include('export');
-  if ($reset) {
-    ctools_export_load_object_reset('box');
-  }
+function boxes_load($delta = NULL) {
+  module_load_include('inc', 'boxes', 'plugins/boxes_box');
   if (isset($delta)) {
-    return array_pop(ctools_export_load_object('box', 'names', array($delta)));
+    return boxes_box::load($delta);
   }
-  else {
-    return ctools_export_load_object('box');
+  ctools_include('export');
+  $boxes = array();
+  foreach (ctools_export_load_object('box') as $box) {
+    $boxes[$box->delta] = boxes_box::load($box->delta);
   }
+  return $boxes;
 }
 
 /**
- * Save a box.
+ * Reset boxes load caches.
  */
-function boxes_save($box) {
-  $existing = boxes_load($box->delta, TRUE);
-  if ($existing && ($existing->export_type & EXPORT_IN_DATABASE)) {
-    drupal_write_record('box', $box, array('delta'));
-  }
-  else {
-    drupal_write_record('box', $box);
-  }
-
-  // Invalidate the ctools object cache.
-  boxes_load(NULL, TRUE);
-
-  // Invalidate the context block info cache.
-  module_exists('context') ? context_invalidate_cache() : NULL;
-}
-
-/**
- * Delete a box.
- */
-function boxes_delete($delta) {
-  db_query("DELETE FROM {box} WHERE delta = '%s'", $delta);
-
-  // Invalidate the ctools object cache.
-  boxes_load(NULL, TRUE);
-
-  // Invalidate the context block info cache.
-  module_exists('context') ? context_invalidate_cache() : NULL;
+function boxes_load_reset() {
+  boxes_box::reset();
 }
 
 /**
  * Common element of the box fom
  */
-function boxes_box_form($box = null) {
+function boxes_box_form($box) {
   $form = array();
-  $form['#box'] = $box;
+  // For hook_block('save').
+  $form['plugin_key'] = array(
+    '#type' => 'value',
+    '#value' => $box->plugin_key,
+  );
+  $form['delta'] = array(
+    '#type' => 'value',
+    '#value' => $box->delta,
+  );
   $form['description'] = array(
     '#type' => 'textfield',
     '#title' => t('Box description'),
-    '#default_value' => isset($box) ? $box->description : '',
+    '#default_value' => $box->description,
     '#maxlength' => 64,
     '#description' => t('A brief description of your box.'),
     '#required' => TRUE,
@@ -248,23 +255,11 @@ function boxes_box_form($box = null) {
     '#title' => t('Block title'),
     '#maxlength' => 64,
     '#description' => t('The title of the block as shown to the user.'),
-    '#default_value' => isset($box) ? $box->title: '',
+    '#default_value' => $box->title,
     '#weight' => -18,
   );
-  $form['body_field']['#weight'] = -17;
-  $form['body_field']['body'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Box body'),
-    '#default_value' => isset($box) ? $box->body : '',
-    '#rows' => 6,
-    '#description' => t('The content of the block as shown to the user.'),
-    '#weight' => -17,
-  );
-  if (!isset($edit['format'])) {
-    $edit['format'] = FILTER_FORMAT_DEFAULT;
-  }
-  $form['body_field']['format'] = filter_form((isset($box) ? $box->format : null), -16);
-
+  $form['options'] = $box->options_form();
+  $form['options']['#weight'] = -17;
   return $form;
 }
 
@@ -293,8 +288,31 @@ function boxes_form_block_admin_configure_alter(&$form, &$form_state) {
 
 // Submit handler for box deletion.
 function boxes_block_delete_submit($form, &$form_state) {
-  boxes_delete($form_state['values']['delta']);
-  $form_state['redirect'] = 'admin/build/block';
+  drupal_goto('admin/build/block/configure/boxes/'. $form_state['values']['delta'] .'/delete');
+}
+
+/**
+ * Alters the block admin form to add delete links next to boxes blocks.
+ */
+function boxes_form_block_admin_display_form_alter(&$form, $form_state) {
+  foreach (element_children($form) as $i) {
+    if ($form[$i]['module']['#value'] == 'boxes') {
+      $delta = $form[$i]['delta']['#value'];
+      if (strpos($delta, 'add__') !== 0) {
+        $box = boxes_load($delta);
+        if (($box->export_type & EXPORT_IN_DATABASE) && ($box->export_type & EXPORT_IN_CODE)) {
+          $form[$i]['delete'] = array(
+            '#value' => l(t('revert'), 'admin/build/block/configure/boxes/'. $delta .'/delete'),
+          );
+        }
+        elseif (!($box->export_type & EXPORT_IN_CODE)) {
+          $form[$i]['delete'] = array(
+            '#value' => l(t('delete'), 'admin/build/block/configure/boxes/'. $delta .'/delete'),
+          );
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -304,6 +322,44 @@ function boxes_ctools_plugin_api($module, $api) {
   if ($module == 'spaces' && $api == 'plugins') {
     return array('version' => 3);
   }
+  elseif ($owner == 'boxes' && $api == 'plugins') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implementation of hook_ctools_plugin_plugins().
+ */
+function boxes_ctools_plugin_plugins() {
+  return array(
+    'cache' => TRUE,
+    'use hooks' => TRUE,
+  );
+}
+
+/**
+ * Implementation of hook_boxes_plugins().
+ */
+function boxes_boxes_plugins() {
+  $info = array();
+  $path = drupal_get_path('module', 'boxes') .'/plugins';
+  $info['box'] = array(
+    'handler' => array(
+      'class' => 'boxes_box',
+      'file' => 'boxes_box.inc',
+      'path' => $path,
+    ),
+  );
+  $info['simple'] = array(
+    'title' => 'Box',
+    'handler' => array(
+      'parent' => 'box',
+      'class' => 'boxes_simple',
+      'file' => 'boxes_simple.inc',
+      'path' => $path,
+    ),
+  );
+  return $info;
 }
 
 /**
@@ -344,7 +400,7 @@ function boxes_spaces_registry() {
 function boxes_spaces_dashboard_block_access_alter(&$access, $block) {
   if ($block->module === 'boxes') {
     // This is the add block, give access to admins.
-    if ($block->delta === 'add') {
+    if (strpos($block->delta, 'add__') === 0) {
       $access = boxes_access_admin();
     }
     // If this box is specific to the current space, allow access.
@@ -393,8 +449,11 @@ function boxes_context_block_info_alter(&$blocks) {
  */
 function boxes_boxes_view_alter(&$box, $delta) {
   if (module_exists('spaces') && $space = spaces_get_space()) {
-    $space_box = $space->controllers->boxes->get($delta);
-    $box = $space_box ? $space_box : $box;
+    if ($space_box = $space->controllers->boxes->get($delta)) {
+      $box = boxes_create($space_box['plugin_key']);
+      $box->set($space_box);
+      $box->new = FALSE;
+    }
   }
 }
 

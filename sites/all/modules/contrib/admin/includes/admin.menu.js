@@ -1,4 +1,4 @@
-// $Id: admin.menu.js,v 1.1.2.6 2010/02/04 00:34:32 yhahn Exp $
+// $Id: admin.menu.js,v 1.1.2.7 2010/04/25 17:17:11 yhahn Exp $
 
 Drupal.behaviors.adminToolbarMenu = function(context) {
   if (jQuery().drilldown) {
@@ -7,7 +7,6 @@ Drupal.behaviors.adminToolbarMenu = function(context) {
       .each(function() {
         var menu = $(this);
         var trail = '#admin-toolbar div.admin-tab.' + $(this).attr('id').split('block-')[1] + ' span';
-        menu.drilldown('init', {'activePath': Drupal.settings.activePath, 'trail': trail});
 
         // Replace the standard trail click handler with one that only
         // adjusts menu if the admin tab is active. Otherwise, switch
@@ -30,6 +29,9 @@ Drupal.behaviors.adminToolbarMenu = function(context) {
             return false;
           });
         });
+
+        // Init drilldown plugin.
+        menu.drilldown('init', {'activePath': Drupal.settings.activePath, 'trail': trail});
       });
   }
 };

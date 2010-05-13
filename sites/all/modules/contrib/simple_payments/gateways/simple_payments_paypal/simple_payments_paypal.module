@@ -106,6 +106,7 @@ function _simple_payments_paypal_post($data = array()) {
 function _simple_payments_paypal_ipn_verify($vars = array()) {
   if (variable_get('simple_payments_paypal_sandbox', 0)) {
     // PayPal sandbox requires login in order to even access, so for sandbox mode, simply return true.
+    watchdog('simple_payments_paypal', 'IPN Post vars=@vars', array('@vars' => print_r($vars, TRUE)));
     return TRUE;
   }
   $ch = curl_init(SIMPLE_PAYMENTS_PAYPAL_SUBMIT_URL);
@@ -143,21 +144,25 @@ function _simple_payments_paypal_ipn_verify($vars = array()) {
 function simple_payments_paypal_ipn() {
 	$ipn = $_POST;
 
-	if(!_simple_payments_paypal_ipn_verify($ipn))
+	if(!_simple_payments_paypal_ipn_verify($ipn)) {
+          watchdog('simple_payments_paypal', 'IPN verification failed.');
 		return;
-	
-	if($ipn['payment_status'] != 'Completed')
-	  return;
-	
+	}
+
+	if($ipn['payment_status'] != 'Completed') {
+          watchdog('simple_payments_paypal', 'Bad payment status: @status', array('@status' => $ipn['payment_status']));
+          return;
+	}
 	
   $payment = simple_payments_explode_custom($ipn['custom']);
 
   $payment['gateway'] = 'paypal';
 	$payment['currency'] = $ipn['mc_currency'];
-	$payment['amount'] = bcmul($ipn['mc_gross'], 100);
+	$payment['amount'] = $ipn['mc_gross'] * 100;
   $payment['timestamp'] = strtotime($ipn['payment_date']);
 	$payment['details'] = $ipn;
-	
+
+  watchdog('simple_payments_paypal', 'Payment received: @payment', array('@payment' => print_r($payment, TRUE)));
 	simple_payments_payment_received($payment);
 }
 

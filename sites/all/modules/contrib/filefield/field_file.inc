@@ -1,5 +1,5 @@
 <?php
-// $Id: field_file.inc 843 2009-07-08 01:03:08Z jhedstrom $
+// $Id: field_file.inc,v 1.35 2010/04/29 01:37:05 quicksketch Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function field_file_load($fid, $reset = NULL) {
     }
 
     foreach (module_implements('file_load') as $module) {
-      $function =  $module .'_file_load';
+      $function = $module .'_file_load';
       $function($file);
     }
 
@@ -52,7 +52,7 @@ function field_file_load($fid, $reset = NULL) {
 
   // Cast to an array for the field storage.
   // Contrary to fields, hook_file() and core file functions expect objects.
-  return (array)$files[$fid];
+  return isset($files[$fid]) ? (array) $files[$fid] : FALSE;
 }
 
 /**

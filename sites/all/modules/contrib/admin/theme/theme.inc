@@ -11,11 +11,11 @@ function template_preprocess_admin_toolbar(&$vars) {
     $vars['tabs'] = array();
     foreach ($vars['blocks'] as $bid => $block) {
       $vars['tabs'][$bid] = array(
-        'title' => $block['subject'],
+        'title' => $block->subject,
         'attributes' => array('id' => 'admin-tab-'. $bid),
       );
       if ($bid == $active) {
-        $vars['blocks'][$bid]['class'] = 'admin-active';
+        $vars['blocks'][$bid]->class = 'admin-active';
         $vars['tabs'][$bid]['active'] = TRUE;
       }
     }
@@ -87,7 +87,16 @@ function theme_admin_menu_tree_output($tree) {
       $output .= theme('menu_item', $link, $data['link']['has_children'], '', $in_active_trail, $extra_class);
     }
   }
-  return $output ? theme('menu_tree', $output) : '';
+  return $output ? theme('admin_menu_tree', $output) : '';
+}
+
+/**
+ * Alternative to theme_menu_tree().
+ * Ensures custom theme-level overrides of theme_menu_tree() do not break
+ * markup expected by admin.
+ */
+function theme_admin_menu_tree($tree) {
+  return theme_menu_tree($tree);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: filefield.views.inc 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: filefield.views.inc,v 1.1 2009/04/12 19:14:02 quicksketch Exp $
 /**
  * @file
  * Provide views data for filefield.module.

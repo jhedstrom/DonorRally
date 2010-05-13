@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.admin.inc,v 1.1.2.3.2.4 2010/02/12 22:49:16 yhahn Exp $
+// $Id: admin.admin.inc,v 1.1.2.3.2.5 2010/04/25 16:39:10 yhahn Exp $
 
 /**
  * System settings form for admin toolbar.
@@ -41,6 +41,8 @@ function admin_settings_form() {
       }
     }
   }
+  // Store block info for use in form processing.
+  $form['#block_info'] = $block_info;
 
   // Get default block options.
   $options = array();
@@ -55,7 +57,7 @@ function admin_settings_form() {
   $form['admin_toolbar']['blocks'] = array(
     '#type' => 'checkboxes',
     '#options' => $options,
-    '#default_value' => admin_get_settings('blocks'),
+    '#default_value' => drupal_map_assoc(array_keys(array_filter(admin_get_settings('blocks')))),
   );
 
   // Grab an array of human-readable module names. It hurts that we need to do this.
@@ -84,7 +86,28 @@ function admin_settings_form() {
     '#value' => t('Add block'),
   );
 
-  return system_settings_form($form);
+  $form = system_settings_form($form);
+
+  // Add a submit handler for expanding block information.
+  array_unshift($form['#submit'], 'admin_settings_form_submit');
+
+  return $form;
+}
+
+/**
+ * Submit handler for admin_settings_form().
+ *
+ * Retrieves cache type for each block and saves that instead of `1` for each
+ * enabled block.
+ */
+function admin_settings_form_submit($form, &$form_state) {
+  if (isset($form['#block_info'], $form_state['values']['admin_toolbar']['blocks'])) {
+    $blocks = array();
+    foreach (array_keys(array_filter($form_state['values']['admin_toolbar']['blocks'])) as $bid) {
+      $blocks[$bid] = isset($form['#block_info'][$bid]['cache']) ? $form['#block_info'][$bid]['cache'] : BLOCK_NO_CACHE;
+    }
+    $form_state['values']['admin_toolbar']['blocks'] = $blocks;
+  }
 }
 
 /**
@@ -108,8 +131,7 @@ function theme_admin_settings_form($form) {
 
   // Admin blocks
   $header = array(array('data' => t('Administrative blocks'), 'colspan' => 2));
-  $default_blocks = admin_get_default_blocks(TRUE);
-  foreach ($default_blocks as $block) {
+  foreach (array_keys(admin_get_default_blocks(TRUE)) as $block) {
     $rows[] = array(array(
         'data' => drupal_render($form['blocks'][$block]),
         'colspan' => 2
@@ -117,10 +139,9 @@ function theme_admin_settings_form($form) {
   }
 
   // "Custom" blocks
-  $custom = array_diff(element_children($form['blocks']), $default_blocks);
   $rows[] = array(array('data' => t('Other blocks'), 'colspan' => 2, 'header' => TRUE));
-  if (!empty($custom)) {
-    foreach ($custom as $block) {
+  foreach (element_children($form['blocks']) as $block) {
+    if (empty($form['blocks'][$block]['#printed'])) {
       $rows[] = array(array(
         'data' => drupal_render($form['blocks'][$block]),
         'colspan' => 2

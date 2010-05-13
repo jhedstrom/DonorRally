@@ -1,4 +1,4 @@
-// $Id: admin.toolbar.js,v 1.1.2.4 2010/01/09 02:58:37 yhahn Exp $
+// $Id: admin.toolbar.js,v 1.1.2.6 2010/04/16 19:34:39 yhahn Exp $
 
 Drupal.behaviors.adminToolbar = function(context) {
   $('#admin-toolbar:not(.processed)').each(function() {

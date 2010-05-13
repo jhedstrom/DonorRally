@@ -1,5 +1,5 @@
 <?php
-// $Id: filefield.devel.inc 890 2009-11-03 22:58:25Z jhedstrom $
+// $Id: filefield.devel.inc,v 1.3 2009/07/25 02:39:25 quicksketch Exp $
 
 /**
  * @file

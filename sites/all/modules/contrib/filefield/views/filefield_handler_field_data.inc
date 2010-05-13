@@ -1,5 +1,5 @@
 <?php
-// $Id: filefield_handler_field_data.inc 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: filefield_handler_field_data.inc,v 1.2 2010/01/08 22:38:40 quicksketch Exp $
 
 /**
  * @file
@@ -9,9 +9,10 @@
  */
 class filefield_handler_field_data extends views_handler_field_node {
 
-  function options(&$options) {
-    parent::options($options);
-    $options['data_key'] = 'description';
+  function option_definition() {
+    $options = parent::option_definition();
+    $options['data_key'] = array('default' => 'description');
+    return $options;
   }
 
   function options_form(&$form, &$form_state) {
