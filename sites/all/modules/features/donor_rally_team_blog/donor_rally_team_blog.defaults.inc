@@ -30,7 +30,7 @@ function _donor_rally_team_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'delete any team_blog_post content',
     'roles' => array(
-      '0' => 'web admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -39,7 +39,7 @@ function _donor_rally_team_blog_user_default_permissions() {
     'name' => 'delete own admin_blog_post content',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'web admin',
+      '1' => 'administrator',
     ),
   );
 
@@ -48,7 +48,7 @@ function _donor_rally_team_blog_user_default_permissions() {
     'name' => 'delete own team_blog_post content',
     'roles' => array(
       '0' => 'authenticated user',
-      '1' => 'web admin',
+      '1' => 'administrator',
     ),
   );
 
@@ -57,7 +57,7 @@ function _donor_rally_team_blog_user_default_permissions() {
     'name' => 'edit any admin_blog_post content',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'web admin',
+      '1' => 'administrator',
     ),
   );
 
@@ -66,7 +66,7 @@ function _donor_rally_team_blog_user_default_permissions() {
     'name' => 'edit any team_blog_post content',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'web admin',
+      '1' => 'administrator',
     ),
   );
 
@@ -75,7 +75,7 @@ function _donor_rally_team_blog_user_default_permissions() {
     'name' => 'edit own admin_blog_post content',
     'roles' => array(
       '0' => 'site editor',
-      '1' => 'web admin',
+      '1' => 'administrator',
     ),
   );
 

@@ -389,7 +389,7 @@ function _donor_rally_team_inkind_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit field_food',
     'roles' => array(
-      '0' => 'web admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -406,7 +406,7 @@ function _donor_rally_team_inkind_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit field_volunteer',
     'roles' => array(
-      '0' => 'web admin',
+      '0' => 'administrator',
     ),
   );
 
