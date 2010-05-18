@@ -123,8 +123,8 @@ function donor_rally_refresh_all() {
       'WHERE nid = %d',
       array(
         $now['cash'],
-        $now['cash'], $now['offline_cash'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
-        $now['cash'], $now['offline_cash'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
+        $now['cash'], $now['field_offline_cash_value'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
+        $now['cash'], $now['field_offline_cash_value'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
         $now['size'],
         $nid
       )
