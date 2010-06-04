@@ -151,6 +151,9 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     // Admin theme.
     variable_set('admin_theme', 'rubik');
 
+    // Default footer.
+    variable_set('site_footer', st('Powered by <a href="!url">Donor Rally</a>', array('!url' => url('http://donorrally.com'))));
+
     // Set default theme. This needes some more set up on next page load
     // We cannot do everything here because of _system_theme_data() static cache
     system_theme_data();
@@ -383,8 +386,17 @@ function  _donor_rally_install_modules() {
     // Custom modules.
     'os_custom',
 
+    // Social networking modules.
+    'donor_rally_social',
+    'forward',
+    'forward_services',
+    'general_services',
+    'service_links',
+    'shorten',
+    'shorturl',
+
     // Donor Rally features.
-    'donor_rally_team', 'donor_rally_team_blog',
+    'donor_rally_team', 'donor_rally_team_blog', 'donor_rally_social_networking',
   );
 
   // Enable selected Donor Rally payment gateway.

@@ -1,0 +1,38 @@
+Common subdirectories: service_links/css and service_linksNEW/css
+Common subdirectories: service_links/images and service_linksNEW/images
+Common subdirectories: service_links/js and service_linksNEW/js
+diff -up service_links/service_links.admin.inc service_linksNEW/service_links.admin.inc
+--- service_links/service_links.admin.inc	2009-08-18 17:54:03.000000000 +0000
++++ service_linksNEW/service_links.admin.inc	2009-11-26 18:30:00.000000000 +0000
+@@ -126,7 +126,8 @@ function service_links_admin_settings() 
+       '#type' => 'select',
+       '#title' => t('How generate short links'),
+       '#default_value' => variable_get('service_links_short_links_type', 1),
+-      '#options' => array(1 => t('Use node/xxx alias'), 2 => t('Use TinyURL.com service'), 3 => t('Redirect only the Domain name'), 4 => t('Combo: domain redirect and node/xxx alias')),
++      '#description' => t('If you select "Short URL," it will use the service selected with the <a href="@shorten">Shorten URLs module</a>. If you have not enabled the module, Service Links will default to TinyURL.', array('@shorten' => 'http://drupal.org/project/shorten')),
++      '#options' => array(1 => t('Use node/xxx alias'), 2 => t('Use Short URL'), 3 => t('Redirect only the Domain name'), 4 => t('Combo: domain redirect and node/xxx alias')),
+     );
+     $form['short_links']['service_links_domain_redirect'] = array(
+       '#type' => 'textfield',
+diff -up service_links/service_links.module service_linksNEW/service_links.module
+--- service_links/service_links.module	2009-11-14 00:41:31.000000000 +0000
++++ service_linksNEW/service_links.module	2009-11-26 18:21:54.000000000 +0000
+@@ -314,8 +314,13 @@ function service_links_short_url($url, $
+       //with alias = true dont transform with path
+       return url("node/$nid", array('absolute' => TRUE, 'alias' => TRUE));
+     case 2:
+-      $turl = drupal_http_request('http://tinyurl.com/api-create.php?url='. $url);
+-      $turl = (isset($turl->data) && ($turl->code == 200)) ? $turl->data : $url;
++      if (module_exists('shorten')) {
++        $turl = shorten_url($url);
++      }
++      else {
++        $turl = drupal_http_request('http://tinyurl.com/api-create.php?url='. $url);
++        $turl = (isset($turl->data) && ($turl->code == 200)) ? $turl->data : $url;
++      }
+       return $turl;
+     case 3:
+       $burl = variable_get('service_links_domain_redirect', NULL);
+Common subdirectories: service_links/services and service_linksNEW/services
+Only in service_linksNEW/: .svn
+Common subdirectories: service_links/translations and service_linksNEW/translations
