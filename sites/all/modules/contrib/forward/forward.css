@@ -1,0 +1,25 @@
+/* $Id: forward.css,v 1.2.2.4 2009/09/21 15:43:44 seanr Exp $ */
+
+.forward-link {
+  position:relative;
+  bottom: 0.5em;
+  float:right;
+  margin-left: 1em;
+}
+
+.forward-syslink {
+  margin-right: 1em;
+}
+
+img.forward-icon {
+  vertical-align: middle;
+}
+
+img.forward-icon-margin {
+  margin-right: 4px;
+}
+
+label.printmail-label {
+  width: 175px;
+  float: left;
+}

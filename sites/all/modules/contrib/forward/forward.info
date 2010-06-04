@@ -1,0 +1,10 @@
+; $Id: forward.info,v 1.2 2007/07/24 16:20:44 seanr Exp $
+name = Forward 
+description = Forward this page module
+core = "6.x"
+; Information added by drupal.org packaging script on 2010-03-22
+version = "6.x-1.16"
+core = "6.x"
+project = "forward"
+datestamp = "1269285608"
+

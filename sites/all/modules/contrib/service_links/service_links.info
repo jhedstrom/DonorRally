@@ -1,0 +1,12 @@
+; $Id: service_links.info,v 1.4.4.2 2009/04/03 11:21:03 thecrow Exp $
+name = "Service links"
+description = "Module engine for add various service links about sharing networks to nodes."
+core = 6.x
+package = Service Links
+
+; Information added by drupal.org packaging script on 2010-01-20
+version = "6.x-2.x-dev"
+core = "6.x"
+project = "service_links"
+datestamp = "1263946423"
+

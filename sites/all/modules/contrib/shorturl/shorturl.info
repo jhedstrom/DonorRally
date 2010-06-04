@@ -1,0 +1,12 @@
+; $Id: shorturl.info,v 1.1 2009/05/13 17:41:39 inadarei Exp $
+name = Short URL
+description = API to Shorten Any URL a-la bit.ly, tinyURL, is.gd etc.
+package = Development
+core = 6.x
+
+; Information added by drupal.org packaging script on 2009-05-13
+version = "6.x-1.0-beta1"
+core = "6.x"
+project = "shorturl"
+datestamp = "1242238277"
+

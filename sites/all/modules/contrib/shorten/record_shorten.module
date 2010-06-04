@@ -1,0 +1,57 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   Records shortened URLs.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function record_shorten_menu() {
+  $items = array();
+  $items['admin/settings/shorten/records'] = array(
+    'title' => 'Shortened URLs',
+    'description' => 'Lists shortened URLs.',
+    'page callback' => 'theme',
+    'page arguments' => array('record_shorten_records'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function record_shorten_theme($existing, $type, $theme, $path) {
+  return array(
+    'record_shorten_records' => array(
+      'arguments' => array(),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_shorten_create().
+ */
+function record_shorten_shorten_create($old, $new, $service) {
+  $array = array('original' => $old, 'short' => $new, 'service' => $service);
+  drupal_write_record('record_shorten', $array);
+}
+
+/**
+ * Builds a list of shortened URLs.
+ */
+function theme_record_shorten_records() {
+  $header = array(t('Original'), t('Short'), t('Service'));
+  $rows = array();
+  $result = pager_query("SELECT original, short, service FROM {record_shorten} ORDER BY sid DESC");
+  while ($row = db_fetch_array($result)) {
+    $rows[] = $row;
+  }
+  $output = theme('table', $header, $rows);
+  $output .= theme('pager');
+  return $output;
+}

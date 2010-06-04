@@ -1,0 +1,74 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   (Un)installs the Shorten module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function shorten_install() {
+  drupal_install_schema('shorten');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function shorten_schema(){
+  $schema = array();
+  $schema['cache_shorten'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function shorten_uninstall() {
+  drupal_uninstall_schema('shorten');
+
+  variable_del('shorten_www');
+  variable_del('shorten_adjix');
+  variable_del('shorten_cligs');
+  variable_del('shorten_method');
+  variable_del('shorten_redirec');
+  variable_del('shorten_service');
+  variable_del('shorten_bitly_key');
+  variable_get('shorten_use_alias');
+  variable_del('shorten_bitly_login');
+  variable_del('shorten_adjix_custom');
+  variable_del('shorten_show_service');
+  variable_del('shorten_generate_token');
+  variable_del('shorten_service_backup');
+  variable_del('shorten_invisible_services');
+}
+
+/**
+ * Implementation of hook_update_N().
+ */
+function shorten_update_6100() {
+  $r = FALSE;
+  if (variable_get('shorten_service', 'is.gd') == 'Drupal ShortURL module') {
+    variable_set('shorten_service', 'This site');
+    $r = TRUE;
+  }
+  if (variable_get('shorten_service_backup', 'TinyURL') == 'Drupal ShortURL module') {
+    variable_set('shorten_service_backup', 'This site');
+    $r = TRUE;
+  }
+  return array(array(
+    'success' => TRUE,
+    'query' => $r ? t('Shorten URLs service updated') : t('Caches refreshed'),
+  ));
+}
+
+/**
+ * Implementation of hook_update_N().
+ */
+function shorten_update_6101() {
+  $ret = array();
+  $schema = drupal_get_schema_unprocessed('system', 'cache');
+  db_create_table($ret, 'cache_shorten', $schema);
+  return $ret;
+}

@@ -1,0 +1,57 @@
+<?php
+// $Id: shorturl.install,v 1.1 2009/05/13 17:41:39 inadarei Exp $
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function shorturl_schema() {
+
+ $schema['shorturl_link'] = array(
+    'description' => 'ShortURL Links Table.',
+    'fields' => array(
+      'lid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'length' => 22),
+      'orig_url' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'created' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'remote_ip' => array('type' => 'varchar', 'length' => 20, 'not null' => FALSE, 'default' => ''),        
+      ),
+    'indexes' => array(
+      'shorturl_orig_url' => array('orig_url'),
+      ),
+    'primary key' => array('lid'),
+    );
+
+  $schema['shorturl_access'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'length' => 22),
+      'url_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'length' => 22),      
+      'url_key' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'remote_ip' => array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => ''),
+      'referer' => array('type' => 'text', 'not null' => TRUE, 'size' => 'normal'),      
+      'browser' => array('type' => 'text', 'not null' => TRUE, 'size' => 'normal'),            
+      'access_time' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),            
+    ),
+    'primary key' => array('aid'),
+   );
+  
+  return $schema;
+}
+ 
+ /**
+ * Implementation of hook_install()
+ */
+function shorturl_install() {
+  drupal_install_schema('shorturl');
+     
+  // Set this module at the top!
+  db_query("UPDATE {system} SET weight = -100 WHERE name = 'shorturl'");
+  
+}
+
+ /**
+ * Implementation of hook_uninstall().
+ */
+function shorturl_uninstall() {
+  drupal_uninstall_schema('shorturl');
+}
+

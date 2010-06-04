@@ -1,0 +1,93 @@
+<?php
+
+// Minimum length of URI: 3 characters (3844 in base10 is equivalent to first 3-char number in base62).
+// This setting is modifyable from settings.php if you don't like it.
+define ('SHORTURL_START_FROM', variable_get('shorturl_start_from', 3844));
+
+/**
+* hook_init implementation
+*/
+function shorturl_init() {
+
+  require_once (dirname(__FILE__) . '/shorturl.engine.inc');
+  $token = $_GET['q'];
+  if (!empty($token)) {
+    $indx = shorturl_decode_url($token);
+    $orig_url = db_result(db_query('SELECT orig_url FROM {shorturl_link} WHERE lid=%d ', $indx));
+
+    if (!empty($orig_url)) {
+      if (stripos($orig_url, 'http') === FALSE && 
+          stripos($orig_url, 'https') === FALSE) {
+        $orig_url = url($orig_url, array('absolute'=>TRUE)); //Let drupal make relative URLs absolute
+      }
+      
+      //echo $orig_url;
+      drupal_goto($orig_url);
+      exit();      
+    }
+  }
+
+}
+
+/**
+* Generate unique token for arbitrary URL. Both absolute and relative
+* URLs are supported.
+*/
+function shorturl_shorten ($long_url) {
+
+  //Do we already have this URL?
+  $existing_id = db_result(db_query('SELECT lid FROM {shorturl_link} WHERE orig_url=\'%s\' ', $long_url));
+  if (!empty($existing_id)) {
+    $encoded = shorturl_encode_url($existing_id);
+    return $encoded;
+  }
+  
+  $found_vacant = FALSE;
+  
+  $last_id = db_result(db_query('SELECT max(lid) FROM {shorturl_link} '));
+  if ($last_id == 0) $last_id = SHORTURL_START_FROM;
+  $last_id++;  
+  
+  while (! $found_vacant ) {
+    $encoded = shorturl_encode_url($last_id);
+    $found_vacant = shorturl_check_availability($encoded);
+    if (!$found_vacant) {
+      $last_id++;
+    }
+  }
+  
+  $remote_ip = (empty($_SERVER['REMOTE_ADDR'])) ? '' : $_SERVER['REMOTE_ADDR']; 
+  
+  db_query('INSERT INTO {shorturl_link} (`lid`, `orig_url`, `created`, `remote_ip` )
+                   VALUES (%d, \'%s\', %d, \'%s\') ', $last_id, $long_url, (int)time(), $remote_ip );
+
+  return $encoded;                   
+}
+
+function shorturl_check_availability($token) {
+  $reserved = shorturl_reserved_tokens();
+  
+  foreach ($reserved as $key) {
+    if (stripos($token, $key)!==FALSE) {  // contains reserved word!
+      return FALSE;
+    }
+  }
+  
+  $menu_handler =  menu_get_item($token);
+  if (!empty($menu_handler)) { return FALSE; } // there's already a handler for this path!
+  
+  $alias_found = db_result(db_query('SELECT count(*) FROM {url_alias} WHERE dst = \'%s\' ', $token));
+  
+  if (!empty($alias_found)) { return FALSE; } // such alias already exists!
+  
+  return TRUE;
+}
+
+
+function shorturl_reserved_tokens() {
+  $reserved_settings = variable_get('shorturl_reserved_tokens', array());
+  
+  $reserved_system = array('node', 'admin', 'term', 'user');
+  
+  return $reserved_system + $reserved_settings;
+}

@@ -1,0 +1,65 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   Uninstalls the Record Shorten module.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function record_shorten_schema() {
+  $schema = array();
+  $schema['record_shorten'] = array(
+    'description' => 'Records shortened URLs.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+        'description' => 'The ID of the shortened URL.',
+      ),
+      'original' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The original (long) URL.',
+      ),
+      'short' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The new (short) URL.',
+      ),
+      'service' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The service used to shorten the URL.',
+      ),
+    ),
+    'indexes' => array(
+      'sid' => array('sid'),
+    ),
+    'primary key' => array('sid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function record_shorten_install() {
+  drupal_install_schema('record_shorten');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function record_shorten_uninstall() {
+  drupal_uninstall_schema('record_shorten');
+}

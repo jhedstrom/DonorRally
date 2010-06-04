@@ -1,0 +1,126 @@
+<?php
+// $Id: forward.install,v 1.4.2.5 2010/03/09 18:46:34 seanr Exp $
+function forward_install() {
+  drupal_install_schema('forward');
+  variable_set('forward_theme_template', 1);
+}
+
+function forward_uninstall() {
+  drupal_uninstall_schema('forward');
+}
+
+/**
+* Implementation of hook_schema().
+*/
+function forward_schema() {
+  $schema['forward_log'] = array(
+    'fields' => array(
+      'path'      => array('type' => 'varchar', 'not null' => TRUE, 'default' => '<front>', 'length' => 255),
+      'type'      => array('type' => 'varchar', 'not null' => TRUE, 'length' => 8),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '', 'description' => 'Hostname of the user who triggered the event.',),
+    ),
+    'indexes' => array(
+      'forward_path'     => array('path'),
+      'forward_uid'      => array('uid'),
+      'forward_hostname' => array('hostname')
+    ),
+  );
+  $schema['forward_statistics'] = array(
+    'fields' => array(
+      'nid'                    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'last_forward_timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'forward_count'          => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'clickthrough_count'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'indexes' => array(
+      'forward_timestamp' => array('last_forward_timestamp')
+    ),
+    'primary key' => array('nid'),
+  );
+  return $schema;
+}
+
+/**
+ * Add statistics table and populate with data from forward_log
+ */
+function forward_update_1() {
+  // initialize table
+  $schema['forward_statistics'] = array(
+    'fields' => array(
+      'nid'                    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'last_forward_timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'forward_count'          => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'clickthrough_count'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'index' => array('last_forward_timestamp'),
+    'primary key' => array('nid'),
+  );
+  $ret = array();
+  db_create_table($ret, 'forward_statistics', $schema['forward_statistics']);
+  db_query("INSERT INTO {forward_statistics} (nid, last_forward_timestamp, forward_count, clickthrough_count) values(0, 0, 0, 0)");
+  db_query("INSERT INTO {forward_statistics} (nid, last_forward_timestamp, forward_count, clickthrough_count) SELECT n.nid, 0, 0, 0 FROM {node} n");
+
+  // fill table
+  $forwards = db_query("SELECT f.nid, f.timestamp, COUNT(f.nid) as forward_count FROM {node} n LEFT JOIN {forward_log} f ON f.nid = n.nid WHERE f.type = 'SENT' GROUP BY f.nid, f.timestamp");
+  while ($forward = db_fetch_object($forwards)) {
+    $forward_count = db_result(db_query("SELECT COUNT(nid) FROM {forward_log} WHERE nid = %d AND type = '%s'", $forward->nid, 'SENT'));
+    $clickthrough_count = db_result(db_query("SELECT COUNT(nid) FROM {forward_log} WHERE nid = %d AND type = '%s'", $forward->nid, 'REF'));
+    db_query("UPDATE {forward_statistics} SET forward_count = %d, clickthrough_count = %d, last_forward_timestamp = %d WHERE nid = %d", $forward_count, $clickthrough_count, $forward->timestamp, $forward->nid);
+  }
+  return $ret;
+}
+
+/**
+ * Update variable strings
+ */
+function forward_update_2() {
+  //variable strings changed
+  variable_set('forward_emailsubject', str_replace(array('%name', '%site'), array('!name', '!site'), variable_get('forward_emailsubject', '!name has forwarded a page to you from !site')));
+  variable_set('forward_emailmessage', str_replace(array('%name', '%site'), array('!name', '!site'), variable_get('forward_emailmessage', '!name thought you would like to see this page from the !site web site.')));
+  
+  variable_set('forward_postcardsubject', str_replace(array('%name', '%site'), array('!name', '!site'), variable_get('forward_postcardsubject', '!name has sent you an e-postcard from !site')));
+  variable_set('forward_postcardmessage', str_replace(array('%name', '%site'), array('!name', '!site'), variable_get('forward_postcardmessage', '!name has sent you an e-postcard from the !site web site.  Please take a moment to visit our web site.')));
+  
+  return array();
+}
+
+/**
+ * Changed forward_statistics to handle non-node paths
+ */
+function forward_update_3() {
+  $ret = array();
+  db_add_field($ret, 'forward_log', 'path', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '<front>'));
+  db_add_index($ret, 'forward_log', 'forward_path', array('path'));
+  $ret[] = update_sql("UPDATE {forward_log} SET path = CONCAT('node/',nid) WHERE nid != 0");
+  $ret[] = update_sql("UPDATE {forward_log} SET path = '<front>' WHERE nid = 0");
+  db_drop_index($ret, 'forward_log', 'forward_nid');
+  db_drop_field($ret, 'forward_log', 'nid');
+  
+  return $ret;
+}
+
+/**
+ * Migrate variable strings
+ */
+function forward_update_4() {
+  //variable strings changed
+  variable_set('forward_pagesubject', variable_get('forward_emailsubject', '!name has forwarded a page to you from !site'));
+  variable_set('forward_pagemessage', variable_get('forward_emailmessage', '!name thought you would like to see this page from the !site web site.'));
+
+  return array();
+}
+
+/**
+ * Add uid and hostname to log table
+ */
+function forward_update_5() {
+  $ret = array();
+  db_add_field($ret, 'forward_log', 'uid', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'forward_log', 'hostname', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '', 'description' => 'Hostname of the user who triggered the event.'));
+  db_add_index($ret, 'forward_log', 'forward_uid', array('uid'));
+  db_add_index($ret, 'forward_log', 'forward_hostname', array('hostname'));
+  
+  return $ret;
+}
