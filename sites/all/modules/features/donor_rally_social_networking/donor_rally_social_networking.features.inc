@@ -10,6 +10,15 @@ function donor_rally_social_networking_ctools_plugin_api() {
 }
 
 /**
+ * Implementation of hook_user_default_permissions().
+ */
+function donor_rally_social_networking_user_default_permissions() {
+  module_load_include('inc', 'donor_rally_social_networking', 'donor_rally_social_networking.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_donor_rally_social_networking_user_default_permissions', $args);
+}
+
+/**
  * Implementation of hook_strongarm().
  */
 function donor_rally_social_networking_strongarm() {

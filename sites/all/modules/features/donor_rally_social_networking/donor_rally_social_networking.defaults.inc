@@ -13,6 +13,51 @@ function _donor_rally_social_networking_ctools_plugin_api() {
 }
 
 /**
+ * Helper to implementation of hook_user_default_permissions().
+ */
+function _donor_rally_social_networking_user_default_permissions() {
+  $permissions = array();
+
+  // Exported permission: access forward
+  $permissions[] = array(
+    'name' => 'access forward',
+    'roles' => array(),
+  );
+
+  // Exported permission: access service links
+  $permissions[] = array(
+    'name' => 'access service links',
+    'roles' => array(),
+  );
+
+  // Exported permission: administer forward
+  $permissions[] = array(
+    'name' => 'administer forward',
+    'roles' => array(),
+  );
+
+  // Exported permission: administer service links
+  $permissions[] = array(
+    'name' => 'administer service links',
+    'roles' => array(),
+  );
+
+  // Exported permission: override email address
+  $permissions[] = array(
+    'name' => 'override email address',
+    'roles' => array(),
+  );
+
+  // Exported permission: override flood control
+  $permissions[] = array(
+    'name' => 'override flood control',
+    'roles' => array(),
+  );
+
+  return $permissions;
+}
+
+/**
  * Helper to implementation of hook_strongarm().
  */
 function _donor_rally_social_networking_strongarm() {
