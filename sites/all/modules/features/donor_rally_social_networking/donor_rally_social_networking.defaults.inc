@@ -21,25 +21,35 @@ function _donor_rally_social_networking_user_default_permissions() {
   // Exported permission: access forward
   $permissions[] = array(
     'name' => 'access forward',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+    ),
   );
 
   // Exported permission: access service links
   $permissions[] = array(
     'name' => 'access service links',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+    ),
   );
 
   // Exported permission: administer forward
   $permissions[] = array(
     'name' => 'administer forward',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'administrator',
+    ),
   );
 
   // Exported permission: administer service links
   $permissions[] = array(
     'name' => 'administer service links',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'administrator',
+    ),
   );
 
   // Exported permission: override email address
