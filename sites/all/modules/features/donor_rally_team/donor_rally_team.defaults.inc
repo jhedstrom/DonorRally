@@ -903,17 +903,23 @@ function _donor_rally_team_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-leaderboard_top_ppc-block_1' => array(
-          'module' => 'views',
-          'delta' => 'leaderboard_top_ppc-block_1',
-          'region' => 'right',
-          'weight' => 0,
-        ),
         'boxes-donor_rally_welcome' => array(
           'module' => 'boxes',
           'delta' => 'donor_rally_welcome',
           'region' => 'right',
           'weight' => 0,
+        ),
+        'views-leaderboard_top_ppc-block_1' => array(
+          'module' => 'views',
+          'delta' => 'leaderboard_top_ppc-block_1',
+          'region' => 'right',
+          'weight' => 1,
+        ),
+        'donor_rally-site_thermometer' => array(
+          'module' => 'donor_rally',
+          'delta' => 'site_thermometer',
+          'region' => 'right',
+          'weight' => 2,
         ),
       ),
     ),
@@ -1157,8 +1163,8 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit any team content',
     'roles' => array(
-      '0' => 'site editor',
-      '1' => 'administrator',
+      '0' => 'administrator',
+      '1' => 'site editor',
     ),
   );
 
@@ -1270,8 +1276,8 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view field_captain_email',
     'roles' => array(
-      '0' => 'site editor',
-      '1' => 'administrator',
+      '0' => 'administrator',
+      '1' => 'site editor',
     ),
   );
 
@@ -1279,8 +1285,8 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view field_captain_first_name',
     'roles' => array(
-      '0' => 'site editor',
-      '1' => 'administrator',
+      '0' => 'administrator',
+      '1' => 'site editor',
     ),
   );
 
@@ -1288,8 +1294,8 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view field_captain_last_name',
     'roles' => array(
-      '0' => 'site editor',
-      '1' => 'administrator',
+      '0' => 'administrator',
+      '1' => 'site editor',
     ),
   );
 
@@ -1297,8 +1303,8 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view field_captain_location',
     'roles' => array(
-      '0' => 'site editor',
-      '1' => 'administrator',
+      '0' => 'administrator',
+      '1' => 'site editor',
     ),
   );
 
@@ -1342,9 +1348,9 @@ function _donor_rally_team_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view field_size',
     'roles' => array(
-      '0' => 'site editor',
-      '1' => 'team lead',
-      '2' => 'administrator',
+      '0' => 'administrator',
+      '1' => 'site editor',
+      '2' => 'team lead',
     ),
   );
 
