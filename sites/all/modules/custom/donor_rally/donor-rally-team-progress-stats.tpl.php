@@ -16,8 +16,9 @@ $odd = FALSE;
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($categories as $type => $label): 
-     $odd = !$odd;
+    <?php foreach ($categories as $type => $info):
+      $label = $info['label'];
+      $odd = !$odd;
     ?>
     <tr class="<?php print $odd ? 'odd' : 'even'; ?>">
       <th>

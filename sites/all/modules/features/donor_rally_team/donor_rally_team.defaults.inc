@@ -9,20 +9,26 @@ function _donor_rally_team_default_box() {
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'donor_rally_welcome';
+  $box->plugin_key = 'simple';
   $box->title = 'Welcome';
   $box->description = 'Donor Rally Welcome Box';
-  $box->body = 'Some introduction help text.';
-  $box->format = 1;
+  $box->options = array(
+    'body' => 'Some introduction help text.',
+    'format' => 1,
+  );
 
   $export['donor_rally_welcome'] = $box;
   $box = new stdClass;
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'team_page_common';
+  $box->plugin_key = 'simple';
   $box->title = '';
   $box->description = 'Team landing page common text';
-  $box->body = 'This text is common across all team landing pages.';
-  $box->format = 1;
+  $box->options = array(
+    'body' => 'This text is common across all team landing pages.',
+    'format' => 1,
+  );
 
   $export['team_page_common'] = $box;
   return $export;
@@ -1449,16 +1455,7 @@ function _donor_rally_team_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'vertical_tabs_forms';
-  $strongarm->value = array(
-    'team_node_form' => array(
-      'menu' => 'menu',
-      'revision_information' => 'revision_information',
-      'author' => 'author',
-      'options' => 'options',
-      'path' => 'path',
-      'group_team_coordinator' => 0,
-    ),
-  );
+  $strongarm->value = array();
 
   $export['vertical_tabs_forms'] = $strongarm;
   $strongarm = new stdClass;

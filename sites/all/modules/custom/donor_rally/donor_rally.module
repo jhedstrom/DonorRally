@@ -199,7 +199,11 @@ function _donor_rally_format_value($value) {
  */
 function donor_rally_donor_rally_team_stat_categories() {
   return array(
-    'cash' => t('Cash ($)'),
+    'cash' => array(
+      'label' => t('Cash ($)'),
+      'goal_field' => 'field_cash_goal',
+      'total_field' => 'field_cash',
+    ),
   );
 }
 
@@ -222,7 +226,9 @@ function donor_rally_team_stats($node) {
   $stats['total_raw'] = 0.0;
   $stats['total_raw_goal'] = 0.0;
 
-  foreach ($categories as $type => $label) {
+  foreach ($categories as $type => $info) {
+    $label = $info['label'];
+
     // Raw values (USD, pounds, shifts, etc.); points (scaled raw).
     $stats[$type .'_raw'] = $node->{'field_'. $type}[0]['value'] + $node->{'field_offline_' .$type}[0]['value'];
     $stats[$type .'_raw_goal'] = $node->{'field_'. $type .'_goal'}[0]['value'];
@@ -297,10 +303,22 @@ function donor_rally_block($op = 'list', $delta = 0, $edit = array()) {
          'info' => t('Team Coordinator Dashboard Button'),
          'cache' => BLOCK_NO_CACHE,
        ),
+       'site_thermometer' => array(
+         'info' => t('Site-wide total/goal thermometer'),
+         'cache' => BLOCK_CACHE_GLOBAL,
+       ),
      );
     case 'configure':
       return array();
     case 'view':
+      switch ($delta) {
+        case 'site_thermometer':
+          return array(
+            'subject' => '',
+            'content' => _donor_rally_block_site_thermometer(),
+          );
+          break;
+      }
       if (!$node) {
         $node = menu_get_object();
         if ($node && $node->type != DONOR_RALLY_CONTENT_PROFILE_TYPE) {
@@ -393,7 +411,7 @@ function donor_rally_preprocess_donor_rally_team_progress_stats(&$variables) {
   unset($variables['vars']);
   $variables['categories'] = module_invoke_all('donor_rally_team_stat_categories');
   if (count($variables['categories']) > 1) {
-    $variables['categories']['total'] = t('Total points');
+    $variables['categories']['total']['label'] = t('Total points');
   }
 }
 
@@ -468,4 +486,44 @@ function theme_donor_rally_team_coordinator_account_button($vars) {
     t('Team Dashboard'),
     'user'
   );
+}
+
+/**
+ * Sitewide total/goal thermometer.
+ */
+function _donor_rally_block_site_thermometer() {
+  $goal = _donor_rally_get_total_goal();
+  $total = _donor_rally_get_total_points();
+  $vars['total_raw_goal'] = $goal;
+  $vars['total'] = $total;
+  $vars['total_raw_goal_view'] = _donor_rally_format_value($goal);
+  $vars['total_raw_view'] = _donor_rally_format_value($total);
+  return theme('donor_rally_team_progress_thermometer', $vars);
+}
+
+/**
+ * Get total goal for all combined teams.
+ */
+function _donor_rally_get_total_goal() {
+  $goal = 0;
+  $categories = module_invoke_all('donor_rally_team_stat_categories');
+  foreach ($categories as $category => $info) {
+    $field = content_fields($info['goal_field']);
+    $db_info = content_database_info($field);
+    $table = $db_info['table'];
+    $column = $db_info['columns']['value']['column'];
+    $goal += db_result(db_query("SELECT SUM(" . $column . ") FROM {" . $table . "} GROUP BY " . $column ));
+  }
+  return $goal;
+}
+
+/**
+ * Get total points for all combined teams.
+ */
+function _donor_Rally_get_total_points() {
+  $field = content_fields('field_total_points');
+  $db_info = content_database_info($field);
+  $table = $db_info['table'];
+  $column = $db_info['columns']['value']['column'];
+  return db_result(db_query("SELECT SUM(" . $column . ") FROM {" . $table . "} GROUP BY " . $column ));
 }

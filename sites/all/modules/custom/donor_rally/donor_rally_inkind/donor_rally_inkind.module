@@ -32,8 +32,16 @@ function donor_rally_inkind_form_donor_rally_settings_form_alter(&$form, $form_s
  */
 function donor_rally_inkind_donor_rally_team_stat_categories() {
   return array(
-    'food' => t('Food (lbs)'),
-    'volunteer' => t('Volunteer shifts'),
+    'food' => array(
+      'label' => t('Food (lbs)'),
+      'goal_field' => 'field_food_goal',
+      'total_field' => 'field_food',
+    ),
+    'volunteer' => array(
+      'label' => t('Volunteer shifts'),
+      'goal_field' => 'field_volunteer_goal',
+      'total_field' => 'field_volunter',
+    ),
   );
 }
 
