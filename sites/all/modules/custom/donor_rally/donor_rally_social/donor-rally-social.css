@@ -1,0 +1,20 @@
+/* $Id$ */
+div.node-links ul.links li a.donor-rally-social-links {
+  display: block;
+  text-indent: -5000em;
+  background: transparent url(images/social.png) no-repeat 0 0;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  margin-left: 10px;
+}
+
+div.node-links ul.links li a.donor-rally-social-links-facebook {
+  background-position: 0 0;
+}
+div.node-links ul.links li a.donor-rally-social-links-twitter {
+  background-position: -48px 0;
+}
+div.node-links ul.links li a.donor-rally-social-links-forward {
+  background-position: -96px 0;
+}
