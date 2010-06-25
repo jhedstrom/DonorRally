@@ -61,6 +61,7 @@ function donor_rally_install_profile_task_list() {
   $tasks['donor-rally-payment-gateway'] = st('Select Donor Rally payment gateway');
   $tasks['donor-rally-modules-batch'] = st('Install Donor Rally modules');
   $tasks['donor-rally-configure'] = st('Configure Donor Rally');
+  $tasks['donor-rally-configure-goal'] = st('Set Fundraising Goal');
   return $tasks;
 }
 
@@ -215,6 +216,18 @@ function donor_rally_install_profile_tasks(&$task, $url) {
 
   if ($task == 'donor-rally-configure') {
     $output = drupal_get_form('donor_rally_install_configure_form', $url);
+
+    if (!variable_get('donor_rally_install_configured', FALSE)) {
+      return $output;
+    }
+    else {
+      variable_set('donor_rally_install_configured', FALSE);
+      $task = 'donor-rally-configure-goal';
+    }
+  }
+
+  if ($task == 'donor-rally-configure-goal') {
+    $output = drupal_get_form('donor_rally_install_fundraising_goal');
 
     if (!variable_get('donor_rally_install_configured', FALSE)) {
       return $output;
@@ -545,6 +558,33 @@ function donor_rally_install_payment_gateway_form_validate($form, &$form_state) 
 function donor_rally_install_payment_gateway_form_submit($form, &$form_state) {
   drupal_set_message('Set Donor Rally payment gateway: %gateway', array('%gateway' => $form_state['values']['donor_rally_payment_gateway']));
   variable_set('donor_rally_payment_gateway', $form_state['values']['donor_rally_payment_gateway']);
+}
+
+/**
+ * Sitewide fundraising goal.
+ */
+function donor_rally_install_fundraising_goal($form_state) {
+  $form['donor_rally_goal'] = array(
+    '#type' => 'textfield',
+    '#title' => st('Total Fundraising Goal'),
+    '#description' => t('This will be used for the total on the site-wide thermometer.'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('donor_rally_goal', 314159265),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Continue'),
+  );
+  return $form;
+}
+
+/**
+ * Sitewide fundraising goal submit handler.
+ */
+function donor_rally_install_fundraising_goal_submit($form, &$form_state) {
+  variable_set('donor_rally_goal', $form_state['values']['donor_rally_goal']);
+  variable_set('donor_rally_install_configured', TRUE);
 }
 
 function _donor_rally_install_get_payment_gateways() {
