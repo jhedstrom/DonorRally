@@ -28,6 +28,14 @@ function donor_rally_settings_form($form_state) {
     );
   }
 
+  $form['donor_rally_goal'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total Fundraising Goal'),
+    '#description' => t('This will be used for the total on the site-wide thermometer.'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('donor_rally_goal', 314159265),
+  );
+
   $form['point_scales'] = array(
     '#type' => 'fieldset',
     '#title' => t('Point conversions'),
@@ -52,6 +60,8 @@ function donor_rally_settings_form($form_state) {
     '#type' => 'submit',
     '#value' => t('Save'),
   );
+
+  // @TODO this should just use system_settings_form().
   return $form;
 }
 
@@ -78,6 +88,7 @@ function donor_rally_settings_form_submit($form, &$form_state) {
   variable_set('donor_rally_cash_scale', $form_state['values']['cash']);
   variable_set('donor_rally_food_scale', $form_state['values']['food']);
   variable_set('donor_rally_volunteer_scale', $form_state['values']['volunteer']);
+  variable_set('donor_rally_goal', $form_state['values']['donor_rally_goal']);
   if (isset($form_state['values']['payment_gateway'])) {
     variable_set('donor_rally_payment_gateway', $form_state['values']['payment_gateway']);
   }
