@@ -16,7 +16,10 @@ function donor_rally_social_link_alter(&$links, $node) {
         drupal_add_css(drupal_get_path('module', 'donor_rally_social') . '/donor-rally-social.css');
         $css_added = TRUE;
       }
+      // Set additional classes.
       $links['service_links_' . $service]['attributes']['class'] = 'donor-rally-social-links donor-rally-social-links-' . $service;
+
+      // @TODO Alter pre-populated message.
     }
   }
 }
