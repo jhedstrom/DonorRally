@@ -44,7 +44,7 @@ stylesheets[all][]   = css/forms.css
 stylesheets[all][]   = css/fields.css
 stylesheets[print][] = css/print.css
 stylesheets[all][]   = css/type.css 
-stylesheets[all][]   = assets/css/local.css 
+stylesheets[all][]   = local.css 
 
 ; stylesheets[handheld][] = css/mobile.css
 ; stylesheets[only screen and (max-device-width: 480px)][] = css/iphone.css
