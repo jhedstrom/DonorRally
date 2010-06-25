@@ -492,7 +492,7 @@ function theme_donor_rally_team_coordinator_account_button($vars) {
  * Sitewide total/goal thermometer.
  */
 function _donor_rally_block_site_thermometer() {
-  $goal = _donor_rally_get_total_goal();
+  $goal = variable_get('donor_rally_goal', 314159265);
   $total = _donor_rally_get_total_points();
   $vars['total_raw_goal'] = $goal;
   $vars['total'] = $total;
@@ -503,6 +503,9 @@ function _donor_rally_block_site_thermometer() {
 
 /**
  * Get total goal for all combined teams.
+ *
+ * @TODO This isn't actually used anymore, but it may be useful for
+ * getting the total team goals at some point.
  */
 function _donor_rally_get_total_goal() {
   $goal = 0;
