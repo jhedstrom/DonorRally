@@ -88,7 +88,7 @@ function os_custom_imagecache_default_presets() {
 function os_custom_preprocess_page(&$vars) {
   if (isset($vars['footer_message'])) {
     // Replace @year with current year.
-    $vars['footer_message'] = str_replace('@year', date('Y'), $vars['footer_message']);
+    $vars['footer_message'] = str_replace('@year', format_date('Y'), $vars['footer_message']);
   }
 }
 
