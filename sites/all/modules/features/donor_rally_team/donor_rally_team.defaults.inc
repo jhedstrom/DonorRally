@@ -909,23 +909,23 @@ function _donor_rally_team_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'donor_rally-site_thermometer' => array(
+          'module' => 'donor_rally',
+          'delta' => 'site_thermometer',
+          'region' => 'sidebar_second',
+          'weight' => 0,
+        ),
         'boxes-donor_rally_welcome' => array(
           'module' => 'boxes',
           'delta' => 'donor_rally_welcome',
-          'region' => 'sidebar_second',
+          'region' => 'content_top',
           'weight' => 0,
         ),
         'views-leaderboard_top_ppc-block_1' => array(
           'module' => 'views',
           'delta' => 'leaderboard_top_ppc-block_1',
-          'region' => 'sidebar_second',
-          'weight' => 1,
-        ),
-        'donor_rally-site_thermometer' => array(
-          'module' => 'donor_rally',
-          'delta' => 'site_thermometer',
-          'region' => 'sidebar_second',
-          'weight' => 2,
+          'region' => 'content_bottom',
+          'weight' => 0,
         ),
       ),
     ),

@@ -195,7 +195,7 @@ function _donor_rally_team_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'field_firm_name_value' => array(
+    'title' => array(
       'label' => 'Team',
       'alter' => array(
         'alter_text' => 0,
@@ -212,29 +212,21 @@ function _donor_rally_team_views_default_views() {
         'max_length' => '',
         'word_boundary' => 1,
         'ellipsis' => 1,
-        'strip_tags' => 0,
         'html' => 0,
+        'strip_tags' => 0,
       ),
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
-      'link_to_node' => 0,
-      'label_type' => 'custom',
-      'format' => 'plain',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
-      ),
+      'link_to_node' => 1,
       'exclude' => 0,
-      'id' => 'field_firm_name_value',
-      'table' => 'node_data_field_firm_name',
-      'field' => 'field_firm_name_value',
-      'relationship' => 'none',
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
       'override' => array(
         'button' => 'Override',
       ),
+      'relationship' => 'none',
     ),
     'field_total_points_value' => array(
       'label' => 'Points',
@@ -326,7 +318,6 @@ function _donor_rally_team_views_default_views() {
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('title', 'Top Points');
   $handler->override_option('empty', 'No teams have been created.');
   $handler->override_option('empty_format', '1');
   $handler->override_option('items_per_page', 0);
