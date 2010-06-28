@@ -498,6 +498,8 @@ function _donor_rally_block_site_thermometer() {
   $vars['total'] = $total;
   $vars['total_raw_goal_view'] = _donor_rally_format_value($goal);
   $vars['total_raw_view'] = _donor_rally_format_value($total);
+
+  $vars['edit_link'] = user_access('administer donor rally') ? l('Change campain goal', 'admin/settings/donor-rally', array('query' => drupal_get_destination())) : '';
   return theme('donor_rally_team_progress_thermometer', $vars);
 }
 

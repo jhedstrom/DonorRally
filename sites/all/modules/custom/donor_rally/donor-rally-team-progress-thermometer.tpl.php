@@ -25,3 +25,6 @@
     <span class="thermometer-filled-bottom" style="top: <?php print $filled_bottom_top; ?>px;"></span>
   </div>
 </div>
+<?php if (isset($edit_link)): ?>
+<div><?php print $edit_link; ?></div>
+<?php endif; ?>
