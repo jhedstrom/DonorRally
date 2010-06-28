@@ -13,7 +13,7 @@ function _donor_rally_team_default_box() {
   $box->title = 'Welcome';
   $box->description = 'Donor Rally Welcome Box';
   $box->options = array(
-    'body' => 'Some introduction help text.',
+    'body' => 'Donor Rally is the first open source social fundraising tool.',
     'format' => 1,
   );
 
