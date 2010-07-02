@@ -401,7 +401,6 @@ function  _donor_rally_install_modules() {
     'os_custom',
 
     // Social networking modules.
-    'donor_rally_social',
     'forward',
     'forward_services',
     'general_services',
@@ -410,7 +409,7 @@ function  _donor_rally_install_modules() {
     'shorturl',
 
     // Donor Rally features.
-    'donor_rally_team', 'donor_rally_team_blog', 'donor_rally_social_networking',
+    'donor_rally_team', 'donor_rally_team_blog', 'donor_rally_social',
   );
 
   // Enable selected Donor Rally payment gateway.
