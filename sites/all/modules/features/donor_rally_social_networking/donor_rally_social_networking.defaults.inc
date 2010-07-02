@@ -3,7 +3,7 @@
 /**
  * Helper to implementation of hook_ctools_plugin_api().
  */
-function _donor_rally_social_networking_ctools_plugin_api() {
+function _donor_rally_social_ctools_plugin_api() {
   $args = func_get_args();
   $module = array_shift($args);
   $api = array_shift($args);
@@ -15,7 +15,7 @@ function _donor_rally_social_networking_ctools_plugin_api() {
 /**
  * Helper to implementation of hook_user_default_permissions().
  */
-function _donor_rally_social_networking_user_default_permissions() {
+function _donor_rally_social_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: access forward
@@ -70,7 +70,7 @@ function _donor_rally_social_networking_user_default_permissions() {
 /**
  * Helper to implementation of hook_strongarm().
  */
-function _donor_rally_social_networking_strongarm() {
+function _donor_rally_social_strongarm() {
   $export = array();
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
