@@ -1,4 +1,5 @@
 core = "6.x"
+dependencies[] = "donor_rally"
 dependencies[] = "features"
 dependencies[] = "forward"
 dependencies[] = "forward_services"
