@@ -569,7 +569,7 @@ function donor_rally_install_fundraising_goal($form_state) {
     '#title' => st('Total Fundraising Goal'),
     '#description' => t('This will be used for the total on the site-wide thermometer.'),
     '#required' => TRUE,
-    '#default_value' => variable_get('donor_rally_goal', 314159265),
+    '#default_value' => variable_get('donor_rally_goal', ''),
   );
 
   $form['submit'] = array(
