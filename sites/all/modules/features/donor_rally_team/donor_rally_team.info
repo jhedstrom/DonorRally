@@ -1,5 +1,6 @@
 core = "6.x"
 dependencies[] = "content_permissions"
+dependencies[] = "strongarm"
 dependencies[] = "content_profile"
 dependencies[] = "content_profile_registration"
 dependencies[] = "context"
