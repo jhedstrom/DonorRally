@@ -112,6 +112,7 @@ function donor_rally_refresh_all() {
       // no-op; we didn't get an online cash value from the payment
       // gateway for this team, so just use the current value for
       // calculating new totals
+      $now['cash'] = 0;
     }
     // @TODO, abstract this out to exclude food and volunteer hours
     // unless the in-kind module/feature is enabled.
@@ -125,7 +126,7 @@ function donor_rally_refresh_all() {
         $now['cash'],
         $now['cash'], $now['field_offline_cash_value'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
         $now['cash'], $now['field_offline_cash_value'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
-        $now['size'],
+        $now['field_size_value'],
         $nid
       )
     );
