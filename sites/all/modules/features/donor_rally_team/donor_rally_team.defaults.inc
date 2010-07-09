@@ -404,7 +404,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_cash',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '58',
+      'weight' => '14',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -462,7 +462,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_cash_goal',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '55',
+      'weight' => '9',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -520,7 +520,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_logo',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '57',
+      'weight' => '13',
       'parent' => '',
       'label' => array(
         'format' => 'inline',
@@ -590,7 +590,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_offline_cash',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '59',
+      'weight' => '17',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -648,7 +648,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_points_per_capita',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '60',
+      'weight' => '20',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -706,7 +706,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_size',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '54',
+      'weight' => '8',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -761,18 +761,18 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_team_info',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '56',
+      'weight' => '12',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
       ),
       'teaser' => array(
         'format' => 'hidden',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       'full' => array(
         'format' => 'plain',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       '4' => array(
         'format' => 'default',
@@ -816,7 +816,7 @@ function _donor_rally_team_content_default_fields() {
     'field_name' => 'field_total_points',
     'type_name' => 'team',
     'display_settings' => array(
-      'weight' => '61',
+      'weight' => '21',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -1073,7 +1073,7 @@ function _donor_rally_team_fieldgroup_default_groups() {
         'description' => '',
       ),
       'display' => array(
-        'weight' => '49',
+        'weight' => '7',
         'label' => 'above',
         'teaser' => array(
           'format' => 'hidden',
