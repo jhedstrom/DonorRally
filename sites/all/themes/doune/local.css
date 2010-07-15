@@ -3,12 +3,20 @@ BLUE: #55b7d1
 GREEN/YELLOW: #bdd73e
 */
 
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+
+
+#page-wrapper, .region-page-closure {
+	width: 1024px;
+}
+
 #site-name {
 	text-indent: -2000px;
 }
 
 h1, h2, h3 {
 	color: #55b7d1;
+	font-family: 'Droid Sans', arial, serif;
 }
 
 #header {
@@ -22,4 +30,13 @@ table styling
 
 thead th {
 	background: #bdd73e;
+}
+
+
+.sidebar .block h2.title {
+	font-size: 1.5em;
+}
+
+body.one-sidebar .region-sidebar-second {
+	width: 250px;
 }
