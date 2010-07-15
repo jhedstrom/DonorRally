@@ -27,6 +27,51 @@ function simple_payments_menu() {
   return $items;
 }
 
+/**
+ * Implementation of hook_views_data().
+ */
+function simple_payments_views_data() {
+  $data['simple_payment']['table']['group'] = t('Simple Payment');
+  $data['simple_payment']['table']['base'] = array(
+    'field' => 'pid',
+    'title' => t('Payment'),
+    'help' => t('Payments made through Simple Payment module'),
+  );
+  $data['simple_payment']['table']['join'] = array(
+    'node' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+  );
+  $data['simple_payment']['nid'] = array(
+    'title' => t('Node ID'),
+    'help' => t('Node associated with this payment'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Node ID'),
+    ),
+  );
+  $data['simple_payment']['amount'] = array(
+    'title' => t('Amount'),
+    'help' => t('Amount paid'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+  return $data;
+}
 
 /**
  * Builds fields for a payment form from supplied variables.
