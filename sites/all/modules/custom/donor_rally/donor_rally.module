@@ -430,7 +430,7 @@ function theme_donor_rally_team_leaderboard_button($vars) {
   return donor_rally_theme_button(
     'donor-rally-leaderboard-button',
     t('Team Ranking'),
-    'topdanceteams'
+    'leaderboard'
   );
 }
 

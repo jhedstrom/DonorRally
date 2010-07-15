@@ -22,6 +22,9 @@ function donor_rally_social_link_alter(&$links, $node) {
       $links['service_links_' . $service]['attributes']['class'] = 'donor-rally-social-links donor-rally-social-links-' . $service;
 
       // @TODO Alter pre-populated message.
+      if (in_array($service, array('facebook', 'twitter'))) {
+        // dpm($links['service_links_' . $service]['query']);
+      }
     }
   }
 }

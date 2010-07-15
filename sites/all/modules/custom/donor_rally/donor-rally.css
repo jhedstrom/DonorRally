@@ -94,8 +94,8 @@ a.donor-rally-button {
   text-align: center;
   font-weight: bold;
   display: block;
-  background-color: #555;
-  font-size: 1.5em;
+  background-color: #ccc;
+  font-size: 1.1em;
   padding: 0.5em 0;
   border-bottom: solid 1px #666;
   border-right: solid 1px #666;
@@ -103,11 +103,11 @@ a.donor-rally-button {
 a.donor-rally-button:link,
 a.donor-rally-button:visited,
 a.donor-rally-button:hover {
-  color: #fff;
+  color: #000;
   text-decoration: none;
 }
 a.donor-rally-button:hover {
-  background-color: #333;
+  background-color: #eee;
 }
 a.donor-rally-button:active {
   background-color: #989848;
