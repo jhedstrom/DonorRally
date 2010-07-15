@@ -1,3 +1,25 @@
+/* 
+BLUE: #55b7d1
+GREEN/YELLOW: #bdd73e
+*/
+
 #site-name {
 	text-indent: -2000px;
+}
+
+h1, h2, h3 {
+	color: #55b7d1;
+}
+
+#header {
+	height: 145px;
+}
+
+
+/*
+table styling
+*/
+
+thead th {
+	background: #bdd73e;
 }
