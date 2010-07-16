@@ -1,5 +1,5 @@
 <?php
-// $Id: context_ui.module,v 1.13.2.48.2.1.2.11 2010/02/28 19:30:48 yhahn Exp $
+// $Id: context_ui.module,v 1.13.2.48.2.1.2.12 2010/05/25 16:06:07 yhahn Exp $
 
 /**
  * Implementation of hook_theme().
@@ -258,6 +258,7 @@ function context_ui_editor($form_state, $contexts) {
   $items = array();
   $form_context = array();
   ksort($contexts);
+
   foreach ($contexts as $context) {
     $edit = l(t('Edit'), $_GET['q'], array('fragment' => $context->name, 'attributes' => array('class' => 'edit')));
     $done = l(t('Done'), $_GET['q'], array('fragment' => $context->name, 'attributes' => array('class' => 'done')));
@@ -350,9 +351,10 @@ function context_ui_editor_process($values) {
  */
 function context_ui_editor_submit(&$form, &$form_state) {
   foreach ($form_state['values']['contexts'] as $name => $values) {
-    $original = drupal_clone($values['context']);
+    $original_conditions = $values['context']->conditions;
+    $original_reactions = $values['context']->reactions;
     $context = context_ui_editor_process($values);
-    if (($original->conditions !== $context->conditions) || ($original->reactions !== $context->reactions)) {
+    if (($original_conditions !== $context->conditions) || ($original_reactions !== $context->reactions)) {
       if (context_save($context)) {
         drupal_set_message(t('Saved %title.', array(
           '%title' => (!empty($context->description) ? $context->description : $context->name)

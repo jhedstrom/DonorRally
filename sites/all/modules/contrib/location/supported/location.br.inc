@@ -1,34 +1,96 @@
 <?php
-// $Id: location.br.inc,v 1.6.4.1 2009/02/04 20:04:09 bdragon Exp $
+// $Id: location.br.inc,v 1.6.4.2 2010/04/11 22:34:21 ankur Exp $
+
+// This file contributed by Avi Alkalay <avi unix sh> to the
+// Location Drupal module, based on other files on same folder.
+//
+// - Fixed Unicode chars and accents
+// - Added support for Google Maps on location_map_link_*_providers()
+//
+// March, 2010
+// São Paulo, Brazil
 
 // Brazil
 
 function location_province_list_br() {
-  return array('AC' => "Acre",
+  return array(
+    'AC' => "Acre",
     'AL' => "Alagoas",
     'AM' => "Amazonas",
-    'AP' => "Amapa",
+    'AP' => "Amapá",
     'BA' => "Bahia",
     'CE' => "Ceara",
     'DF' => "Distrito Federal",
-    'ES' => "Espirito Santo",
+    'ES' => "Espírito Santo",
     'GO' => "Goias",
-    'MA' => "Maranhao",
+    'MA' => "Maranhão",
     'MG' => "Minas Gerais",
     'MS' => "Mato Grosso do Sul",
     'MT' => "Mato Grosso",
-    'PA' => "Para",
-    'PB' => "Paraiba",
+    'PA' => "Pará",
+    'PB' => "Paraíba",
     'PE' => "Pernambuco",
     'PI' => "Piaui",
-    'PR' => "Parana",
+    'PR' => "Paraná",
     'RJ' => "Rio de Janeiro",
     'RN' => "Rio Grande do Norte",
-    'RO' => "Rondonia",
+    'RO' => "Rondônia",
     'RR' => "Roraima",
     'RS' => "Rio Grande do Sul",
     'SC' => "Santa Catarina",
     'SE' => "Sergipe",
-    'SP' => "Sao Paulo",
+    'SP' => "São Paulo",
     'TO' => "Tocantins");
 }
+
+function location_map_link_br_providers() {
+  return array(
+    'google' => array(
+      'name' => 'Google Maps',
+      'url' => 'http://maps.google.com.br',
+      'tos' => 'http://maps.google.com/intl/pt-BR/help/terms_maps.html',
+    ),
+  );
+}
+
+function location_map_link_br_default_providers() {
+  return array('google');
+}
+
+
+function location_map_link_br_google($location = array()) {
+  $query_params = array();
+  $q = NULL;
+
+  foreach (array('street', 'city', 'province', 'postal_code', 'country') as $field) {
+    if (isset($location[$field])) {
+      $query_params[] = $location[$field];
+    }
+  }
+
+  if (location_has_coordinates($location)) {
+    $q = $location['latitude'] . ' ' . $location['longitude'];
+    if ($location[name] != "") {
+       $q .= " ($location[name]," . implode(', ', $query_params) . ")";
+    } else {
+       $q .= ' (' . implode(', ', $query_params) . ')';
+    }
+  } else if (count($query_params) > 0) {
+    $q = implode(", ", $query_params);
+    if ($location[name] != "") {
+       $q .= " ($location[name])";
+    }
+  }
+
+  $q = urlencode($q);
+
+  if ($q != NULL) {
+    return ('http://maps.google.com.br?q='.$q );
+  }
+  else {
+    return NULL;
+  }
+}
+
+
+

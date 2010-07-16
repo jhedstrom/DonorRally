@@ -1,5 +1,5 @@
 <?php
-// $Id: fieldgroup-simple.tpl.php 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: fieldgroup-simple.tpl.php,v 1.1.2.1 2009/02/28 23:56:17 yched Exp $
 
 /**
  * @file fieldgroup-simple.tpl.php

@@ -1,4 +1,4 @@
-// $Id: README.txt 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: README.txt,v 1.12.2.4 2008/10/28 01:42:48 yched Exp $
 
 Content Construction Kit
 ------------------------

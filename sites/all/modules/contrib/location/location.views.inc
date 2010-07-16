@@ -1,5 +1,5 @@
 <?php
-// $Id: location.views.inc,v 1.16 2008/12/03 22:51:23 bdragon Exp $
+// $Id: location.views.inc,v 1.16.2.3 2010/07/04 14:10:07 rooby Exp $
 
 /**
  * @file
@@ -49,6 +49,9 @@ function location_views_handlers() {
         'parent' => 'views_handler_filter',
       ),
       'location_handler_argument_location_province' => array(
+        'parent' => 'views_handler_argument',
+      ),
+      'location_handler_argument_location_proximity' => array(
         'parent' => 'views_handler_argument',
       ),
       'location_handler_field_location_address' => array(
@@ -303,6 +306,9 @@ function location_views_data() {
     'sort' => array(
       'handler' => 'location_handler_sort_location_distance',
     ),
+    'argument' => array(
+      'handler' => 'location_handler_argument_location_proximity',
+    ),
     'filter' => array(
       'handler' => 'location_views_handler_filter_proximity',
     ),
@@ -338,6 +344,7 @@ function location_views_data() {
     'field' => array(
       'field' => 'lid',
       'handler' => 'location_handler_field_location_address',
+      'element type' => 'div',
     ),
   );
 
@@ -382,4 +389,159 @@ function location_views_data() {
   );
 
   return $data;
+}
+
+/**
+ * Helper function for proximity handlers.
+ * Gets a list of available node location and cck location fields.
+ *
+ * @return
+ *   An array of the location field options.
+ */
+function location_views_proximity_get_location_field_options() {
+  // Get the CCK location field options.
+  $field_options = array('node' => t('Node location'));
+  if (module_exists('location_cck')) {
+    $fields = content_fields();
+    foreach ($fields as $field) {
+      if ($field['module'] == 'location_cck') {
+        $field_options[$field['field_name']] = t('CCK Location: @label (@name)', array('@label' => $field['widget']['label'], '@name' => $field['field_name']));
+      }
+    }
+  }
+  return $field_options;
+}
+
+/**
+ * Helper function for proximity handlers.
+ * Gets available arguments for argument related handler options.
+ *
+ * @param $view
+ *   The view object.
+ *
+ * @return
+ *   An array containing arrays of the nid arguments and the uid arguments.
+ */
+function location_views_proximity_get_argument_options($view) {
+  // Get the arguments for this view so we can use nid, uid or Global: Null arguments.
+  $uid_argument_options = array();
+  $nid_argument_options = array();
+  $arguments = $view->display_handler->get_handlers('argument');
+  foreach ($arguments as $id => $handler) {
+    if ($handler->field == 'null') {
+      $uid_argument_options[$id] = $handler->ui_name();
+      $nid_argument_options[$id] = $handler->ui_name();
+    }
+    else if ($handler->field == 'nid') {
+      $nid_argument_options[$id] = $handler->ui_name();
+    }
+    else if ($handler->field == 'uid') {
+      $uid_argument_options[$id] = $handler->ui_name();
+    }
+  }
+  return array($nid_argument_options, $uid_argument_options);
+}
+
+/**
+ * Helper function for proximity handlers.
+ * Retrieves the coordinates of the location that this field measures distances against.
+ *
+ * @param $view
+ *   The view object.
+ * @param $options
+ *   An array of the options (or values in the case of the filter) of the handler.
+ *
+ * @return
+ *   An array with keys 'latitude' and 'longitude' or an empty array.
+ */
+function location_views_proximity_get_reference_location($view, $options) {
+  $coordinates = array();
+  switch ($options['origin']) {
+    case 'user':
+    case 'hybrid':
+      global $user;
+      $user_locations = isset($user->locations) ? $user->locations : location_load_locations($user->uid, 'uid');
+      // This user_location_delta will only possibly be set if we are dealing with the filter.
+      $i = (isset($options['user_location_delta']) && !empty($options['user_location_delta'])) ? $options['user_location_delta'] : 0;
+      if (isset($user_locations[$i]['latitude']) || !empty($user_locations[$i]['latitude'])) {
+        $coordinates['latitude'] = (float) $user_locations[$i]['latitude'];
+        $coordinates['longitude'] = (float) $user_locations[$i]['longitude'];
+      }
+      else if ($options['origin'] == 'hybrid') {
+        $coordinates['latitude'] = (float) $options['latitude'];
+        $coordinates['longitude'] = (float) $options['longitude'];
+      }
+      break;
+    case 'static':
+      $coordinates['latitude'] = (float) $options['latitude'];
+      $coordinates['longitude'] = (float) $options['longitude'];
+      break;
+    case 'tied':
+      if (!empty($view->filter)) {
+        foreach ($view->filter as $filter) {
+          if ($filter->table == 'location' && $filter->field == 'distance' && $filter->options['relationship'] == $options['relationship']) {
+            $filter_options = array_merge($filter->options, $filter->options['value'], $filter->value);
+            if ($coords = location_views_proximity_get_reference_location($view, $filter_options)) {
+              $coordinates['latitude'] = (float) $coords['latitude'];
+              $coordinates['longitude'] = (float) $coords['longitude'];
+            }
+          }
+        }
+      }
+      break;
+    case 'postal':
+    case 'postal_default':
+      // Force default for country.
+      if ($options['origin'] == 'postal_default') {
+        $options['country'] = variable_get('location_default_country', 'us');
+      }
+      // Zip code lookup.
+      if (!empty($options['postal_code']) && !empty($options['country'])) {
+        $coords = location_latlon_rough($options);
+        if ($coords) {
+          $coordinates['latitude'] = (float) $coords['lat'];
+          $coordinates['longitude'] = (float) $coords['lon'];
+        }
+      }
+      break;
+    case 'php':
+      ob_start();
+      $result = eval($options['php_code']);
+      ob_end_clean();
+      if ($result && $result['latitude'] && $result['longitude']) {
+        $coordinates['latitude'] = (float) $result['latitude'];
+        $coordinates['longitude'] = (float) $result['longitude'];
+      }
+      break;
+    case 'nid_arg':
+      if ($nodehandler = $view->display_handler->get_handler('argument', $options['nid_arg'])) {
+        $nid = $nodehandler->get_value();
+        if ($nid && is_numeric($nid) && $tempnode = node_load($nid)) {
+          $field_name = $options['nid_loc_field'];
+          if ($field_name == 'node') {
+            $coordinates['latitude'] = (float) $tempnode->location['latitude'];
+            $coordinates['longitude'] = (float) $tempnode->location['longitude'];
+          }
+          else {
+            $cck_location = $tempnode->$field_name;
+            if (isset($cck_location[0]['longitude']) && isset($cck_location[0]['latitude'])) {
+              $coordinates['latitude'] = (float) $cck_location[0]['latitude'];
+              $coordinates['longitude'] = (float) $cck_location[0]['longitude'];
+            }
+          }
+        }
+      }
+      break;
+    case 'uid_arg':
+      if ($userhandler = $view->display_handler->get_handler('argument', $options['uid_arg'])) {
+        $uid = $userhandler->get_value();
+        if ($uid && is_numeric($uid) && $tempuser = user_load(array('uid' => $uid))) {
+          $coordinates['latitude'] = (float) $tempuser->location['latitude'];
+          $coordinates['longitude'] = (float) $tempuser->location['longitude'];
+        }
+      }
+      break;
+  }
+
+  return $coordinates;
 }

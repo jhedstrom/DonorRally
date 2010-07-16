@@ -315,13 +315,8 @@ function service_links_short_url($url, $nid) {
       //with alias = true dont transform with path
       return url("node/$nid", array('absolute' => TRUE, 'alias' => TRUE));
     case 2:
-      if (module_exists('shorten')) {
-        $turl = shorten_url($url);
-      }
-      else {
-        $turl = drupal_http_request('http://tinyurl.com/api-create.php?url='. $url);
-        $turl = (isset($turl->data) && ($turl->code == 200)) ? $turl->data : $url;
-      }
+      $turl = drupal_http_request('http://tinyurl.com/api-create.php?url='. $url);
+      $turl = (isset($turl->data) && ($turl->code == 200)) ? $turl->data : $url;
       return $turl;
     case 3:
       $burl = variable_get('service_links_domain_redirect', NULL);

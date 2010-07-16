@@ -1,4 +1,4 @@
-// $Id: context_reaction_block.js,v 1.1.2.15 2010/02/23 15:15:42 yhahn Exp $
+// $Id: context_reaction_block.js,v 1.1.2.16 2010/04/26 14:45:02 yhahn Exp $
 
 Drupal.behaviors.contextReactionBlock = function(context) {
   $('form.context-editor:not(.context-block-processed)')
@@ -142,21 +142,21 @@ function DrupalContextBlockEditor(editor) {
   this.updateBlocks = function() {
     var browser = $('div.context-block-browser');
 
-    // For all enabled blocks, hide corresponding addables.
+    // For all enabled blocks, mark corresponding addables as having been added.
     $('div.block, div.admin-block').each(function() {
       var bid = $(this).attr('id').split('block-')[1]; // Ugh.
-      $('#context-block-addable-'+bid, browser).hide();
+      $('#context-block-addable-'+bid, browser).draggable('disable').addClass('context-block-added').removeClass('context-block-addable');
     });
-    // For all hidden addables with no corresponding blocks, show.
-    $('.context-block-addable', browser).each(function() {
+    // For all hidden addables with no corresponding blocks, mark as addable.
+    $('.context-block-item', browser).each(function() {
       var bid = $(this).attr('id').split('context-block-addable-')[1];
       if ($('#block-'+bid).size() === 0) {
-        $(this).show();
+        $(this).draggable('enable').removeClass('context-block-added').addClass('context-block-addable');
       }
     });
 
     // Clean up after jQuery UI. Sometimes addables get left -- not good.
-    $('.context-block-addable.ui-sortable-helper').remove();
+    $('.context-block-item.ui-sortable-helper').remove();
 
     // Mark empty regions.
     $('.context-block-region').each(function() {

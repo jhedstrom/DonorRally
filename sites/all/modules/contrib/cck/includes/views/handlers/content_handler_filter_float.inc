@@ -1,5 +1,5 @@
 <?php
-// $Id: content_handler_filter_float.inc 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: content_handler_filter_float.inc,v 1.1.2.3 2009/04/09 00:04:23 yched Exp $
 
 /**
  * @file

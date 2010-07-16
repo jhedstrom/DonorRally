@@ -89,22 +89,8 @@ function shorten_block($op = 'list', $delta = 0, $edit = array()) {
     $block['content'] = drupal_get_form('shorten_current');
     return $block;
   }
-  elseif ($op == 'configure' && $delta == 'shorten') {
-    if (_shorten_method_default() != 'none') {
-      $form['shorten_show_service'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Show the list of URL shortening services'),
-        '#default_value' => variable_get('shorten_show_service', FALSE),
-        '#weight' => -4,
-      );
-      return $form;
-    }
-  }
   elseif ($op == 'configure' && $delta == 'shorten_short') {
     drupal_set_message(t('This block displays the short URL for the page on which it is shown, which can slow down uncached pages in some instances.'));
-  }
-  elseif ($op == 'save' && $delta == 'shorten') {
-    variable_set('shorten_show_service', $edit['shorten_show_service']);
   }
 }
 
@@ -137,7 +123,7 @@ function shorten_flush_caches() {
  */
 function shorten_url($original = '', $service = '') {
   if (!$original) {
-    $original = url($_GET['q'], array('absolute' => TRUE, 'alias' => variable_get('shorten_use_alias', 1)));
+    $original = url($_GET['q'], array('absolute' => TRUE, 'alias' => !variable_get('shorten_use_alias', 1)));
   }
   if (!$service) {
     $service = variable_get('shorten_service', 'is.gd');
@@ -161,6 +147,7 @@ function shorten_url($original = '', $service = '') {
       $url = $original;
     }
   }
+  $url = trim($url); //Redundant for most services.
   //Replace "http://" with "www." if the URL is abbreviated because it's shorter.
   if ($url != $original && variable_get('shorten_www', TRUE)) {
     if (strpos($url, 'http://') === 0) {
@@ -252,6 +239,16 @@ function shorten_shorten_service() {
       'custom' => '_shorten_adjix',
     );
   }
+  if (variable_get('shorten_budurl', '')) {
+    $services['budurl'] = array(
+      'url' => 'http://budurl.com/api/v1/budurls/shrink?api_key='. variable_get('shorten_budurl', '') .'&format=txt&long_url=',
+    );
+  }
+  if (variable_get('shorten_ez', '')) {
+    $services['ez'] = array(
+      'url' => 'http://ez.com/api/v1/ezlinks/shrink?api_key='. variable_get('shorten_ez', '') .'&format=txt&long_url=',
+    );
+  }
   if (variable_get('shorten_bitly_login', '') && variable_get('shorten_bitly_key', '')) {
     $services['bit.ly'] = 'http://api.bit.ly/v3/shorten?format=txt&login='.
       variable_get('shorten_bitly_login', '') .'&apiKey='.
@@ -265,11 +262,13 @@ function shorten_shorten_service() {
       variable_get('shorten_bitly_key', '') .'&longUrl=';
   }
   $services += array(
+    'fwd4.me' => 'http://api.fwd4.me/?url=',
     'cli.gs' => 'http://cli.gs/api/v1/cligs/create?appid=drupal&url=',
     'hex.io' => 'http://hex.io/api-create.php?url=',
     'idek.net' => 'http://idek.net/c.php?idek-api=true&idek-ref=drupal&idek-url=',
     'is.gd' => 'http://is.gd/api.php?longurl=',
     'lin.cr' => 'http://lin.cr/?mode=api&full=1&l=',
+    'migre.me' => 'http://migre.me/api.txt?url=',
     'Metamark' => 'http://metamark.net/api/rest/simple?long_url=',
     'PeekURL' => 'http://peekurl.com/api.php?desturl=',
     'PiURL' => 'http://piurl.com/api.php?url=',
@@ -286,12 +285,15 @@ function shorten_shorten_service() {
     'urlShort' => 'http://u.mavrev.com/api.php?url=',
   );
   if (module_exists('shorturl')) {
-    $services['This site'] = array(
+    $services['Drupal ShortURL module'] = array(
       'custom' => '_shorten_shorturl',
     );
   }
   if (variable_get('shorten_cligs', '')) {
     $services['cli.gs'] = 'http://cli.gs/api/v1/cligs/create?appid=drupal&key='. variable_get('shorten_cligs', '') .'&url=';
+  }
+  if (variable_get('shorten_fwd4me', '')) {
+    $services['fwd4.me'] = 'http://api.fwd4.me/?key='. variable_get('shorten_fwd4me', '') .'&url=';
   }
   if (variable_get('shorten_redirec', '')) {
     $services['redir.ec'] = 'http://redir.ec/_api/rest/redirec/create?appid=drupal&apikey='. variable_get('shorten_redirec', '') .'&url=';
@@ -327,7 +329,7 @@ function _shorten_adjix($original) {
  * Helps get a shortened URL via the Short URLs module.
  */
 function _shorten_shorturl($original) {
-  return url(shorturl_shorten($original), array('absolute' => TRUE));
+  return shorturl_shorten($original, TRUE);
 }
 
 /**
@@ -411,10 +413,8 @@ function shorten_form_shorten() {
   $form['opendiv'] = array(
     '#value' => '<div id="shorten_replace">',
   );
+  drupal_add_js(drupal_get_path('module', 'shorten') .'/shorten.js');
   if ($_SESSION['shorten']) {
-    if (arg(0) != 'shorten' && arg(1) != 'js') {
-      drupal_add_js(drupal_get_path('module', 'shorten') .'/shorten.js');
-    }
     $form['shortened_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Shortened URL'),
@@ -575,7 +575,7 @@ function shorten_current(&$form_state) {
   $form['this_shortened'] = array(
     '#type' => 'textfield',
     '#size' => 25,
-    '#default_value' => shorten_url(url($_GET['q'], array('absolute' => TRUE, 'alias' => variable_get('shorten_use_alias', 1)))),
+    '#default_value' => shorten_url(),
   );
   return $form;
 }

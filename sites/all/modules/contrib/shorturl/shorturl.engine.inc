@@ -1,4 +1,9 @@
 <?php
+//$Id: shorturl.engine.inc,v 1.1.2.1 2009/08/08 06:52:50 inadarei Exp $
+/**
+* @File shorturl.engine.inc
+*   the URL shortening "engine" with all the math trickery
+*/
 
 /**
 * Calculate factorial of a number
@@ -33,13 +38,23 @@ function shorturl_decode_url($url)	{
     $mapping = shorturl_base_decode_mapping();
     $base = sizeof($mapping);
     
+    //There's just no chance encoded URL will ever be too long so if 
+    //we get something like that - somebody is messing with us trying
+    //to eat up CPU cycles on decoding or cause some other kind of overflow. 
+    if (strlen($url)>15) return -1;
+    
+    $seq = str_split ($url);    
+    if (!is_array($seq) || !(sizeof($seq)>0)) return -1;
+    
     $seq = array_reverse(str_split ($url));
     
     $i = 0;
     foreach ($seq as $c) {
-      $val = (int)$mapping[$c];
-      $num += $val * pow($base, $i);    
-      $i++;
+      if (isset($mapping[$c])) {
+        $val = (int)$mapping[$c];
+        $num += $val * pow($base, $i);    
+        $i++;
+      }
     }
     
     return $num;

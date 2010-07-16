@@ -5,9 +5,9 @@ core = 6.x
 package = Service Links
 dependencies[] = service_links
 
-; Information added by drupal.org packaging script on 2010-01-20
+; Information added by drupal.org packaging script on 2010-07-11
 version = "6.x-2.x-dev"
 core = "6.x"
 project = "service_links"
-datestamp = "1263946423"
+datestamp = "1278835625"
 

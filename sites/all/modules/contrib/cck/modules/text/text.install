@@ -1,5 +1,5 @@
 <?php
-// $Id: text.install 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: text.install,v 1.37.2.10 2008/10/22 12:53:40 yched Exp $
 
 /**
  * @file

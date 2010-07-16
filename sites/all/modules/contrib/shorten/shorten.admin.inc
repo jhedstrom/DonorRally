@@ -80,6 +80,12 @@ function shorten_admin($form_state) {
       '#default_value' => variable_get('shorten_service_backup', 'TinyURL'),
       '#options' => $services,
     );
+    $form['shorten_show_service'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show the list of URL shortening services in the user interface'),
+      '#default_value' => variable_get('shorten_show_service', FALSE),
+      '#description' => t('Allow users to choose which service to use in the Shorten URLs block and page.'),
+    );
   }
   if (module_exists('token')) {
     $form['shorten_generate_token'] = array(
@@ -174,10 +180,25 @@ function shorten_keys($form_state) {
     '#title' => t('Bit.ly API Key'),
     '#default_value' => variable_get('shorten_bitly_key', ''),
   );
+  $form['shorten_budurl'] = array(
+    '#type' => 'textfield',
+    '#title' => t('BudURL API Key'),
+    '#default_value' => variable_get('shorten_budurl', ''),
+  );
   $form['shorten_cligs'] = array(
     '#type' => 'textfield',
     '#title' => t('Cligs API Key'),
     '#default_value' => variable_get('shorten_cligs', ''),
+  );
+  $form['shorten_ez'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Ez API Key'),
+    '#default_value' => variable_get('shorten_ez', ''),
+  );
+  $form['shorten_fwd4me'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fwd4.me API Key'),
+    '#default_value' => variable_get('shorten_fwd4me', ''),
   );
   $form['shorten_redirec'] = array(
     '#type' => 'textfield',

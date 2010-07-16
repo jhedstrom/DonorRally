@@ -1,5 +1,5 @@
 <?php
-// $Id: context_condition.inc,v 1.1.2.3 2010/03/03 19:42:06 yhahn Exp $
+// $Id: context_condition.inc,v 1.1.2.5 2010/05/25 16:06:07 yhahn Exp $
 
 /**
  * Base class for a context condition.
@@ -9,6 +9,23 @@ class context_condition {
   var $title;
   var $description;
   var $values = array();
+
+  /**
+   * Clone our references when we're being cloned.
+   *
+   * PHP 5.3 performs 'shallow' clones when clone()'ing objects, meaning that
+   * any objects or arrays referenced by this object will not be copied, the
+   * cloned object will just reference our objects/arrays instead. By iterating
+   * over our properties and serializing and unserializing them, we force PHP to
+   * copy them.
+   */
+  function __clone() {
+    foreach ($this as $key => $val) {
+      if (is_object($val) || (is_array($val))) {
+        $this->{$key} = unserialize(serialize($val));
+      }
+    }
+  }
 
   /**
    * Constructor. Do not override.
@@ -139,10 +156,6 @@ class context_condition {
    * Retrieve options from the context provided.
    */
   function fetch_from_context($context, $key = NULL) {
-    // Allow other modules to alter the value just before it's returned.
-    if (!context_isset('context_ui', 'no_alter')) {
-      drupal_alter('context_condition_fetch', $this, $context);
-    }
     if (isset($key)) {
       return isset($context->conditions[$this->plugin][$key]) ? $context->conditions[$this->plugin][$key] : array();
     }

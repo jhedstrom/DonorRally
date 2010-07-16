@@ -1,5 +1,5 @@
 <?php
-// $Id: node_from_noderef.inc 875 2009-08-25 00:48:52Z jhedstrom $
+// $Id: node_from_noderef.inc,v 1.1.2.3 2009/07/20 17:34:17 markuspetrux Exp $
 
 /**
  * @file

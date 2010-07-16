@@ -1,5 +1,5 @@
 <?php
-// $Id: context.core.inc,v 1.1.2.3.2.20.2.16 2010/03/03 19:57:47 yhahn Exp $
+// $Id: context.core.inc,v 1.1.2.3.2.20.2.18 2010/05/25 21:57:44 yhahn Exp $
 
 /**
  * Implementation of hook_context_registry().
@@ -313,6 +313,7 @@ function context_links($reset = FALSE) {
       }
     }
     drupal_alter('context_links', $links);
+    uasort($links, 'element_sort');
   }
   return $links;
 }
@@ -363,5 +364,8 @@ function context_preprocess_page(&$vars) {
 
   if ($context_links = context_links()) {
     $vars['context_links'] = theme('links', $context_links);
+  }
+  else {
+    $vars['context_links'] = '';
   }
 }
