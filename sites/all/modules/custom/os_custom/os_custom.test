@@ -33,10 +33,10 @@ class OsCustomHelperTestCase extends SimpleTestCloneTestCase {
   }
 
   /**
-   * Create user with Site Editor role.
+   * Create user with Team Leader role.
    */
-  protected function drupalCreateSiteEditor() {
-    return $this->drupalCreateUserWithRole('site editor');
+  protected function drupalCreateTeamLeader() {
+    return $this->drupalCreateUserWithRole('team leader');
   }
 
 }
@@ -55,7 +55,7 @@ class OsCustomUserRoles extends OsCustomHelperTestCase {
 
   function testUserRoles() {
     $expected = array(
-      'site editor',
+      'team leader',
       'web admin',
       'anonymous user',
       'authenticated user',
