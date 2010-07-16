@@ -1,5 +1,5 @@
 <?php
-// $Id: boxes.install,v 1.2.2.3 2010/04/26 14:21:23 jmiccolis Exp $
+// $Id: boxes.install,v 1.2.2.5 2010/06/21 20:57:22 jmiccolis Exp $
 
 /**
  * Implemenation of hook_install().
@@ -147,6 +147,23 @@ function boxes_update_6102() {
   }
   else {
     $ret['#abort'] = array('success' => FALSE, 'query' => "Could not resize the `box.delta` field. Some entries are larger than 32 characters and must be manually truncated.");
+  }
+  return $ret;
+}
+
+/**
+ * Ensure that Spaces overrides are stored as an object, not  an array.
+ */
+function boxes_update_6103() {
+  $ret = array();
+  if (module_exists('spaces')) {
+    $result = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'boxes'");
+    while ($row = db_fetch_object($result)) {
+      $v = unserialize($row->value);
+      $row->value = (object)$v;
+      drupal_write_record('spaces_overrides', $row, array('type', 'id', 'object_type', 'object_id'));
+    }
+    $ret[] = array('success' => true, 'query' => 'Updated Spaces overrides');
   }
   return $ret;
 }

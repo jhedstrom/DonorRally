@@ -1,5 +1,5 @@
 <?php
-// $Id: content.token.inc 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: content.token.inc,v 1.5.2.8 2008/12/05 14:59:22 yched Exp $
 
 /**
  * @file

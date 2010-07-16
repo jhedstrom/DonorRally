@@ -1,5 +1,5 @@
 <?php
-// $Id: boxes.module,v 1.10.2.2 2010/04/26 02:15:58 jmiccolis Exp $
+// $Id: boxes.module,v 1.10.2.6 2010/06/22 15:17:05 jmiccolis Exp $
 
 /**
  * Implementation of hook_menu().
@@ -122,10 +122,7 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
 
     case 'save':
       $edit['delta'] = $delta;
-      if (!$box = boxes_load($delta)) {
-        $box = boxes_create($edit['plugin_key']);
-      }
-      $box->set($edit);
+      $box = boxes_create($edit['plugin_key'], $edit);
       $box->save();
       break;
 
@@ -146,8 +143,7 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
           $hash = dechex(crc32($user->sid . microtime()));
         }
         $delta = "{$identifier}-{$hash}";
-        $box = boxes_create($plugin_key);
-        $box->set(array('delta' => $delta));
+        $box = boxes_create($plugin_key, array('delta' => $delta));
       }
       else {
         $box = boxes_load($delta);
@@ -197,11 +193,18 @@ function boxes_block($op = 'list', $delta = '', $edit = array()) {
 }
 
 /**
- * Create a new box object.
+ * Instantiate box object.
+ *
+ * @param $plugin_key
+ *   The string id of the boxes plugin.
+ * @param $values
+ *   The values to set on the box.
+ *
+ * @return a box object.
  */
-function boxes_create($plugin_key) {
+function boxes_create($plugin_key, $values = array()) {
   module_load_include('inc', 'boxes', 'plugins/boxes_box');
-  return boxes_box::create($plugin_key);
+  return boxes_box::factory($plugin_key, $values);
 }
 
 /**
@@ -322,7 +325,7 @@ function boxes_ctools_plugin_api($module, $api) {
   if ($module == 'spaces' && $api == 'plugins') {
     return array('version' => 3);
   }
-  elseif ($owner == 'boxes' && $api == 'plugins') {
+  elseif ($module == 'boxes' && $api == 'plugins') {
     return array('version' => 1);
   }
 }
@@ -397,20 +400,23 @@ function boxes_spaces_registry() {
  *
  * Provides access to blocks specific to each space.
  */
-function boxes_spaces_dashboard_block_access_alter(&$access, $block) {
-  if ($block->module === 'boxes') {
-    // This is the add block, give access to admins.
-    if (strpos($block->delta, 'add__') === 0) {
-      $access = boxes_access_admin();
-    }
-    // If this box is specific to the current space, allow access.
-    else if (module_exists('spaces') && $space = spaces_get_space()) {
-      $in_space = $space->controllers->boxes->get($block->delta, 'space');
-      $access = $access || !empty($in_space);
-    }
-    // Outside of spaces, give admins access to all boxes.
-    else {
-      $access = boxes_access_admin();
+function boxes_spaces_dashboard_block_access_alter(&$access) {
+  foreach (array_keys($access) as $bid) {
+    list($module, $delta) = explode('-', $bid, 2);
+    if ($module === 'boxes') {
+      // This is the add block, give access to admins.
+      if (strpos($delta, 'add__') === 0) {
+        $access[$bid] = boxes_access_admin();
+      }
+      // If this box is specific to the current space, allow access.
+      else if (module_exists('spaces') && $space = spaces_get_space()) {
+        $in_space = $space->controllers->boxes->get($delta, 'space');
+        $access[$bid] = $access[$bid] || !empty($in_space);
+      }
+      // Outside of spaces, give admins access to all boxes.
+      else {
+        $access[$bid] = boxes_access_admin();
+      }
     }
   }
 }
@@ -450,8 +456,12 @@ function boxes_context_block_info_alter(&$blocks) {
 function boxes_boxes_view_alter(&$box, $delta) {
   if (module_exists('spaces') && $space = spaces_get_space()) {
     if ($space_box = $space->controllers->boxes->get($delta)) {
-      $box = boxes_create($space_box['plugin_key']);
-      $box->set($space_box);
+      // Some older overrides may be stored as an array, check for these and
+      // convert them to objects.
+      if (is_array($space_box)) {
+        $space_box = (object)$space_box;
+      }
+      $box = boxes_create($space_box->plugin_key, $space_box);
       $box->new = FALSE;
     }
   }

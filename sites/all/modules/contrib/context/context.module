@@ -1,5 +1,5 @@
 <?php
-// $Id: context.module,v 1.6.2.6.2.6.2.13 2010/03/03 00:57:19 yhahn Exp $
+// $Id: context.module,v 1.6.2.6.2.6.2.16 2010/05/25 15:40:50 yhahn Exp $
 
 require('context.core.inc');
 
@@ -178,14 +178,6 @@ function context_init() {
 }
 
 /**
- * Implementation of hook_flush_caches().
- */
-function context_flush_caches() {
-  context_invalidate_cache();
-  return array();
-}
-
-/**
  * Load & crud functions ==============================================
  */
 
@@ -201,7 +193,9 @@ function context_flush_caches() {
 function context_load($name = NULL, $reset = FALSE) {
   ctools_include('export');
   static $contexts;
+  static $altered;
   if (!isset($contexts) || $reset) {
+    $contexts = $altered = array();
     if (!$reset && $contexts = context_cache_get('context')) {
       // Nothing here.
     }
@@ -214,6 +208,11 @@ function context_load($name = NULL, $reset = FALSE) {
     }
   }
   if (isset($name)) {
+    // Allow other modules to alter the value just before it's returned.
+    if (isset($contexts[$name]) && !isset($altered[$name])) {
+      $altered[$name] = TRUE;
+      drupal_alter('context_load', $contexts[$name]);
+    }
     return isset($contexts[$name]) ? $contexts[$name] : FALSE;
   }
   return $contexts;
@@ -506,20 +505,4 @@ function _context_registry($key = NULL, $reset = FALSE) {
     return isset($registry[$key]) ? $registry[$key] : array();
   }
   return $registry;
-}
-
-/**
- * Implementation of hook_features_api().
- */
-function context_features_api() {
-  return array(
-    'context' => array(
-      'name' => 'Contexts',
-      'api' => 'context',
-      'default_hook' => 'context_default_contexts',
-      'current_version' => 3,
-      'module' => 'context',
-      'feature_source' => TRUE,
-    ),
-  );
 }

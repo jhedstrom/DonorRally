@@ -1,5 +1,5 @@
 <?php
-// $Id: context_reaction_block.theme.inc,v 1.1.2.6 2010/01/19 22:03:43 yhahn Exp $
+// $Id: context_reaction_block.theme.inc,v 1.1.2.8 2010/05/25 18:56:21 yhahn Exp $
 
 /**
  * Block form.
@@ -92,6 +92,8 @@ function template_preprocess_context_block_browser(&$vars) {
  * Preprocessor for theme('context_block_browser_item').
  */
 function template_preprocess_context_block_browser_item(&$vars) {
+  $vars['bid'] = $vars['block']->bid;
+  $vars['info'] = check_plain($vars['block']->info);
 }
 
 /**
@@ -104,6 +106,11 @@ function template_preprocess_context_block_editable_region(&$vars) {
   $vars['editable'] = isset($vars['editable']) ? $vars['editable'] : TRUE;
 
   $vars['show_always'] = variable_get('context_ui_show_empty_regions', false);
+
+  // Provide the user-friendly name of the region
+  global $theme_key;
+  $regions = system_region_list($theme_key);
+  $vars['region_description'] = isset($regions[$vars['region']]) ? $regions[$vars['region']] : $vars['region'];
 }
 
 /**
@@ -113,7 +120,7 @@ function template_preprocess_context_block_editable_block(&$vars) {
   $plugin = context_get_plugin('reaction', 'block');
   $block_info = $plugin->get_blocks();
   $block = $vars['block'];
-  $vars['label'] = isset($block_info[$block->bid]) ? $block_info[$block->bid]->info : $block->bid;
+  $vars['label'] = isset($block_info[$block->bid]) ? check_plain($block_info[$block->bid]->info) : $block->bid;
   $vars['tools'] = l('X', $_GET['q'], array('fragment' => 'remove', 'attributes' => array('class' => 'remove')));
   $vars['class'] = !empty($block->context) ? "editable edit-{$block->context}" : '';
 }

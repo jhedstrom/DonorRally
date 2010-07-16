@@ -1,5 +1,5 @@
 <?php
-// $Id: context_reaction_block.inc,v 1.1.2.15 2010/02/10 15:45:50 yhahn Exp $
+// $Id: context_reaction_block.inc,v 1.1.2.21 2010/05/25 18:56:21 yhahn Exp $
 
 /**
  * Expose blocks as context reactions.
@@ -9,7 +9,6 @@ class context_reaction_block extends context_reaction {
    * Options form.
    */
   function options_form($context) {
-    // init_theme();
     $theme_key = variable_get('theme_default', 'garland');
     $weight_delta = $this->max_block_weight();
 
@@ -44,7 +43,7 @@ class context_reaction_block extends context_reaction {
           '#options' => array(),
         );
       }
-      $form['selector'][$block->module]['#options'][$block->bid] = $block->info;
+      $form['selector'][$block->module]['#options'][$block->bid] = check_plain($block->info);
     }
     ksort($form['selector']);
 
@@ -64,7 +63,7 @@ class context_reaction_block extends context_reaction {
       foreach ($this->get_blocks($region, $context) as $block) {
         if (!empty($block->context)) {
           $form['blocks'][$region][$block->bid] = array(
-            '#value' => $block->info,
+            '#value' => check_plain($block->info),
             '#weight' => $block->weight,
             '#type' => 'markup',
             '#tree' => TRUE,
@@ -225,6 +224,7 @@ class context_reaction_block extends context_reaction {
     static $context_blocks;
     if (!isset($context_blocks)) {
       $context_blocks = array();
+      $info = $this->get_blocks();
       foreach ($this->get_contexts() as $context) {
         $options = $this->fetch_from_context($context);
         if (!empty($options['blocks'])) {
@@ -232,6 +232,7 @@ class context_reaction_block extends context_reaction {
             $block = (object) $block;
             $block->context = $context->name;
             $block->bid = "{$block->module}-{$block->delta}";
+            $block->cache = isset($info[$block->bid]->cache) ? $info[$block->bid]->cache : BLOCK_NO_CACHE;
             $block = $this->build_block($block);
             if (!empty($block->content)) {
               $context_blocks[$block->region][] = $block;
@@ -244,9 +245,7 @@ class context_reaction_block extends context_reaction {
     // Get blocks provided by Drupal core block visibility & merge context blocks in.
     $blocks = block_list($region);
     if (isset($context_blocks[$region])) {
-      foreach ($context_blocks[$region] as $block) {
-        $blocks[] = $block;
-      }
+      $blocks = array_merge($blocks, $context_blocks[$region]);
       uasort($blocks, 'context_reaction_block::block_sort');
     }
     return $blocks;
@@ -255,20 +254,30 @@ class context_reaction_block extends context_reaction {
   /**
    * Build a block's content. Largely taken from block_list().
    */
-  protected function build_block($block) {
+  protected function build_block($block, $reset = FALSE) {
+    // Block caching is not compatible with node_access modules. We also
+    // preserve the submission of forms in blocks, by fetching from cache
+    // only if the request method is 'GET'.
+    static $cacheable;
+    if (!isset($cacheable) || $reset) {
+      $cacheable = !count(module_implements('node_grants')) && $_SERVER['REQUEST_METHOD'] == 'GET';
+    }
+
     if (!isset($block->content)) {
       $block->content = '';
-      // Try fetching the block from cache. Block caching is not compatible with
-      // node_access modules. We also preserve the submission of forms in blocks,
-      // by fetching from cache only if the request method is 'GET'.
-      if (!count(module_implements('node_grants')) && $_SERVER['REQUEST_METHOD'] == 'GET' && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
-        $array = $cache->data;
-      }
-      else {
-        $array = module_invoke($block->module, 'block', 'view', $block->delta);
-        if (isset($cid)) {
+      // Try fetching the block from cache.
+      if ($cacheable && ($cid = _block_get_cache_id($block))) {
+        if ($cache = cache_get($cid, 'cache_block')) {
+          $array = $cache->data;
+        }
+        else {
+          $array = module_invoke($block->module, 'block', 'view', $block->delta);
           cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
         }
+      }
+      // Otherwise build block.
+      else {
+        $array = module_invoke($block->module, 'block', 'view', $block->delta);
       }
       if (isset($array) && is_array($array)) {
         foreach ($array as $k => $v) {
@@ -322,7 +331,16 @@ class context_reaction_block extends context_reaction {
     static $block_info;
 
     if (!isset($block_info) || $reset) {
-      $block_info = empty($reset) ? context_cache_get('block_info') : array();
+      $block_info = array();
+
+      // Force a reset of the block info cache when on admin pages as a
+      // variety of administrative UI tasks can create or alter block info.
+      if (arg(0) === 'admin') {
+        context_cache_set('block_info', NULL);
+      }
+      else if (!$reset) {
+        $block_info = context_cache_get('block_info');
+      }
       if (empty($block_info)) {
         $block_info = array();
         foreach (module_implements('block') as $module) {
@@ -405,7 +423,7 @@ class context_reaction_block extends context_reaction {
     if (function_exists('json_decode')) {
       return json_decode($json, $assoc);
     }
-    return $this->_json_decode($json);
+    return context_reaction_block::_json_decode($json);
   }
 
   /**
@@ -473,13 +491,9 @@ class context_reaction_block extends context_reaction {
 
       // Ensure $bid is valid.
       $info = $this->get_blocks();
-      if (isset($info[$bid]->info)) {
-        $block = new StdClass();
+      if (isset($info[$bid])) {
+        $block = $info[$bid];
         $block->context = $context;
-        $block->module = $module;
-        $block->delta = $delta;
-        $block->info = isset($info[$bid]->info) ? $info[$bid]->info : '';
-        $block->bid = $bid;
         $block->region = '';
 
         $block_view = module_invoke($module, 'block', 'view', $delta);

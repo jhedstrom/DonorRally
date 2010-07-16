@@ -1,5 +1,5 @@
 <?php
-// $Id: token.install 510 2008-12-01 19:47:20Z jhedstrom $
+// $Id: token.install,v 1.2.2.1 2008/06/28 15:10:22 greggles Exp $
 
 /**
  * @file

@@ -28,9 +28,12 @@ function shorten_schema(){
 function shorten_uninstall() {
   drupal_uninstall_schema('shorten');
 
+  variable_del('shorten_ez');
   variable_del('shorten_www');
   variable_del('shorten_adjix');
   variable_del('shorten_cligs');
+  variable_del('shorten_budurl');
+  variable_del('shorten_fwd4me');
   variable_del('shorten_method');
   variable_del('shorten_redirec');
   variable_del('shorten_service');
@@ -71,4 +74,24 @@ function shorten_update_6101() {
   $schema = drupal_get_schema_unprocessed('system', 'cache');
   db_create_table($ret, 'cache_shorten', $schema);
   return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ */
+function shorten_update_6102() {
+  $disabled_services = variable_get('shorten_invisible_services', array());
+  if (isset($disabled_services['This site'])) {
+    $value = $disabled_services['This site'] ? 'Drupal ShortURL module' : 0;
+    $disabled_services['Drupal ShortURL module'] = $value;
+    unset($disabled_services['This site']);
+    variable_set('shorten_invisible_services', $disabled_services);
+  }
+  if (variable_get('shorten_service', 'is.gd') == 'This site') {
+    variable_set('shorten_service', 'Drupal ShortURL module');
+  }
+  if (variable_get('shorten_service_backup', 'TinyURL') == 'This site') {
+    variable_set('shorten_service_backup', 'Drupal ShortURL module');
+  }
+  return array();
 }

@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.1.4.2.2.4 2010/02/09 20:09:58 yhahn Exp $
+$Id: README.txt,v 1.1.4.2.2.5 2010/04/26 15:07:26 yhahn Exp $
 
 Context 3.x for Drupal 6.x
 --------------------------
@@ -17,7 +17,7 @@ Installation
 ------------
 Context can be installed like any other Drupal module -- place it in
 the modules directory for your site and enable it (and its requirement,
-context) on the `admin/build/modules` page.
+CTools) on the `admin/build/modules` page.
 
 You will probably also want to install Context UI which provides a way for
 you to edit contexts through the Drupal admin interface.

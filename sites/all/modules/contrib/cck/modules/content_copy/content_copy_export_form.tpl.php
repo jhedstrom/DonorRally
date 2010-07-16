@@ -1,5 +1,5 @@
 <?php
-// $Id: content_copy_export_form.tpl.php 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: content_copy_export_form.tpl.php,v 1.1.2.2 2008/10/28 02:11:49 yched Exp $
 
 if ($form['#step'] == 2):
   if ($rows): ?>

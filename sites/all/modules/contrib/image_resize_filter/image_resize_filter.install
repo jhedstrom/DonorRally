@@ -1,5 +1,5 @@
 <?php
-// $Id: image_resize_filter.install,v 1.7 2009/10/22 02:17:57 quicksketch Exp $
+// $Id: image_resize_filter.install,v 1.8 2010/05/08 19:01:47 quicksketch Exp $
 
 /**
  * Implementation of hook_install().
@@ -23,7 +23,7 @@ function image_resize_filter_requirements($phase) {
   $requirements = array();
   $t = get_t();
   if ($phase == 'install' && function_exists('image_get_toolkit')) {
-    if (function_exists('imageapi_default_toolkit') && !imageapi_default_toolkit() || !image_get_toolkit()) {
+    if (!(image_get_toolkit() || (function_exists('imageapi_default_toolkit') && imageapi_default_toolkit()))) {
       $requirements['image_resize_filter'] = array(
         'title' => $t('Image resize filter'),
         'description' => $t('Image resize filter requires at least one active image toolkit on your server.'),

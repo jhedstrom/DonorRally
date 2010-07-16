@@ -1,5 +1,5 @@
 <?php
-// $Id: location_fax.views.inc,v 1.1 2008/09/29 20:31:20 bdragon Exp $
+// $Id: location_fax.views.inc,v 1.1.2.1 2009/12/16 20:47:53 bdragon Exp $
 
 /**
  * @file
@@ -18,9 +18,28 @@ function location_fax_views_data() {
 
   $data['location_fax']['table']['group'] = t('Location');
 
-  // Location_fax joins only to location.
+  // Join location_fax to all the tables that would be useful
   $data['location_fax']['table']['join'] = array(
+    // location_fax links to location via lid.
     'location' => array(
+      'left_field' => 'lid',
+      'field' => 'lid',
+    ),
+    // location_fax links to node through location_instance via lid.
+    'node' => array(
+      'left_table' => 'location_instance',
+      'left_field' => 'lid',
+      'field' => 'lid',
+    ),
+    // location_fax links to node_revisions through location_instance via lid.
+    'node_revisions' => array(
+      'left_table' => 'location_instance',
+      'left_field' => 'lid',
+      'field' => 'lid',
+    ),
+    // location_fax links to users through location_instance via lid.
+    'users' => array(
+      'left_table' => 'location_instance',
       'left_field' => 'lid',
       'field' => 'lid',
     ),
@@ -31,6 +50,7 @@ function location_fax_views_data() {
 
   $data['location_fax']['fax'] = array(
     'title' => t('Fax'),
+    'help' => t('The fax number of the selected location.'),
     'field' => array(
       'click sortable' => TRUE,
     ),

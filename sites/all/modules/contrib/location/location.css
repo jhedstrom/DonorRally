@@ -1,4 +1,4 @@
-/* $Id: location.css,v 1.8 2008/09/16 17:25:04 bdragon Exp $ */
+/* $Id: location.css,v 1.8.2.1 2010/05/13 11:49:41 rooby Exp $ */
 
 /**
  * @file
@@ -94,10 +94,13 @@ table.location-search-form-table tbody tr td table tbody tr td table tbody tr td
 .location .container-inline label { display: block; float: left; width: 120px; }
 */
 
+.location-current-coordinates-fieldset {
+  width: 35em;
+}
+
 .location .form-item input {
   display: block;
-  float: left;
-  width: 342px;
+  width: 25em;
   margin-bottom: 5px;
 }
 
@@ -105,7 +108,7 @@ table.location-search-form-table tbody tr td table tbody tr td table tbody tr td
   display: block;
   float: left;
   text-align: left;
-  width: 100px;
+  width: 10em;
   padding-right: 10px;
 }
 

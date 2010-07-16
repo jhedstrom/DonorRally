@@ -1,5 +1,5 @@
 <?php
-// $Id: userreference.rules.inc 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: userreference.rules.inc,v 1.1.2.2 2008/10/06 15:02:03 karens Exp $
 
 /**
  * @file

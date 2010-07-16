@@ -1,5 +1,5 @@
 <?php
-// $Id: location.au.inc,v 1.9 2008/07/25 14:54:11 bdragon Exp $
+// $Id: location.au.inc,v 1.9.2.1 2010/05/27 12:16:14 rooby Exp $
 
 // Australia
 
@@ -325,6 +325,14 @@ function location_geocode_au_google_settings() {
     '#maxlength' => 128,
     '#default_value' => variable_get('location_geocode_au_google_apikey', ''),
     '#description' => t('In order to use the Google Maps API geocoding web-service, you will need a Google Maps API Key.  You can obtain one at the !sign_up_link for the !google_maps_api.', array('!sign_up_link' => '<a href="http://www.google.com/apis/maps/signup.html">sign-up page</a>', '!google_maps_api' => '<a href="http://www.google.com/apis/maps/">Google Maps API</a>'))
+  );
+
+  $form['location_geocode_au_google_accuracy_code'] = array(
+    '#type' => 'select',
+    '#title' => t('Google Maps Geocoding Accuracy for %country', array('%country' => $country ) ),
+    '#default_value' => variable_get('location_geocode_au_google_accuracy_code', variable_get('location_geocode_google_minimum_accuracy', '3')),
+    '#options' => location_google_geocode_accuracy_codes(),
+    '#description' => t('The minimum required accuracy for the geolocation data to be saved.'),
   );
 
   return $form;

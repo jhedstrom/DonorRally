@@ -11,8 +11,8 @@
  */
 div.context-editor div.context-block-browser div.category { display:none; }
 
-div.context-block-addable,
-#admin-toolbar div.context-editor div.context-block-browser div.context-block-addable {
+div.context-block-item,
+#admin-toolbar div.context-editor div.context-block-browser div.context-block-item {
   font-weight:bold;
   font-size:11px;
   line-height:15px;
@@ -23,7 +23,6 @@ div.context-block-addable,
   margin:0px 0px 1px;
   overflow:hidden;
   max-width:300px;
-  cursor:move;
 
   -moz-border-radius:5px;
   -webkit-border-radius:5px;
@@ -31,12 +30,16 @@ div.context-block-addable,
   -webkit-user-select:none;
   }
 
-  #admin-toolbar.horizontal div.context-editor div.context-block-browser div.context-block-addable {
+  #admin-toolbar.horizontal div.context-editor div.context-block-browser div.context-block-item {
     width:180px;
     margin-right:1px;
     padding-right:9px;
     float:left;
     }
+
+div.context-block-addable { cursor: move; }
+
+div.context-block-added { display:none; }
 
 /**
  * Blocks wrappers.

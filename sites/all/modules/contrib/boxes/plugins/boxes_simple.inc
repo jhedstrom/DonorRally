@@ -1,5 +1,5 @@
 <?php
-// $Id: boxes_simple.inc,v 1.2 2010/03/30 19:49:39 jmiccolis Exp $
+// $Id: boxes_simple.inc,v 1.2.2.1 2010/06/21 20:47:21 jmiccolis Exp $
 
 /**
  * Simple custom text box.
@@ -38,7 +38,7 @@ class boxes_simple extends boxes_box {
    */
   public function render() {
     $content = '';
-    if (!empty($this->options['body']) && !empty($this->options['format'])) {
+    if (!empty($this->options['body']) && isset($this->options['format'])) {
       $content = check_markup($this->options['body'], $this->options['format'], FALSE);
     }
     $title = isset($this->title) ? check_plain($this->title) : NULL;

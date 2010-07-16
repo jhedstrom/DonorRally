@@ -1,6 +1,6 @@
 <?php if ($editable && (!empty($blocks) || $show_always)): ?>
   <div class='context-block-region <?php print $class ?>' id='context-block-region-<?php print $region ?>'>
-    <div class='target'><?php print $region ?></div>
+    <div class='target'><?php print $region_description ?></div>
     <?php foreach ($blocks as $block): ?>
       <?php print theme('context_block_editable_block', $block); ?>
     <?php endforeach; ?>

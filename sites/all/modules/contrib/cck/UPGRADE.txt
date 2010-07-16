@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: UPGRADE.txt,v 1.10.2.3 2008/10/06 20:03:12 karens Exp $
 
 ================================================================
 UPDATING FROM VERSION 4.7 to 6.x

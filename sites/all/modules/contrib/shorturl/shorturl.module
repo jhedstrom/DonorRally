@@ -1,4 +1,9 @@
 <?php
+//$Id: shorturl.module,v 1.1.2.6 2010/06/16 05:20:19 inadarei Exp $
+/**
+* @File shorturl.module
+*   the module file for shorturl
+*/
 
 // Minimum length of URI: 3 characters (3844 in base10 is equivalent to first 3-char number in base62).
 // This setting is modifyable from settings.php if you don't like it.
@@ -13,7 +18,9 @@ function shorturl_init() {
   $token = $_GET['q'];
   if (!empty($token)) {
     $indx = shorturl_decode_url($token);
-    $orig_url = db_result(db_query('SELECT orig_url FROM {shorturl_link} WHERE lid=%d ', $indx));
+    if (is_numeric($indx)) {
+      $orig_url = db_result(db_query('SELECT orig_url FROM {shorturl_link} WHERE lid=%d ', $indx));
+    }
 
     if (!empty($orig_url)) {
       if (stripos($orig_url, 'http') === FALSE && 
@@ -21,19 +28,101 @@ function shorturl_init() {
         $orig_url = url($orig_url, array('absolute'=>TRUE)); //Let drupal make relative URLs absolute
       }
       
-      //echo $orig_url;
-      drupal_goto($orig_url);
+      drupal_goto($orig_url,  $query = NULL, $fragment = NULL, $http_response_code = 301);
       exit();      
     }
   }
+  
+}
 
+/** 
+* hook_perm implementation
+*/ 
+function shorturl_perm() {
+  return array('administer shorturl');
 }
 
 /**
-* Generate unique token for arbitrary URL. Both absolute and relative
-* URLs are supported.
+* hook_menu() implementation
 */
-function shorturl_shorten ($long_url) {
+function shorturl_menu() {
+
+  $items['admin/settings/shorturl'] = array(
+    'title' => 'ShortURL',
+    'description' => 'Configure the settings for ShortURL.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shorturl_admin_settings_form'),
+    'access arguments' => array('administer shorturl'),
+    'file' => 'shorturl.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+/**
+*
+* Generate unique short token or a short URL, for an arbitrary URL. Both absolute and relative
+* URLs are supported.
+*
+* @param $long_url
+*   the original URL
+*
+* @param $full_url
+*   return full URL with the domain set in the admin settings or the domain of the Drupal installation if 
+*   the former is empty. FALSE by default.
+*
+* @return shortened URI token or full shortened URL
+*
+*/
+function shorturl_shorten ($long_url, $full_url = FALSE) {
+
+  $token = _shorturl_get_token($long_url);
+  
+  if ($full_url) {
+    
+    $domain = variable_get('shorturl_domain', shorturl_default_domain());
+
+    if (substr(trim($domain), -1, 1) != '/') { 
+      $domain .= '/';
+    }
+    $url = $domain . $token;
+    return $url;
+  }
+  else {
+    return $token;                   
+  }
+  
+  
+}
+
+function shorturl_default_domain() {
+  static $default_domain;
+  
+  if (!empty($default_domain)) {
+    return $default_domain;
+  }
+  
+  $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+  $default_domain =  $base_root . '://'. $_SERVER['HTTP_HOST'];
+  
+  return $default_domain;
+  
+}
+
+/**
+*
+* Generate unique short token for an arbitrary URL. Both absolute and relative
+* URLs are supported.
+*
+* @param $long_url
+*   the original URL
+*
+* @return short URL token.
+*
+*/
+function _shorturl_get_token($long_url) {
 
   //Do we already have this URL?
   $existing_id = db_result(db_query('SELECT lid FROM {shorturl_link} WHERE orig_url=\'%s\' ', $long_url));
@@ -43,9 +132,15 @@ function shorturl_shorten ($long_url) {
   }
   
   $found_vacant = FALSE;
+  $remote_ip = (empty($_SERVER['REMOTE_ADDR'])) ? '' : $_SERVER['REMOTE_ADDR']; 
+
+  $link = new stdClass();
+  $link->orig_url = $long_url; 
+  $link->created = (int)time();
+  $link->remote_ip = $remote_ip;
   
-  $last_id = db_result(db_query('SELECT max(lid) FROM {shorturl_link} '));
-  if ($last_id == 0) $last_id = SHORTURL_START_FROM;
+  $last_id = db_result(db_query('SELECT max(lid) FROM {shorturl_link}'));
+  if ($last_id < SHORTURL_START_FROM) {$last_id = SHORTURL_START_FROM;}
   $last_id++;  
   
   while (! $found_vacant ) {
@@ -54,14 +149,19 @@ function shorturl_shorten ($long_url) {
     if (!$found_vacant) {
       $last_id++;
     }
+    // Perform multi-threading safety check. 
+    // Make sure nobody inserted a record with this $lid, while we were checking other stuff    
+    else {
+      $link->lid = $last_id;
+      $status = @drupal_write_record('shorturl_link', $link);
+      if ($status === FALSE) {
+        $found_vacant = FALSE;
+        $last_id++;
+      }
+    }
   }
   
-  $remote_ip = (empty($_SERVER['REMOTE_ADDR'])) ? '' : $_SERVER['REMOTE_ADDR']; 
-  
-  db_query('INSERT INTO {shorturl_link} (`lid`, `orig_url`, `created`, `remote_ip` )
-                   VALUES (%d, \'%s\', %d, \'%s\') ', $last_id, $long_url, (int)time(), $remote_ip );
-
-  return $encoded;                   
+  return $encoded;
 }
 
 function shorturl_check_availability($token) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: boxes.admin.inc,v 1.5.2.1 2010/04/25 18:41:54 jmiccolis Exp $
+// $Id: boxes.admin.inc,v 1.5.2.2 2010/06/21 19:30:07 jmiccolis Exp $
 
 /**
  * Generate form for creating new boxes.
@@ -38,8 +38,7 @@ function boxes_validate_delta($element, &$form_state) {
  * Submit handler for box_add_form.
  */
 function boxes_add_form_submit($form, &$form_state) {
-  $box = boxes_create($form_state['values']['plugin_key']);
-  $box->set($form_state['values']);
+  $box = boxes_create($form_state['values']['plugin_key'], $form_state['values']);
   $box->save();
   drupal_set_message(t('%name has been created.', array('%name' => $box->description)));
   $form_state['redirect'] = 'admin/build/block';
@@ -155,10 +154,8 @@ function boxes_box_inline_form(&$form_state, $box, $block) {
  * Submit handler for the inline form.
  */
 function boxes_box_inline_form_submit($form, $form_state) {
-  if (!$box = boxes_load($form_state['values']['delta'])) {
-    $box = boxes_create($form_state['values']['plugin_key']);
-  }
-  $box->set($form_state['values']);
+  $box = boxes_create($form_state['values']['plugin_key'], $form_state['values']);
+
   if (module_exists('spaces') && $space = spaces_get_space()) {
     $space->controllers->boxes->set($box->delta, $box);
   }

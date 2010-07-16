@@ -1,5 +1,5 @@
 <?php
-// $Id: context_reaction.inc,v 1.1.2.1 2009/12/14 22:34:05 yhahn Exp $
+// $Id: context_reaction.inc,v 1.1.2.4 2010/05/25 16:06:07 yhahn Exp $
 
 /**
  * Base class for a context reaction.
@@ -8,6 +8,23 @@ class context_reaction {
   var $plugin;
   var $title;
   var $description;
+
+  /**
+   * Clone our references when we're being cloned.
+   *
+   * PHP 5.3 performs 'shallow' clones when clone()'ing objects, meaning that
+   * any objects or arrays referenced by this object will not be copied, the
+   * cloned object will just reference our objects/arrays instead. By iterating
+   * over our properties and serializing and unserializing them, we force PHP to
+   * copy them.
+   */
+  function __clone() {
+    foreach ($this as $key => $val) {
+      if (is_object($val) || (is_array($val))) {
+        $this->{$key} = unserialize(serialize($val));
+      }
+    }
+  }
 
   /**
    * Constructor. Do not override.
@@ -52,10 +69,6 @@ class context_reaction {
    * Retrieve options from the context provided.
    */
   function fetch_from_context($context) {
-    // Allow other modules to alter the value just before it's returned.
-    if (!context_isset('context_ui', 'no_alter')) {
-      drupal_alter('context_reaction_fetch', $this, $context);
-    }
     return isset($context->reactions[$this->plugin]) ? $context->reactions[$this->plugin] : array();
   }
 }

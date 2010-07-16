@@ -1,5 +1,5 @@
 <?php
-// $Id: boxes_box.inc,v 1.1 2010/03/30 21:34:31 jmiccolis Exp $
+// $Id: boxes_box.inc,v 1.1.2.3 2010/06/23 01:57:00 jmiccolis Exp $
  
 /**
  * Abstract base class defining a box. A boxes content plugin provides a
@@ -8,7 +8,7 @@
  * @see boxes_simple.
  */
 abstract class boxes_box {
-  static $boxes;
+  static $boxes; // Static cache of box objects.
   public $delta;
   public $title;
   public $description;
@@ -18,42 +18,54 @@ abstract class boxes_box {
   public $export_type;
  
   /**
-   * Load an existing box by its unique identifier $delta.
+   * Load existing box by its unique identifier $delta.
    */
-  public static function load($delta) {
-    if (!isset(self::$boxes[$delta])) {
+  public static function load($delta, $reset = false) {
+    if (!isset(self::$boxes[$delta]) || $reset) {
       ctools_include('export');
       if ($values = array_pop(ctools_export_load_object('box', 'names', array($delta)))) {
-        $box = self::create(isset($values->plugin_key) ? $values->plugin_key : 'simple'); // Handle legacy boxes.
-        foreach ($box as $key => $value) {
-          if (isset($values->$key)) {
-            $box->$key = $values->$key;
-          }
-        }
-        $box->new = FALSE; // Set in __construct().
-        self::$boxes[$delta] = $box;
+        self::$boxes[$delta] = self::factory($values->plugin_key, $values);
+        self::$boxes[$delta]->new = false;
       }
     }
     return isset(self::$boxes[$delta]) ? self::$boxes[$delta] : NULL;
   }
  
   /**
-   * Create a new box. Factory for creating a box of a particular type.
+   * Instantiate, populate and return a box object.
+   *
+   * @param $plugin_key
    *
    * @param $values
-   * An array with at least a plugin_key key identifying the plugin class to
-   * use for instantiating this box.
+   *   An array with at least a plugin_key key identifying the plugin class to
+   *   use for instantiating this box.
    */
-  public static function create($plugin_key) {
+  public static function factory($plugin_key, $values) {
     ctools_include('plugins');
     if ($class = ctools_plugin_load_class('boxes', 'plugins', $plugin_key, 'handler')) {
+
+      // While we actually prefer to get objects, we need to allow for either,
+      // so we convert it all to arrays.
+      if (is_object($values)) {
+        $values = (array)$values;
+      }
+
       $box = new $class();
       $box->plugin_key = $plugin_key;
+
+      foreach ($box as $key => $value) {
+        if (isset($values[$key])) {
+          $box->$key = $values[$key];
+        }
+      }
+      foreach ($box->options_defaults() as $key => $value) {
+        if (isset($values[$key])) {
+          $box->options[$key] = $values[$key];
+        }
+      }
       return $box;
     }
-    else {
-      throw new Exception(t('Plugin !key not found.', array('!key' => $plugin_key)));
-    }
+    return false;
   }
  
   /**
@@ -65,34 +77,14 @@ abstract class boxes_box {
   }
  
   /**
-   * Set class variables.
-   *
-   * @param $values
-   * A keyed array where the keys are class variables or keys in
-   * $this->options declared by options_defaults().
-   */
-  public function set($values) {
-    foreach ($this as $key => $value) {
-      if (isset($values[$key])) {
-        $this->$key = $values[$key];
-      }
-    }
-    foreach ($this->options_defaults() as $key => $value) {
-      if (isset($values[$key])) {
-        $this->options[$key] = $values[$key];
-      }
-    }
-    // Make sure box is present in static cache as soon as delta is set.
-    if (!empty($this->delta)) {
-      self::$boxes[$this->delta] = $this;
-    }
-  }
- 
-  /**
    * Reset the boxes cache.
+   * 
+   * Both ctools and boxes current maintain caches, ctools of the config and
+   * boxes of the loaded box objects. We clear them both.
    */
   public static function reset() {
     ctools_export_load_object_reset('box');
+    self::$boxes = array();
   }
  
   /**

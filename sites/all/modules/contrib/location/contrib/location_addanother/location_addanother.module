@@ -1,5 +1,5 @@
 <?php
-// $Id: location_addanother.module,v 1.6 2008/10/24 15:22:01 bdragon Exp $
+// $Id: location_addanother.module,v 1.6.2.1 2010/01/19 02:17:29 bdragon Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function location_addanother_form(&$form_state, &$node) {
 /**
  * Validation function for "add another location" form.
  */
-function location_addanother_form_validate($form, &$form_state, $form_id) {
+function location_addanother_form_validate($form, &$form_state) {
   $location = $form_state['values']['location'];
   $node = node_load($location['nid']);
   unset($location['nid']);

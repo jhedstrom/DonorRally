@@ -1,5 +1,5 @@
 <?php
-// $Id: earth.inc,v 1.10 2008/05/20 22:55:25 bdragon Exp $
+// $Id: earth.inc,v 1.10.4.1 2010/07/04 13:12:11 rooby Exp $
 
 /**
  * License clarification:
@@ -123,6 +123,12 @@ function earth_distance_sql($longitude, $latitude, $tbl_alias = '') {
   return "(IFNULL(ACOS($coslat*COS(RADIANS({$tbl_alias}latitude))*($coslong*COS(RADIANS({$tbl_alias}longitude)) + $sinlong*SIN(RADIANS({$tbl_alias}longitude))) + $sinlat*SIN(RADIANS({$tbl_alias}latitude))), 0.00000)*$radius)";
 }
 
+/**
+ * @todo This function uses earth_asin_safe so is not accurate for all possible
+ *   parameter combinations. This means this function doesn't work properly
+ *   for high distance values. This function needs to be re-written to work properly for
+ *   larger distance values. See http://drupal.org/node/821628
+ */
 function earth_longitude_range($longitude, $latitude, $distance) {
   // Estimate the min and max longitudes within $distance of a given location.
   $long = deg2rad($longitude);
@@ -130,7 +136,7 @@ function earth_longitude_range($longitude, $latitude, $distance) {
   $radius = earth_radius($latitude);
 
   $angle = $distance / $radius;
-  $diff = asin(sin($angle)/cos($lat));
+  $diff = earth_asin_safe(sin($angle)/cos($lat));
   $minlong = $long - $diff;
   $maxlong = $long + $diff;
   if ($minlong < -pi()) { $minlong = $minlong + pi()*2; }
@@ -161,4 +167,19 @@ function earth_latitude_range($longitude, $latitude, $distance) {
     $maxlat = $rightangle;
   }
   return array(rad2deg($minlat), rad2deg($maxlat));
+}
+
+/**
+ * This is a helper function to avoid errors when using the asin() PHP function.
+ * asin is only real for values between -1 and 1.
+ * If a value outside that range is given it returns NAN (not a number), which
+ * we don't want to happen.
+ * So this just rounds values outside this range to -1 or 1 first.
+ *
+ * This means that calculations done using this function with $x outside the range
+ * will not be accurate.  The alternative though is getting NAN, which is an error
+ * and won't give accurate results anyway.
+ */
+function earth_asin_safe($x) {
+  return asin(max(-1, min($x, 1)));
 }

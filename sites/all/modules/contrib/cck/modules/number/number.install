@@ -1,5 +1,5 @@
 <?php
-// $Id: number.install 828 2009-06-16 17:56:46Z jhedstrom $
+// $Id: number.install,v 1.28.2.6 2008/10/04 13:14:22 karens Exp $
 
 /**
  * @file
