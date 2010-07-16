@@ -1,0 +1,64 @@
+/* 
+BLUE: #55b7d1
+GREEN/YELLOW: #bdd73e
+*/
+
+
+#page-wrapper {
+	position: relative;
+}
+
+#page-wrapper, .region-page-closure {
+	width: 1024px;
+}
+
+#site-name {
+	text-indent: -2000px;
+}
+
+h1, h2, h3 {
+	color: #55b7d1;
+	font-family: 
+}
+
+#header {
+	height: 145px;
+}
+
+
+/*
+table styling
+*/
+
+thead th {
+	background: #bdd73e;
+}
+
+table.donor-rally-team-stats .odd {
+	background: #e0e0e0;
+}
+
+
+.sidebar .block h2.title {
+	font-size: 1.5em;
+}
+
+body.one-sidebar .region-sidebar-second {
+	width: 250px;
+}
+
+#block-boxes-donor_rally_welcome .content p {
+	font-size: 2em;
+}
+
+
+/* TEAM PAGES */
+
+.node-type-team h1.title {
+	position: relative;
+	
+}
+
+#donor-rally-paypal-donate-form {
+	float: right;
+}
