@@ -126,7 +126,8 @@ function service_links_admin_settings() {
       '#type' => 'select',
       '#title' => t('How generate short links'),
       '#default_value' => variable_get('service_links_short_links_type', 1),
-      '#options' => array(1 => t('Use node/xxx alias'), 2 => t('Use TinyURL.com service'), 3 => t('Redirect only the Domain name'), 4 => t('Combo: domain redirect and node/xxx alias')),
+      '#description' => t('If you select "Short URL," it will use the service selected with the <a href="@shorten">Shorten URLs module</a>. If you have not enabled the module, Service Links will default to TinyURL.', array('@shorten' => 'http://drupal.org/project/shorten')),
+      '#options' => array(1 => t('Use node/xxx alias'), 2 => t('Use Short URL'), 3 => t('Redirect only the Domain name'), 4 => t('Combo: domain redirect and node/xxx alias')),
     );
     $form['short_links']['service_links_domain_redirect'] = array(
       '#type' => 'textfield',
