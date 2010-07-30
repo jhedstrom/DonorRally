@@ -18,7 +18,7 @@ GREEN/YELLOW: #bdd73e
 
 h1, h2, h3 {
 	color: #55b7d1;
-	font-family: 
+	font-family:  'Droid Sans', arial, serif;
 }
 
 #header {
@@ -59,6 +59,31 @@ body.one-sidebar .region-sidebar-second {
 	
 }
 
-#donor-rally-paypal-donate-form {
-	float: right;
+#donor-rally-paypal-donate-form #edit-button {
+  font-size: 2em;
 }
+#donor-rally-paypal-donate-form .form-item {
+}
+#block-donor_rally-1 {
+}
+.team-page #content-area {
+  float: right;
+  width: 250px;
+}
+.team-page .region-content-bottom {
+  float: left;
+  width: 500px;
+}
+#context-block-views-team_information-block_1 {
+  float: left;
+  padding-left: 20px;
+  width: 200px;
+}
+#context-block-donor_rally-1 {
+  width: 200px;
+  padding-left: 20px;
+  float: left;
+}
+#context-block-donor_rally-5,
+#block-views-team_blog-block { clear: both; }
+#context-block-donor_rally-0 { width: 250px; float: left; }
