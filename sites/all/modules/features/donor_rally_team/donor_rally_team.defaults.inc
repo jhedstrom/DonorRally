@@ -957,24 +957,6 @@ function _donor_rally_team_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-team_information-block_1' => array(
-          'module' => 'views',
-          'delta' => 'team_information-block_1',
-          'region' => 'content_bottom',
-          'weight' => 0,
-        ),
-        'views-team_blog-block' => array(
-          'module' => 'views',
-          'delta' => 'team_blog-block',
-          'region' => 'content_bottom',
-          'weight' => 1,
-        ),
-        'donor_rally-5' => array(
-          'module' => 'donor_rally',
-          'delta' => 5,
-          'region' => 'content_bottom',
-          'weight' => 2,
-        ),
         'views-donor_rally_team_logo-block_1' => array(
           'module' => 'views',
           'delta' => 'donor_rally_team_logo-block_1',
@@ -987,43 +969,66 @@ function _donor_rally_team_context_default_contexts() {
           'region' => 'sidebar_second',
           'weight' => 1,
         ),
-        'donor_rally-0' => array(
-          'module' => 'donor_rally',
-          'delta' => 0,
-          'region' => 'sidebar_second',
-          'weight' => 2,
-        ),
         'donor_rally-3' => array(
           'module' => 'donor_rally',
           'delta' => 3,
           'region' => 'sidebar_second',
-          'weight' => 3,
-        ),
-        'donor_rally-1' => array(
-          'module' => 'donor_rally',
-          'delta' => 1,
-          'region' => 'sidebar_second',
-          'weight' => 4,
+          'weight' => 2,
         ),
         'donor_rally-2' => array(
           'module' => 'donor_rally',
           'delta' => 2,
           'region' => 'sidebar_second',
-          'weight' => 5,
+          'weight' => 3,
         ),
         'donor_rally-6' => array(
           'module' => 'donor_rally',
           'delta' => 6,
           'region' => 'sidebar_second',
-          'weight' => 6,
+          'weight' => 4,
         ),
         'donor_rally-7' => array(
           'module' => 'donor_rally',
           'delta' => 7,
           'region' => 'sidebar_second',
-          'weight' => 7,
+          'weight' => 5,
+        ),
+        'donor_rally-0' => array(
+          'module' => 'donor_rally',
+          'delta' => 0,
+          'region' => 'content_bottom',
+          'weight' => 0,
+        ),
+        'views-team_information-block_1' => array(
+          'module' => 'views',
+          'delta' => 'team_information-block_1',
+          'region' => 'content_bottom',
+          'weight' => 1,
+        ),
+        'donor_rally-1' => array(
+          'module' => 'donor_rally',
+          'delta' => 1,
+          'region' => 'content_bottom',
+          'weight' => 2,
+        ),
+        'views-team_blog-block' => array(
+          'module' => 'views',
+          'delta' => 'team_blog-block',
+          'region' => 'content_bottom',
+          'weight' => 3,
+        ),
+        'donor_rally-5' => array(
+          'module' => 'donor_rally',
+          'delta' => 5,
+          'region' => 'content_bottom',
+          'weight' => 4,
         ),
       ),
+    ),
+    'theme' => array(
+      'title' => '',
+      'subtitle' => '',
+      'class' => 'team-page',
     ),
   );
   $context->condition_mode = 0;
@@ -1047,10 +1052,10 @@ function _donor_rally_team_ctools_plugin_api() {
   if ($module == "boxes" && $api == "box") {
     return array("version" => 1);
   }
-  else if ($module == "context" && $api == "context") {
+  elseif ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  else if ($module == "strongarm" && $api == "strongarm") {
+  elseif ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }
@@ -1074,13 +1079,13 @@ function _donor_rally_team_fieldgroup_default_groups() {
       ),
       'display' => array(
         'weight' => '7',
-        'label' => 'above',
+        'label' => 'hidden',
         'teaser' => array(
           'format' => 'hidden',
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'simple',
+          'format' => 'hidden',
           'exclude' => 0,
         ),
         'description' => '',

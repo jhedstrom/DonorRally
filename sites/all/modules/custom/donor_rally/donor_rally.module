@@ -312,13 +312,11 @@ function donor_rally_block($op = 'list', $delta = 0, $edit = array()) {
     case 'configure':
       return array();
     case 'view':
-      switch ($delta) {
-        case 'site_thermometer':
-          return array(
-            'subject' => '',
-            'content' => _donor_rally_block_site_thermometer(),
-          );
-          break;
+      if ($delta === 'site_thermometer') {
+        return array(
+          'subject' => '',
+          'content' => _donor_rally_block_site_thermometer(),
+        );
       }
       if (!$node) {
         $node = menu_get_object();
