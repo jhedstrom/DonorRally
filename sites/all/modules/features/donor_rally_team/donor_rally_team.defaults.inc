@@ -1170,7 +1170,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'edit any team content',
     'roles' => array(
       '0' => 'administrator',
-      '1' => 'team leader',
+      '1' => 'team coordinator',
     ),
   );
 
@@ -1283,7 +1283,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_email',
     'roles' => array(
       '0' => 'administrator',
-      '1' => 'team leader',
+      '1' => 'team coordinator',
     ),
   );
 
@@ -1292,7 +1292,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_first_name',
     'roles' => array(
       '0' => 'administrator',
-      '1' => 'team leader',
+      '1' => 'team coordinator',
     ),
   );
 
@@ -1301,7 +1301,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_last_name',
     'roles' => array(
       '0' => 'administrator',
-      '1' => 'team leader',
+      '1' => 'team coordinator',
     ),
   );
 
@@ -1310,7 +1310,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_captain_location',
     'roles' => array(
       '0' => 'administrator',
-      '1' => 'team leader',
+      '1' => 'team coordinator',
     ),
   );
 
@@ -1355,7 +1355,7 @@ function _donor_rally_team_user_default_permissions() {
     'name' => 'view field_size',
     'roles' => array(
       '0' => 'administrator',
-      '1' => 'team leader',
+      '1' => 'team coordinator',
       '2' => 'team lead',
     ),
   );

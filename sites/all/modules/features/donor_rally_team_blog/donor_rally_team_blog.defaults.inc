@@ -38,7 +38,7 @@ function _donor_rally_team_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'delete own admin_blog_post content',
     'roles' => array(
-      '0' => 'team leader',
+      '0' => 'team coordinator',
       '1' => 'administrator',
     ),
   );
@@ -56,7 +56,7 @@ function _donor_rally_team_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit any admin_blog_post content',
     'roles' => array(
-      '0' => 'team leader',
+      '0' => 'team coordinator',
       '1' => 'administrator',
     ),
   );
@@ -65,7 +65,7 @@ function _donor_rally_team_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit any team_blog_post content',
     'roles' => array(
-      '0' => 'team leader',
+      '0' => 'team coordinator',
       '1' => 'administrator',
     ),
   );
@@ -74,7 +74,7 @@ function _donor_rally_team_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit own admin_blog_post content',
     'roles' => array(
-      '0' => 'team leader',
+      '0' => 'team coordinator',
       '1' => 'administrator',
     ),
   );
