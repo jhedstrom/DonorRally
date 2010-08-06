@@ -498,7 +498,7 @@ function _donor_rally_block_site_thermometer() {
   $vars['total_raw_goal_view'] = _donor_rally_format_value($goal);
   $vars['total_raw_view'] = _donor_rally_format_value($total);
 
-  $vars['edit_link'] = user_access('administer donor rally') ? l('Change campain goal', 'admin/settings/donor-rally', array('query' => drupal_get_destination())) : '';
+  $vars['edit_link'] = user_access('administer donor rally') ? l('Change campaign goal', 'admin/settings/donor-rally', array('query' => drupal_get_destination())) : '';
   return theme('donor_rally_team_progress_thermometer', $vars);
 }
 
@@ -524,7 +524,7 @@ function _donor_rally_get_total_goal() {
 /**
  * Get total points for all combined teams.
  */
-function _donor_Rally_get_total_points() {
+function _donor_rally_get_total_points() {
   $field = content_fields('field_total_points');
   $db_info = content_database_info($field);
   $table = $db_info['table'];
