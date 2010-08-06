@@ -957,45 +957,51 @@ function _donor_rally_team_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-donor_rally_team_logo-block_1' => array(
-          'module' => 'views',
-          'delta' => 'donor_rally_team_logo-block_1',
+        'donor_rally-0' => array(
+          'module' => 'donor_rally',
+          'delta' => 0,
           'region' => 'sidebar_second',
           'weight' => 0,
+        ),
+        'donor_rally-1' => array(
+          'module' => 'donor_rally',
+          'delta' => 1,
+          'region' => 'sidebar_second',
+          'weight' => 1,
         ),
         'boxes-team_page_common' => array(
           'module' => 'boxes',
           'delta' => 'team_page_common',
           'region' => 'sidebar_second',
-          'weight' => 1,
+          'weight' => 2,
         ),
         'donor_rally-3' => array(
           'module' => 'donor_rally',
           'delta' => 3,
           'region' => 'sidebar_second',
-          'weight' => 2,
+          'weight' => 3,
         ),
         'donor_rally-2' => array(
           'module' => 'donor_rally',
           'delta' => 2,
           'region' => 'sidebar_second',
-          'weight' => 3,
+          'weight' => 4,
         ),
         'donor_rally-6' => array(
           'module' => 'donor_rally',
           'delta' => 6,
           'region' => 'sidebar_second',
-          'weight' => 4,
+          'weight' => 5,
         ),
         'donor_rally-7' => array(
           'module' => 'donor_rally',
           'delta' => 7,
           'region' => 'sidebar_second',
-          'weight' => 5,
+          'weight' => 6,
         ),
-        'donor_rally-0' => array(
-          'module' => 'donor_rally',
-          'delta' => 0,
+        'views-donor_rally_team_logo-block_1' => array(
+          'module' => 'views',
+          'delta' => 'donor_rally_team_logo-block_1',
           'region' => 'content_bottom',
           'weight' => 0,
         ),
@@ -1005,23 +1011,17 @@ function _donor_rally_team_context_default_contexts() {
           'region' => 'content_bottom',
           'weight' => 1,
         ),
-        'donor_rally-1' => array(
-          'module' => 'donor_rally',
-          'delta' => 1,
-          'region' => 'content_bottom',
-          'weight' => 2,
-        ),
         'views-team_blog-block' => array(
           'module' => 'views',
           'delta' => 'team_blog-block',
           'region' => 'content_bottom',
-          'weight' => 3,
+          'weight' => 2,
         ),
         'donor_rally-5' => array(
           'module' => 'donor_rally',
           'delta' => 5,
           'region' => 'content_bottom',
-          'weight' => 4,
+          'weight' => 3,
         ),
       ),
     ),
