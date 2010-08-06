@@ -84,7 +84,7 @@
     <div class="unpublished"><?php print t('Unpublished'); ?></div>
   <?php endif; ?>
 
-  <?php if ($display_submitted || $terms): ?>
+  <!--<?php if ($display_submitted || $terms): ?>
     <div class="meta">
       <?php if ($display_submitted): ?>
         <span class="submitted">
@@ -99,7 +99,7 @@
         <div class="terms terms-inline"><?php print $terms; ?></div>
       <?php endif; ?>
     </div>
-  <?php endif; ?>
+  <?php endif; ?>-->
 
   <div class="content">
     <?php print $content; ?>

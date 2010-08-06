@@ -2,7 +2,13 @@
 BLUE: #55b7d1
 GREEN/YELLOW: #bdd73e
 */
+body {
+	background: #d2d2d2 url('../images/bodyBG.png') top left repeat-x;
+}
 
+#logo {
+	margin: 20px 0 0;
+}
 
 #page-wrapper {
 	position: relative;
@@ -17,12 +23,14 @@ GREEN/YELLOW: #bdd73e
 }
 
 h1, h2, h3 {
-	color: #55b7d1;
+	color: #111;
 	font-family:  'Droid Sans', arial, serif;
 }
 
 #header {
 	height: 145px;
+	background: transparent;
+	margin: 0 0 10px 0;
 }
 
 
@@ -72,18 +80,71 @@ body.one-sidebar .region-sidebar-second {
 }
 .team-page .region-content-bottom {
   float: left;
-  width: 500px;
 }
+
 #context-block-views-team_information-block_1 {
   float: left;
   padding-left: 20px;
   width: 200px;
 }
+
 #context-block-donor_rally-1 {
   width: 200px;
   padding-left: 20px;
   float: left;
 }
+
 #context-block-donor_rally-5,
 #block-views-team_blog-block { clear: both; }
 #context-block-donor_rally-0 { width: 250px; float: left; }
+
+/* TEAM BLOG */
+
+.view-team-blog ul,
+.view-team-blog ul li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.view-team-blog ul li.views-row {
+	padding: 5px 10px;
+	background: #e0e0e0;
+	margin: 10px 0;
+}
+
+.view-team-blog ul li.views-row .meta {
+	background: #FFF;
+	padding: 4px 5px;
+	margin: 0 0 20px;
+	color: #888;
+}
+
+.view-team-blog ul li.views-row .meta a:link,
+.view-team-blog ul li.views-row .meta a:visited {
+	color: #55b7d1;
+}	
+
+.view-team-blog ul li.views-row .meta a:hover,
+.view-team-blog ul li.views-row .meta a:focus {
+	color: #333;
+}
+
+.view-team-blog h2.title {
+	margin: 5px 0 10px;
+}
+	
+.view-team-blog h2.title a:link,
+.view-team-blog h2.title a:visited {
+	color: #FFF;
+	background: #bdd73e;
+	padding: 3px 5px 1px;
+	display: block;
+	text-decoration: none;
+	margin: 0;
+}
+
+.view-team-blog h2.title a:hover,
+.view-team-blog h2.title a:focus {
+	background: #55b7d1;
+}
