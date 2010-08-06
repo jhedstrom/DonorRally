@@ -33,6 +33,21 @@ h1, h2, h3 {
 	margin: 0 0 10px 0;
 }
 
+.breadcrumb {
+	background: #b8d3df;
+	padding: 2px;
+	display: inline;
+}
+
+.breadcrumb a:link,
+.breadcrumb a:visited {
+	color: #55b7d1;
+}
+
+.breadcrumb a:focus,
+.breadcrumb a:hover {
+	color: #333;
+}
 
 /*
 table styling
@@ -64,12 +79,20 @@ body.one-sidebar .region-sidebar-second {
 
 .node-type-team h1.title {
 	position: relative;
-	
+	margin: 15px 0 0 0;
 }
 
 #donor-rally-paypal-donate-form #edit-button {
   font-size: 2em;
+	background: #55b7d1;
+	color: #e0e0e0;
 }
+
+#donor-rally-paypal-donate-form #edit-button:hover {
+	background: #333;
+	color: #bdd73e ;
+}
+
 #donor-rally-paypal-donate-form .form-item {
 }
 #block-donor_rally-1 {
@@ -82,11 +105,6 @@ body.one-sidebar .region-sidebar-second {
   float: left;
 }
 
-#context-block-views-team_information-block_1 {
-  float: left;
-  padding-left: 20px;
-  width: 200px;
-}
 
 #context-block-donor_rally-1 {
   width: 200px;
@@ -98,9 +116,31 @@ body.one-sidebar .region-sidebar-second {
 #block-views-team_blog-block { clear: both; }
 #context-block-donor_rally-0 { width: 250px; float: left; }
 
+.view-donor-rally-team-logo {
+	float: left;
+	width: 200px;
+	margin: 0 10px 0 0;
+}
+
+.view-team-information {
+	float: left;
+	font-size: 2em;
+	line-height: 1.2em;
+	width: 530px;
+}
+
+
 /* TEAM BLOG */
 
-.view-team-blog ul,
+.view-team-blog {
+	margin: 15px 0 0 0;
+}
+
+.view-team-blog ul {
+	margin: 15px 0 0 0;
+	padding: 0;
+}
+
 .view-team-blog ul li {
 	list-style: none;
 	margin: 0;
