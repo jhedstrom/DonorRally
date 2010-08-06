@@ -8,7 +8,7 @@ function _donor_rally_team_blog_node_info() {
     'admin_blog_post' => array(
       'name' => t('Admin Blog Post'),
       'module' => 'features',
-      'description' => t('Blog posts written by SF Food Bank administrators.'),
+      'description' => t('Blog posts written by Donor Rally administrators.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'has_body' => '1',
