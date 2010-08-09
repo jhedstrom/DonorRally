@@ -1,0 +1,140 @@
+@primary: #55b7d1;
+@secondary: #bdd73e;
+@bright: #d6eef4;
+
+
+
+.rounded_corners (@radius: 6px) {
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.shadow {
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.2), 0 2px rgba(0, 0, 0, 0.2), 0 0 rgba(255, 255, 255, 0.2), 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.inset {
+  text-shadow: #fff 1px 1px 0;
+}
+
+#site-name a:link span,
+#site-name a:visited span {
+  color: @primary;
+}
+
+h1.title {
+  .inset;
+}
+
+#main {
+  background: transparent url('../images/mainBG.png') top center no-repeat;
+  .rounded_corners;
+}
+
+.view-team-information {
+  .inset;
+  .rounded_corners;
+}
+
+/* BLOG */
+.view-team-blog h2.title a:link,
+.view-team-blog h2.title a:visited {
+  .shadow;
+}
+
+/* PRIMARY NAVIGATION */
+
+#navigation {
+  background: @primary url('../assets/images/navBG.png') center left repeat-x;
+}
+
+#navigation ul#main-menu li a:link,
+#navigation ul#main-menu li a:visited {
+  color: @primary;
+  .rounded_corners;
+}
+
+#navigation ul#main-menu li a:hover,
+#navigation ul#main-menu li a:focus {
+	color: @primary;
+}
+
+/* SECONDARY NAVIGATION */
+
+#secondary-menu li a:link,
+#secondary-menu li a:visited {
+  background: @primary-muted;
+  color: @primary;
+  .rounded_corners;
+  border: 1px solid #f3f3f3;
+}
+
+#secondary-menu li a:hover,
+#secondary-menu li a:focus {
+  background: @primary;
+  color: @highlight;
+  border: 1px solid #d2d2d2;
+}
+
+a:link,
+a:visited {
+  color: @primary;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: @primary;
+}
+
+h1, h2, h3,
+h1.title {
+  color: @primary;
+}
+
+.block,
+.view-team-blog ul li.views-row,
+.view-team-blog h2.title a:link, .view-team-blog h2.title a:visited {
+  .rounded_corners;
+}
+
+
+
+/*
+FOOTER
+*/
+
+#footer {
+  background: @comp1;
+}
+
+input[type="submit"], button {
+  background-color: @primary;
+  color: @highlight;
+  .rounded_corners;
+}
+
+input[type=submit]:hover,
+input[type=submit]:focus,
+button:hover, button:focus {
+  background-color: @primary;
+}
+
+/*
+LOGIN/REGISTER
+*/
+.login a:link, 
+.login a:visited, 
+.register a:link, 
+.register a:visited {
+  background: @primary;
+  .rounded_corners;
+}
+
+.login a:focus, 
+.login a:hover, 
+.register a:focus, 
+.register a:hover {
+  background: @primary;
+}

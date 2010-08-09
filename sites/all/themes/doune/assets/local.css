@@ -18,6 +18,22 @@ body {
 	width: 1024px;
 }
 
+#main {
+	padding: 20px;
+}
+
+.sidebar-second #content {
+	margin-left:0;
+	margin-right:-660px;
+	width:655px;
+}
+
+body.one-sidebar .region-sidebar-second {
+	margin-left: 660px;
+	margin-right: -970px;
+	width: 310px;
+}
+
 #site-name {
 	text-indent: -2000px;
 }
@@ -37,11 +53,14 @@ h1, h2, h3 {
 	background: #b8d3df;
 	padding: 2px;
 	display: inline;
+	border-top: 1px solid #b4b4b4;
+	border-bottom: 1px solid #FFF;
 }
 
 .breadcrumb a:link,
 .breadcrumb a:visited {
 	color: #55b7d1;
+	padding: 2px 4px;
 }
 
 .breadcrumb a:focus,
@@ -66,9 +85,6 @@ table.donor-rally-team-stats .odd {
 	font-size: 1.5em;
 }
 
-body.one-sidebar .region-sidebar-second {
-	width: 250px;
-}
 
 #block-boxes-donor_rally_welcome .content p {
 	font-size: 2em;
@@ -126,7 +142,8 @@ body.one-sidebar .region-sidebar-second {
 	float: left;
 	font-size: 2em;
 	line-height: 1.2em;
-	width: 530px;
+	width: 400px;
+	padding: 5px 15px;
 }
 
 
@@ -149,7 +166,7 @@ body.one-sidebar .region-sidebar-second {
 
 .view-team-blog ul li.views-row {
 	padding: 5px 10px;
-	background: #e0e0e0;
+	background: #e0e0e0 url('../images/blogBG.png') top center no-repeat;
 	margin: 10px 0;
 }
 

@@ -43,7 +43,8 @@ stylesheets[all][]   = css/comments.css
 stylesheets[all][]   = css/forms.css
 stylesheets[all][]   = css/fields.css
 stylesheets[print][] = css/print.css
-stylesheets[all][]   = assets/type.css 
+stylesheets[all][]   = assets/type.css
+stylesheets[all][]   = assets/branding.less  
 stylesheets[all][]   = assets/local.css 
 
 ; stylesheets[handheld][] = css/mobile.css
