@@ -381,7 +381,7 @@ function donor_rally_preprocess_donor_rally_team_progress_thermometer(&$variable
   $top_halfheight = $bottom_halfheight = 52 / 2;
   $font_halfheight = 9; /* half of "line-height" for the style goal/points style */
 
-  $vars['complete'] = $vars['total'] / $vars['total_raw_goal'];
+  $vars['complete'] = $vars['total_raw'] / $vars['total_raw_goal'];
   $vars['success'] = $vars['complete'] >= 1.0;
 
   $vars['filled_height'] = (int)($total_height * min(1.0, $vars['complete']) + 0.5);
