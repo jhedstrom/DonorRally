@@ -42,6 +42,13 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
       '#dependency' => array('edit-options-validate-type' => array($this->id)),
     );
 
+    $form['validate_argument_node_access_op'] = array(
+      '#type' => 'radios',
+      '#title' => t('Access operation to check'),
+      '#options' => array('view' => t('View'), 'update' => t('Edit'), 'delete' => t('Delete')),
+      '#default_value' => isset($this->argument->options['validate_argument_node_access_op']) ? $this->argument->options['validate_argument_node_access_op'] : 'view',
+    );
+
     $form['validate_argument_nid_type'] = array(
       '#type' => 'select',
       '#title' => t('Argument type'),
@@ -71,7 +78,8 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
         }
 
         if (!empty($this->argument->options['validate_argument_node_access'])) {
-          if (!node_access('view', $node)) {
+          $access_op = isset($this->argument->options['validate_argument_node_access_op']) ? $this->argument->options['validate_argument_node_access_op'] : 'view';
+          if (!node_access($access_op, $node)) {
             return FALSE;
           }
         }
@@ -105,7 +113,8 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
           }
 
           if (!empty($this->argument->options['validate_argument_node_access'])) {
-            if (!node_access('view', $node)) {
+            $access_op = isset($this->argument->options['validate_argument_node_access_op']) ? $this->argument->options['validate_argument_node_access_op'] : 'view';
+            if (!node_access($access_op, $node)) {
               return FALSE;
             }
           }
