@@ -51,7 +51,7 @@ Team: A CCK content type with these fields:
 + points_per_capita: Points for this team divided by 'size'. Also re-
   calculated upon Salsa refresh
 + Various other fields that are mostly/completely for administrator use
-  (that is, not used in code), such as team coordinator and firm
+  (that is, not used in code), such as campaign coordinator and firm
   information. (A firm is mostly synonymous with team as far as we're
   concerned; but the idea is that a bunch of (e.g.) law firms participate
   in the competition, each as one competition team.

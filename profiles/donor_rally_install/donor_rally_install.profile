@@ -255,7 +255,7 @@ function donor_rally_install_form_alter(&$form, $form_state, $form_id) {
  * Creates Team Leader and Administrator roles.
  */
 function _donor_rally_install_user_roles() {
-  foreach (array('team coordinator', 'administrator') as $role) {
+  foreach (array('campaign coordinator', 'administrator') as $role) {
     if (!db_result(db_query("SELECT rid FROM {role} WHERE name = '%s'", array(':role_name' => $role)))) {
       db_query("INSERT INTO {role} (name) VALUES ('%s')", $role);
       drupal_set_message(t('The %role role has been added.', array('%role' => $role)));
@@ -266,14 +266,14 @@ function _donor_rally_install_user_roles() {
 }
 
 /**
- * Set team coordinator and administrator default input format to full HTML.
+ * Set campaign coordinator and administrator default input format to full HTML.
  */
 function _donor_rally_install_better_formats() {
   $roles = array();
   foreach (user_roles() as $rid => $name) {
-    if (in_array($name, array('team coordinator', 'administrator'))) {
+    if (in_array($name, array('campaign coordinator', 'administrator'))) {
       $roles[] = $rid;
-      // Float admin to top, team coordinator 2nd highest.
+      // Float admin to top, campaign coordinator 2nd highest.
       $weight = -2 * $rid;
       db_query("UPDATE {better_formats_defaults} SET format = %d, weight = %d WHERE rid = %d AND type = '%s'", array(':format' => 2, ':weight' => $weight, ':rid' => $rid, ':type' => 'node'));
       db_query("UPDATE {better_formats_defaults} SET format = %d, weight = %d WHERE rid = %d AND type = '%s'", array(':format' => 2, ':weight' => $weight, ':rid' => $rid, ':type' => 'comment'));
@@ -285,7 +285,7 @@ function _donor_rally_install_better_formats() {
     $roles = array_merge($current, $roles);
   }
   $roles = ','. implode(',', $roles) .',';
-  // Allow team coordinators and administrators to use HTML;
+  // Allow campaign coordinators and administrators to use HTML;
   db_query("UPDATE {filter_formats} SET roles = '%s' WHERE format = 2", array(':roles' => $roles));
 }
 
@@ -305,7 +305,7 @@ function _donor_rally_install_set_permissions() {
     'edit any page content',
     'revert revisions',
     'view revisions',
-    'assign team coordinator role',
+    'assign campaign coordinator role',
     'assign administrator role',
     'administer users',
     'access administration pages',
@@ -315,7 +315,7 @@ function _donor_rally_install_set_permissions() {
     drupal_set_message(t("Set sensible defaults for %role role.", array('%role' => 'administrator')));
   }
 
-  $team_leader_rid = array_search('team coordinator', $roles);
+  $team_leader_rid = array_search('campaign coordinator', $roles);
   $team_leader_user_perms = array(
     'create url aliases',
     'create page content',
@@ -324,9 +324,9 @@ function _donor_rally_install_set_permissions() {
     'revert revisions',
     'view revisions',
   );
-  if (!db_result(db_query("SELECT rid FROM {permission} LEFT JOIN {role} USING (rid) WHERE name = '%s'", array(':role_name' => 'team coordinator')))) {
+  if (!db_result(db_query("SELECT rid FROM {permission} LEFT JOIN {role} USING (rid) WHERE name = '%s'", array(':role_name' => 'campaign coordinator')))) {
     db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", array(':rid' => $team_leader_rid, implode(', ', $team_leader_user_perms)));
-    drupal_set_message(t("Set sensible defaults for %role role.", array('%role' => 'team coordinator')));
+    drupal_set_message(t("Set sensible defaults for %role role.", array('%role' => 'campaign coordinator')));
   }
 }
 
