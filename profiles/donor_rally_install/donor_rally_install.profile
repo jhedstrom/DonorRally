@@ -25,9 +25,6 @@ function donor_rally_install_profile_modules() {
     'token',
     'vertical_tabs',
     'views',
-
-    // Development modules.
-    'devel',
   );
 
   return $modules;
