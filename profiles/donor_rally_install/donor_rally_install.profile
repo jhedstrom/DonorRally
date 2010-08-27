@@ -394,9 +394,6 @@ function  _donor_rally_install_modules() {
     'views_bonus_export',
     'views_or',
 
-    // Custom modules.
-    'os_custom',
-
     // Social networking modules.
     'forward',
     'forward_services',
