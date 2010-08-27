@@ -380,7 +380,6 @@ function  _donor_rally_install_modules() {
     'donor_rally_io',
     'fieldgroup',
     'filefield',
-    'image_resize_filter',
     'imageapi',
     'imageapi_gd',
     'imagecache',
