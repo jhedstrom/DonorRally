@@ -107,14 +107,14 @@ projects[simple_payments][download][type] = "cvs"
 projects[simple_payments][download][module] = "contributions/modules/simple_payments"
 projects[simple_payments][download][revision] = "DRUPAL-6--1:2010-08-09"
 ; http://drupal.org/node/839952
-projects[simple_payments][patch][] = http://drupal.org/files/issues/simple_payments.payer_email.patch
+projects[simple_payments][patch][] = "http://drupal.org/files/issues/simple_payments.payer_email.patch"
 ; http://drupal.org/node/869142#comment-3267326
-projects[simple_payments][patch][] = http://drupal.org/files/issues/simple_payments-869142-views-support.patch
+projects[simple_payments][patch][] = "http://drupal.org/files/issues/simple_payments-869142-views-support.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = "2.11"
 ; http://drupal.org/node/862072
-projects[views][patch][] = http://drupal.org/files/issues/views.862072.patch
+projects[views][patch][] = "http://drupal.org/files/issues/views.862072.patch"
 
 ; Devel modules
 
