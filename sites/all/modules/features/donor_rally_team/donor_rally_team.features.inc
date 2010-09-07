@@ -1,91 +1,70 @@
 <?php
 
 /**
- * Implementation of hook_default_box().
- */
-function donor_rally_team_default_box() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_default_box', $args);
-}
-
-/**
- * Implementation of hook_content_default_fields().
- */
-function donor_rally_team_content_default_fields() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_content_default_fields', $args);
-}
-
-/**
- * Implementation of hook_context_default_contexts().
- */
-function donor_rally_team_context_default_contexts() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_context_default_contexts', $args);
-}
-
-/**
  * Implementation of hook_ctools_plugin_api().
  */
 function donor_rally_team_ctools_plugin_api() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_ctools_plugin_api', $args);
-}
-
-/**
- * Implementation of hook_fieldgroup_default_groups().
- */
-function donor_rally_team_fieldgroup_default_groups() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_fieldgroup_default_groups', $args);
+  list($module, $api) = func_get_args();
+  if ($module == "boxes" && $api == "box") {
+    return array("version" => 1);
+  }
+  elseif ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
+  elseif ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
  * Implementation of hook_imagecache_default_presets().
  */
 function donor_rally_team_imagecache_default_presets() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_imagecache_default_presets', $args);
+  $items = array(
+    'donor_rally_team_logo' => array(
+      'presetname' => 'donor_rally_team_logo',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '198',
+            'height' => '',
+            'upscale' => 1,
+          ),
+        ),
+      ),
+    ),
+  );
+  return $items;
 }
 
 /**
  * Implementation of hook_node_info().
  */
 function donor_rally_team_node_info() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_node_info', $args);
+  $items = array(
+    'team' => array(
+      'name' => t('Team'),
+      'module' => 'features',
+      'description' => t('Donor Rally Team'),
+      'has_title' => '1',
+      'title_label' => t('Team name'),
+      'has_body' => '0',
+      'body_label' => '',
+      'min_word_count' => '0',
+      'help' => '',
+    ),
+  );
+  return $items;
 }
 
 /**
- * Implementation of hook_user_default_permissions().
+ * Implementation of hook_views_api().
  */
-function donor_rally_team_user_default_permissions() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_user_default_permissions', $args);
-}
-
-/**
- * Implementation of hook_strongarm().
- */
-function donor_rally_team_strongarm() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_strongarm', $args);
-}
-
-/**
- * Implementation of hook_views_default_views().
- */
-function donor_rally_team_views_default_views() {
-  module_load_include('inc', 'donor_rally_team', 'donor_rally_team.features.views');
-  $args = func_get_args();
-  return call_user_func_array('_donor_rally_team_views_default_views', $args);
+function donor_rally_team_views_api() {
+  return array(
+    'api' => '2',
+  );
 }

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Helper to implementation of hook_content_default_fields().
+ * Implementation of hook_content_default_fields().
  */
-function _donor_rally_team_inkind_content_default_fields() {
+function donor_rally_team_inkind_content_default_fields() {
   $fields = array();
 
   // Exported field: field_food
-  $fields[] = array(
+  $fields['team-field_food'] = array(
     'field_name' => 'field_food',
     'type_name' => 'team',
     'display_settings' => array(
@@ -65,7 +65,7 @@ function _donor_rally_team_inkind_content_default_fields() {
   );
 
   // Exported field: field_food_goal
-  $fields[] = array(
+  $fields['team-field_food_goal'] = array(
     'field_name' => 'field_food_goal',
     'type_name' => 'team',
     'display_settings' => array(
@@ -123,7 +123,7 @@ function _donor_rally_team_inkind_content_default_fields() {
   );
 
   // Exported field: field_offline_food
-  $fields[] = array(
+  $fields['team-field_offline_food'] = array(
     'field_name' => 'field_offline_food',
     'type_name' => 'team',
     'display_settings' => array(
@@ -181,7 +181,7 @@ function _donor_rally_team_inkind_content_default_fields() {
   );
 
   // Exported field: field_offline_volunteer
-  $fields[] = array(
+  $fields['team-field_offline_volunteer'] = array(
     'field_name' => 'field_offline_volunteer',
     'type_name' => 'team',
     'display_settings' => array(
@@ -239,7 +239,7 @@ function _donor_rally_team_inkind_content_default_fields() {
   );
 
   // Exported field: field_volunteer
-  $fields[] = array(
+  $fields['team-field_volunteer'] = array(
     'field_name' => 'field_volunteer',
     'type_name' => 'team',
     'display_settings' => array(
@@ -297,7 +297,7 @@ function _donor_rally_team_inkind_content_default_fields() {
   );
 
   // Exported field: field_volunteer_goal
-  $fields[] = array(
+  $fields['team-field_volunteer_goal'] = array(
     'field_name' => 'field_volunteer_goal',
     'type_name' => 'team',
     'display_settings' => array(
@@ -355,105 +355,13 @@ function _donor_rally_team_inkind_content_default_fields() {
   );
 
   // Translatables
-  array(
-    t('Food'),
-    t('Food Goal'),
-    t('Offline Food'),
-    t('Offline Volunteer Shifts'),
-    t('Volunteer Shifts'),
-    t('Volunteer Shifts Goal'),
-  );
+  // Included for use with string extractors like potx.
+  t('Food');
+  t('Food Goal');
+  t('Offline Food');
+  t('Offline Volunteer Shifts');
+  t('Volunteer Shifts');
+  t('Volunteer Shifts Goal');
 
   return $fields;
-}
-
-/**
- * Helper to implementation of hook_ctools_plugin_api().
- */
-function _donor_rally_team_inkind_ctools_plugin_api() {
-  $args = func_get_args();
-  $module = array_shift($args);
-  $api = array_shift($args);
-  if ($module == "strongarm" && $api == "strongarm") {
-    return array("version" => 1);
-  }
-}
-
-/**
- * Helper to implementation of hook_user_default_permissions().
- */
-function _donor_rally_team_inkind_user_default_permissions() {
-  $permissions = array();
-
-  // Exported permission: edit field_food
-  $permissions[] = array(
-    'name' => 'edit field_food',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: edit field_food_goal
-  $permissions[] = array(
-    'name' => 'edit field_food_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_volunteer
-  $permissions[] = array(
-    'name' => 'edit field_volunteer',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: edit field_volunteer_goal
-  $permissions[] = array(
-    'name' => 'edit field_volunteer_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_food
-  $permissions[] = array(
-    'name' => 'view field_food',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_food_goal
-  $permissions[] = array(
-    'name' => 'view field_food_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_volunteer
-  $permissions[] = array(
-    'name' => 'view field_volunteer',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_volunteer_goal
-  $permissions[] = array(
-    'name' => 'view field_volunteer_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  return $permissions;
 }

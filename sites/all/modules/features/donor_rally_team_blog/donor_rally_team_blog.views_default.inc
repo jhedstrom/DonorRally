@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _donor_rally_team_blog_views_default_views() {
+function donor_rally_team_blog_views_default_views() {
   $views = array();
 
   // Exported view: team_blog

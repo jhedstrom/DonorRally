@@ -1,76 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_ctools_plugin_api().
+ * Implementation of hook_strongarm().
  */
-function _donor_rally_social_ctools_plugin_api() {
-  $args = func_get_args();
-  $module = array_shift($args);
-  $api = array_shift($args);
-  if ($module == "strongarm" && $api == "strongarm") {
-    return array("version" => 1);
-  }
-}
-
-/**
- * Helper to implementation of hook_user_default_permissions().
- */
-function _donor_rally_social_user_default_permissions() {
-  $permissions = array();
-
-  // Exported permission: access forward
-  $permissions[] = array(
-    'name' => 'access forward',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: access service links
-  $permissions[] = array(
-    'name' => 'access service links',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: administer forward
-  $permissions[] = array(
-    'name' => 'administer forward',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: administer service links
-  $permissions[] = array(
-    'name' => 'administer service links',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: override email address
-  $permissions[] = array(
-    'name' => 'override email address',
-    'roles' => array(),
-  );
-
-  // Exported permission: override flood control
-  $permissions[] = array(
-    'name' => 'override flood control',
-    'roles' => array(),
-  );
-
-  return $permissions;
-}
-
-/**
- * Helper to implementation of hook_strongarm().
- */
-function _donor_rally_social_strongarm() {
+function donor_rally_social_strongarm() {
   $export = array();
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

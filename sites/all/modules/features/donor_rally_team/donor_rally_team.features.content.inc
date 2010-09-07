@@ -1,47 +1,13 @@
 <?php
 
 /**
- * Helper to implementation of hook_default_box().
+ * Implementation of hook_content_default_fields().
  */
-function _donor_rally_team_default_box() {
-  $export = array();
-  $box = new stdClass;
-  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
-  $box->api_version = 1;
-  $box->delta = 'donor_rally_welcome';
-  $box->plugin_key = 'simple';
-  $box->title = 'Welcome';
-  $box->description = 'Donor Rally Welcome Box';
-  $box->options = array(
-    'body' => 'Donor Rally is the first open source social fundraising tool.',
-    'format' => 1,
-  );
-
-  $export['donor_rally_welcome'] = $box;
-  $box = new stdClass;
-  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
-  $box->api_version = 1;
-  $box->delta = 'team_page_common';
-  $box->plugin_key = 'simple';
-  $box->title = '';
-  $box->description = 'Team landing page common text';
-  $box->options = array(
-    'body' => 'This text is common across all team landing pages.',
-    'format' => 1,
-  );
-
-  $export['team_page_common'] = $box;
-  return $export;
-}
-
-/**
- * Helper to implementation of hook_content_default_fields().
- */
-function _donor_rally_team_content_default_fields() {
+function donor_rally_team_content_default_fields() {
   $fields = array();
 
   // Exported field: field_captain_email
-  $fields[] = array(
+  $fields['team-field_captain_email'] = array(
     'field_name' => 'field_captain_email',
     'type_name' => 'team',
     'display_settings' => array(
@@ -96,7 +62,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_captain_first_name
-  $fields[] = array(
+  $fields['team-field_captain_first_name'] = array(
     'field_name' => 'field_captain_first_name',
     'type_name' => 'team',
     'display_settings' => array(
@@ -151,7 +117,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_captain_last_name
-  $fields[] = array(
+  $fields['team-field_captain_last_name'] = array(
     'field_name' => 'field_captain_last_name',
     'type_name' => 'team',
     'display_settings' => array(
@@ -206,7 +172,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_captain_location
-  $fields[] = array(
+  $fields['team-field_captain_location'] = array(
     'field_name' => 'field_captain_location',
     'type_name' => 'team',
     'display_settings' => array(
@@ -305,6 +271,8 @@ function _donor_rally_team_content_default_fields() {
         ),
       ),
     ),
+    'gmap_macro' => '',
+    'gmap_marker' => '',
     'widget' => array(
       'default_value' => array(
         '0' => array(
@@ -400,7 +368,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_cash
-  $fields[] = array(
+  $fields['team-field_cash'] = array(
     'field_name' => 'field_cash',
     'type_name' => 'team',
     'display_settings' => array(
@@ -458,7 +426,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_cash_goal
-  $fields[] = array(
+  $fields['team-field_cash_goal'] = array(
     'field_name' => 'field_cash_goal',
     'type_name' => 'team',
     'display_settings' => array(
@@ -516,7 +484,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_logo
-  $fields[] = array(
+  $fields['team-field_logo'] = array(
     'field_name' => 'field_logo',
     'type_name' => 'team',
     'display_settings' => array(
@@ -586,7 +554,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_offline_cash
-  $fields[] = array(
+  $fields['team-field_offline_cash'] = array(
     'field_name' => 'field_offline_cash',
     'type_name' => 'team',
     'display_settings' => array(
@@ -644,7 +612,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_points_per_capita
-  $fields[] = array(
+  $fields['team-field_points_per_capita'] = array(
     'field_name' => 'field_points_per_capita',
     'type_name' => 'team',
     'display_settings' => array(
@@ -702,7 +670,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_size
-  $fields[] = array(
+  $fields['team-field_size'] = array(
     'field_name' => 'field_size',
     'type_name' => 'team',
     'display_settings' => array(
@@ -757,7 +725,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_team_info
-  $fields[] = array(
+  $fields['team-field_team_info'] = array(
     'field_name' => 'field_team_info',
     'type_name' => 'team',
     'display_settings' => array(
@@ -812,7 +780,7 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Exported field: field_total_points
-  $fields[] = array(
+  $fields['team-field_total_points'] = array(
     'field_name' => 'field_total_points',
     'type_name' => 'team',
     'display_settings' => array(
@@ -870,605 +838,19 @@ function _donor_rally_team_content_default_fields() {
   );
 
   // Translatables
-  array(
-    t('Address'),
-    t('Cash'),
-    t('Cash Goal'),
-    t('Email'),
-    t('First name'),
-    t('Last name'),
-    t('Logo'),
-    t('Offline Cash'),
-    t('Points Per Capita'),
-    t('Size'),
-    t('Team greeting'),
-    t('Total Points'),
-  );
+  // Included for use with string extractors like potx.
+  t('Address');
+  t('Cash');
+  t('Cash Goal');
+  t('Email');
+  t('First name');
+  t('Last name');
+  t('Logo');
+  t('Offline Cash');
+  t('Points Per Capita');
+  t('Size');
+  t('Team greeting');
+  t('Total Points');
 
   return $fields;
-}
-
-/**
- * Helper to implementation of hook_context_default_contexts().
- */
-function _donor_rally_team_context_default_contexts() {
-  $export = array();
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'leaderboard';
-  $context->description = 'Donor Rally Leader Board';
-  $context->tag = 'Donor Rally';
-  $context->conditions = array(
-    'views' => array(
-      'values' => array(
-        'leaderboard_top:page_1' => 'leaderboard_top:page_1',
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'donor_rally-site_thermometer' => array(
-          'module' => 'donor_rally',
-          'delta' => 'site_thermometer',
-          'region' => 'sidebar_second',
-          'weight' => 0,
-        ),
-        'boxes-donor_rally_welcome' => array(
-          'module' => 'boxes',
-          'delta' => 'donor_rally_welcome',
-          'region' => 'content_top',
-          'weight' => 0,
-        ),
-        'views-leaderboard_top_ppc-block_1' => array(
-          'module' => 'views',
-          'delta' => 'leaderboard_top_ppc-block_1',
-          'region' => 'content_bottom',
-          'weight' => 0,
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  $translatables['leaderboard'] = array(
-    t('Donor Rally Leader Board'),
-    t('Donor Rally'),
-  );
-
-  $export['leaderboard'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'team_page';
-  $context->description = 'Team landing pages';
-  $context->tag = 'Donor Rally';
-  $context->conditions = array(
-    'node' => array(
-      'values' => array(
-        'team' => 'team',
-      ),
-      'options' => array(
-        'node_form' => 0,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'donor_rally-0' => array(
-          'module' => 'donor_rally',
-          'delta' => 0,
-          'region' => 'sidebar_second',
-          'weight' => 0,
-        ),
-        'donor_rally-1' => array(
-          'module' => 'donor_rally',
-          'delta' => 1,
-          'region' => 'sidebar_second',
-          'weight' => 1,
-        ),
-        'boxes-team_page_common' => array(
-          'module' => 'boxes',
-          'delta' => 'team_page_common',
-          'region' => 'sidebar_second',
-          'weight' => 2,
-        ),
-        'donor_rally-3' => array(
-          'module' => 'donor_rally',
-          'delta' => 3,
-          'region' => 'sidebar_second',
-          'weight' => 3,
-        ),
-        'donor_rally-2' => array(
-          'module' => 'donor_rally',
-          'delta' => 2,
-          'region' => 'sidebar_second',
-          'weight' => 4,
-        ),
-        'donor_rally-6' => array(
-          'module' => 'donor_rally',
-          'delta' => 6,
-          'region' => 'sidebar_second',
-          'weight' => 5,
-        ),
-        'donor_rally-7' => array(
-          'module' => 'donor_rally',
-          'delta' => 7,
-          'region' => 'sidebar_second',
-          'weight' => 6,
-        ),
-        'views-donor_rally_team_logo-block_1' => array(
-          'module' => 'views',
-          'delta' => 'donor_rally_team_logo-block_1',
-          'region' => 'content_bottom',
-          'weight' => 0,
-        ),
-        'views-team_information-block_1' => array(
-          'module' => 'views',
-          'delta' => 'team_information-block_1',
-          'region' => 'content_bottom',
-          'weight' => 1,
-        ),
-        'views-team_blog-block' => array(
-          'module' => 'views',
-          'delta' => 'team_blog-block',
-          'region' => 'content_bottom',
-          'weight' => 2,
-        ),
-        'donor_rally-5' => array(
-          'module' => 'donor_rally',
-          'delta' => 5,
-          'region' => 'content_bottom',
-          'weight' => 3,
-        ),
-      ),
-    ),
-    'theme' => array(
-      'title' => '',
-      'subtitle' => '',
-      'class' => 'team-page',
-    ),
-  );
-  $context->condition_mode = 0;
-
-  $translatables['team_page'] = array(
-    t('Donor Rally'),
-    t('Team landing pages'),
-  );
-
-  $export['team_page'] = $context;
-  return $export;
-}
-
-/**
- * Helper to implementation of hook_ctools_plugin_api().
- */
-function _donor_rally_team_ctools_plugin_api() {
-  $args = func_get_args();
-  $module = array_shift($args);
-  $api = array_shift($args);
-  if ($module == "boxes" && $api == "box") {
-    return array("version" => 1);
-  }
-  elseif ($module == "context" && $api == "context") {
-    return array("version" => 3);
-  }
-  elseif ($module == "strongarm" && $api == "strongarm") {
-    return array("version" => 1);
-  }
-}
-
-/**
- * Helper to implementation of hook_fieldgroup_default_groups().
- */
-function _donor_rally_team_fieldgroup_default_groups() {
-  $groups = array();
-
-  // Exported group: group_team_coordinator
-  $groups[] = array(
-    'group_type' => 'standard',
-    'type_name' => 'team',
-    'group_name' => 'group_team_coordinator',
-    'label' => 'Team coordinator',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'weight' => '7',
-        'label' => 'hidden',
-        'teaser' => array(
-          'format' => 'hidden',
-          'exclude' => 0,
-        ),
-        'full' => array(
-          'format' => 'hidden',
-          'exclude' => 0,
-        ),
-        'description' => '',
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-    ),
-    'weight' => '7',
-    'fields' => array(
-      '0' => 'field_captain_first_name',
-      '1' => 'field_captain_last_name',
-      '2' => 'field_captain_email',
-      '3' => 'field_captain_location',
-    ),
-  );
-
-  // Translatables
-  array(
-    t('Team coordinator'),
-  );
-
-  return $groups;
-}
-
-/**
- * Helper to implementation of hook_imagecache_default_presets().
- */
-function _donor_rally_team_imagecache_default_presets() {
-  $items = array(
-    'donor_rally_team_logo' => array(
-      'presetname' => 'donor_rally_team_logo',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_scale',
-          'data' => array(
-            'width' => '198',
-            'height' => '',
-            'upscale' => 1,
-          ),
-        ),
-      ),
-    ),
-  );
-  return $items;
-}
-
-/**
- * Helper to implementation of hook_user_default_permissions().
- */
-function _donor_rally_team_user_default_permissions() {
-  $permissions = array();
-
-  // Exported permission: create team content
-  $permissions[] = array(
-    'name' => 'create team content',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: delete any team content
-  $permissions[] = array(
-    'name' => 'delete any team content',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: delete own team content
-  $permissions[] = array(
-    'name' => 'delete own team content',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: edit any team content
-  $permissions[] = array(
-    'name' => 'edit any team content',
-    'roles' => array(
-      '0' => 'administrator',
-      '1' => 'campaign coordinator',
-    ),
-  );
-
-  // Exported permission: edit field_captain_email
-  $permissions[] = array(
-    'name' => 'edit field_captain_email',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_captain_first_name
-  $permissions[] = array(
-    'name' => 'edit field_captain_first_name',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_captain_last_name
-  $permissions[] = array(
-    'name' => 'edit field_captain_last_name',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_captain_location
-  $permissions[] = array(
-    'name' => 'edit field_captain_location',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_cash
-  $permissions[] = array(
-    'name' => 'edit field_cash',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: edit field_cash_goal
-  $permissions[] = array(
-    'name' => 'edit field_cash_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_logo
-  $permissions[] = array(
-    'name' => 'edit field_logo',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_points_per_capita
-  $permissions[] = array(
-    'name' => 'edit field_points_per_capita',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: edit field_size
-  $permissions[] = array(
-    'name' => 'edit field_size',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_team_info
-  $permissions[] = array(
-    'name' => 'edit field_team_info',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: edit field_total_points
-  $permissions[] = array(
-    'name' => 'edit field_total_points',
-    'roles' => array(
-      '0' => 'administrator',
-    ),
-  );
-
-  // Exported permission: edit own team content
-  $permissions[] = array(
-    'name' => 'edit own team content',
-    'roles' => array(
-      '0' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_captain_email
-  $permissions[] = array(
-    'name' => 'view field_captain_email',
-    'roles' => array(
-      '0' => 'administrator',
-      '1' => 'campaign coordinator',
-    ),
-  );
-
-  // Exported permission: view field_captain_first_name
-  $permissions[] = array(
-    'name' => 'view field_captain_first_name',
-    'roles' => array(
-      '0' => 'administrator',
-      '1' => 'campaign coordinator',
-    ),
-  );
-
-  // Exported permission: view field_captain_last_name
-  $permissions[] = array(
-    'name' => 'view field_captain_last_name',
-    'roles' => array(
-      '0' => 'administrator',
-      '1' => 'campaign coordinator',
-    ),
-  );
-
-  // Exported permission: view field_captain_location
-  $permissions[] = array(
-    'name' => 'view field_captain_location',
-    'roles' => array(
-      '0' => 'administrator',
-      '1' => 'campaign coordinator',
-    ),
-  );
-
-  // Exported permission: view field_cash
-  $permissions[] = array(
-    'name' => 'view field_cash',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_cash_goal
-  $permissions[] = array(
-    'name' => 'view field_cash_goal',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_logo
-  $permissions[] = array(
-    'name' => 'view field_logo',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_points_per_capita
-  $permissions[] = array(
-    'name' => 'view field_points_per_capita',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_size
-  $permissions[] = array(
-    'name' => 'view field_size',
-    'roles' => array(
-      '0' => 'administrator',
-      '1' => 'campaign coordinator',
-      '2' => 'team lead',
-    ),
-  );
-
-  // Exported permission: view field_team_info
-  $permissions[] = array(
-    'name' => 'view field_team_info',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  // Exported permission: view field_total_points
-  $permissions[] = array(
-    'name' => 'view field_total_points',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-    ),
-  );
-
-  return $permissions;
-}
-
-/**
- * Helper to implementation of hook_strongarm().
- */
-function _donor_rally_team_strongarm() {
-  $export = array();
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_extra_weights_team';
-  $strongarm->value = array(
-    'title' => '6',
-    'revision_information' => '24',
-    'menu' => '22',
-    'path' => '23',
-  );
-
-  $export['content_extra_weights_team'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_profile_team';
-  $strongarm->value = array(
-    'weight' => '0',
-    'user_display' => 'full',
-    'edit_link' => 0,
-    'edit_tab' => 'sub',
-    'add_link' => 1,
-    'registration_use' => 1,
-    'admin_user_create_use' => 1,
-    'registration_hide' => array(),
-  );
-
-  $export['content_profile_team'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_profile_use_team';
-  $strongarm->value = 1;
-
-  $export['content_profile_use_team'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_team';
-  $strongarm->value = array(
-    '0' => 'status',
-  );
-
-  $export['node_options_team'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'pathauto_node_team_pattern';
-  $strongarm->value = 'teams/[title-raw]';
-
-  $export['pathauto_node_team_pattern'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'site_frontpage';
-  $strongarm->value = 'leaderboard';
-
-  $export['site_frontpage'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'user_register';
-  $strongarm->value = 1;
-
-  $export['user_register'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'vertical_tabs_forms';
-  $strongarm->value = array();
-
-  $export['vertical_tabs_forms'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'vertical_tabs_node_type_settings';
-  $strongarm->value = 1;
-
-  $export['vertical_tabs_node_type_settings'] = $strongarm;
-  return $export;
 }

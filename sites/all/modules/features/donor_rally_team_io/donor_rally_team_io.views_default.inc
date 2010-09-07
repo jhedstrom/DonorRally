@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _donor_rally_team_io_views_default_views() {
+function donor_rally_team_io_views_default_views() {
   $views = array();
 
   // Exported view: team_export
@@ -380,6 +380,7 @@ function _donor_rally_team_io_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $handler->override_option('displays', array(
     'page_1' => 'page_1',
@@ -403,6 +404,7 @@ function _donor_rally_team_io_views_default_views() {
     'title' => 'Manage Teams',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
 
   $views[$view->name] = $view;
