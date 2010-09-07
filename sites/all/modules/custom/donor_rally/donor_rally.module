@@ -494,7 +494,7 @@ function _donor_rally_block_site_thermometer() {
   $goal = variable_get('donor_rally_goal', 314159265);
   $total = _donor_rally_get_total_points();
   $vars['total_raw_goal'] = $goal;
-  $vars['total'] = $total;
+  $vars['total_raw'] = $total;
   $vars['total_raw_goal_view'] = _donor_rally_format_value($goal);
   $vars['total_raw_view'] = _donor_rally_format_value($total);
 
