@@ -1,4 +1,4 @@
-$Id: API.txt,v 1.1.2.1 2010/02/09 20:09:58 yhahn Exp $
+$Id: API.txt,v 1.1.2.2 2010/07/29 14:31:36 yhahn Exp $
 
 Context 3.x API
 ---------------
@@ -29,16 +29,7 @@ Adding a condition or reaction plugin
 Both context conditions and reactions utilize the CTools plugins API. In order
 to add a new condition or reaction for your module, follow these steps:
 
-1. Implement `hook_ctools_plugin_api()` in your module. This declares that your
-  module is API compatible with Context 3.
-
-        function mymodule_ctools_plugin_api($module, $api) {
-          if ($module == 'context' && $api == 'plugins') {
-            return array('version' => 3);
-          }
-        }
-
-2. Implement `hook_context_plugins()` to define your plugins, classes, and class
+1. Implement `hook_context_plugins()` to define your plugins, classes, and class
   hierarchy.
 
         function mymodule_context_plugins() {
@@ -54,7 +45,7 @@ to add a new condition or reaction for your module, follow these steps:
           return $plugins;
         }
 
-3. Implement `hook_context_registry()` to define your conditions and/or
+2. Implement `hook_context_registry()` to define your conditions and/or
   reactions and map them to plugins.
 
         function mymodule_context_registry() {
@@ -68,10 +59,10 @@ to add a new condition or reaction for your module, follow these steps:
           );
         }
 
-4. Write your condition or reaction plugin class. It's best to look at one of
+3. Write your condition or reaction plugin class. It's best to look at one of
   the included plugins as a starting point.
 
-5. Add in a Drupal integration point for your plugin. A node page condition
+4. Add in a Drupal integration point for your plugin. A node page condition
   plugin, for example, may be invoked from `hook_nodeapi()`.
 
 

@@ -65,17 +65,16 @@ div.context-editor div.context-editable { padding:5px 0px; }
 /**
  * Admin listing page =================================================
  */
-table.context-admin td.context-name {
+table.context-admin td.tag { font-style:italic; }
+
+table.context-admin td.ctools-export-ui-name {
   width:75%;
   padding-left:20px;
   }
 
-table.context-admin td.tag { font-style:italic; }
+table.context-admin td.ctools-export-ui-operations { white-space:nowrap; }
 
-table.context-admin td.context-links { white-space:nowrap; }
-
-table.context-admin em.storage,
-table.context-admin tr.disabled td.context-name { color:#999; }
+table.context-admin td.ctools-export-ui-storage { color:#999; }
 
 table.context-admin div.description {
   padding-left:10px;
@@ -168,7 +167,7 @@ table.context-admin input.form-text { width:90%; }
 
   .context-plugins .context-plugin-forms .active-form { display:block; }
 
-  .context-plugins .context-plugin-form {
-    max-height:400px;
+  .context-plugins .context-plugin-form .form-checkboxes {
+    max-height:300px;
     overflow:auto;
     }

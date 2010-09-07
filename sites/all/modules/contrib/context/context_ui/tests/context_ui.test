@@ -1,5 +1,5 @@
 <?php
-// $Id: context_ui.test,v 1.4.4.1.2.1 2009/12/14 22:34:05 yhahn Exp $
+// $Id: context_ui.test,v 1.4.4.1.2.2 2010/08/05 16:46:26 yhahn Exp $
 
 /**
  * Functional Test for Context UI
@@ -45,7 +45,7 @@ class ContextUiTestCase extends DrupalWebTestCase {
       'reactions[plugins][menu]' => 'node/add/page',
     );
     $this->drupalPost('admin/build/context/add', $edit, 'Save');
-    $this->assertText('Saved context '. $context->name, 'Context saved.');
+    $this->assertText($context->name . ' has been created.', 'Context saved.');
 
   }
 }

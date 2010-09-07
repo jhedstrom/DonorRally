@@ -1,12 +1,14 @@
 <?php
-// $Id: context_layouts.module,v 1.1.2.4 2010/02/25 22:22:40 yhahn Exp $ 
+// $Id: context_layouts.module,v 1.1.2.6 2010/08/05 08:03:29 yhahn Exp $ 
 
 /**
- * Implementation of hook_ctools_plugin_api().
+ * Implementation of hook_help().
  */
-function context_layouts_ctools_plugin_api($module, $api) {
-  if ($module == 'context' && $api == 'plugins') {
-    return array('version' => 3);
+function context_layouts_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#context_layouts':
+      $output = file_get_contents(drupal_get_path('module', 'context_layouts') .'/README.txt');
+      return module_exists('markdown') ? filter_xss_admin(module_invoke('markdown', 'filter', 'process', 0, -1, $output)) : '<pre>'. check_plain($output) .'</pre>';
   }
 }
 

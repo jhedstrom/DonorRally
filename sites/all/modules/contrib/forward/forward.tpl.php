@@ -1,5 +1,5 @@
 <?php
-/* $Id: forward.tpl.php,v 1.1.2.8 2010/03/22 19:14:41 seanr Exp $ */
+/* $Id: forward.tpl.php,v 1.1.2.9 2010/08/30 19:59:34 seanr Exp $ */
 
 /**
  * This template should only contain the contents of the body
@@ -35,7 +35,7 @@
             <?php } ?>
             <?php if ($title) { ?><h2 style="font-size: 14px;"><?php print $title; ?></h2><?php } ?>
             <?php if ($submitted) { ?><p><em><?php print $submitted; ?></em></p><?php } ?>
-            <?php if ($node) { ?><div><?php print $node; ?></div><?php } ?><p><?php print $link; ?></p>
+            <?php if ($teaser) { ?><div><?php print $teaser; ?></div><?php } ?><p><?php print $link; ?></p>
           </td>
         </tr>
         <?php if ($dynamic_content) { ?><tr>

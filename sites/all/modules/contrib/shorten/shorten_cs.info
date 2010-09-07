@@ -1,0 +1,11 @@
+; $Id$
+name = Shorten URLs Custom Services
+description = "Allows administrators to specify custom URL shortening services. <strong>Advanced users only.</strong>"
+core = 6.x
+dependencies[] = shorten
+; Information added by drupal.org packaging script on 2010-09-06
+version = "6.x-1.10"
+core = "6.x"
+project = "shorten"
+datestamp = "1283750207"
+

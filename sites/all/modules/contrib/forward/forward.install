@@ -1,12 +1,26 @@
 <?php
-// $Id: forward.install,v 1.4.2.5 2010/03/09 18:46:34 seanr Exp $
+// $Id: forward.install,v 1.4.2.8 2010/08/30 21:00:21 seanr Exp $
 function forward_install() {
   drupal_install_schema('forward');
   variable_set('forward_theme_template', 1);
+  db_query("INSERT INTO {forward_statistics} (nid, last_forward_timestamp, forward_count, clickthrough_count) values(0, 0, 0, 0)");
+  db_query("INSERT INTO {forward_statistics} (nid, last_forward_timestamp, forward_count, clickthrough_count) SELECT n.nid, 0, 0, 0 FROM {node} n");
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function forward_uninstall() {
   drupal_uninstall_schema('forward');
+  
+  // Get global variable array
+  global $conf;
+  foreach (array_keys($conf) as $key) {
+    // Find variables that have the module prefix
+    if (strpos($key, 'forward_') === 0) {
+      variable_del($key);
+    }
+  }
 }
 
 /**
@@ -123,4 +137,15 @@ function forward_update_5() {
   db_add_index($ret, 'forward_log', 'forward_hostname', array('hostname'));
   
   return $ret;
+}
+
+/**
+ * Fix variable strings
+ */
+function forward_update_6() {
+  //variable strings changed
+  variable_set('forward_page_subject', variable_get('forward_email_subject', '!name has forwarded a page to you from !site'));
+  variable_set('forward_page_message', variable_get('forward_email_message', '!name thought you would like to see this page from the !site web site.'));
+
+  return array();
 }

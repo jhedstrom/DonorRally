@@ -104,6 +104,17 @@ function shorten_admin($form_state) {
       .' <strong>'. t('Some integrated modules ignore this.') .'</strong>',
     '#default_value' => variable_get('shorten_use_alias', 1),
   );
+  $form['shorten_cache_duration'] = array(
+    '#type' => 'textfield',
+    '#field_prefix' => t('Cache shortened URLs for') .' ',
+    '#field_suffix' => ' '. t('seconds'),
+    '#description' => t('Shortened URLs are stored after retrieval to improve performance.') .' '.
+      t('Enter the number of seconds for which you would like the shortened URLs to be stored.') .' '.
+      t('Leave this field blank to store shortened URLs indefinitely (although this is not recommended).') .' '.
+      t('The default value is 1814400 (3 weeks).'),
+    '#size' => 11,
+    '#default_value' => variable_get('shorten_cache_duration', 1814400),
+  );
   unset($services['none']);
   $form['shorten_invisible_services'] = array(
     '#type' => 'checkboxes',
@@ -126,12 +137,19 @@ function shorten_admin_validate($form, &$form_state) {
   }
   elseif (($v['shorten_service'] == 'bit.ly' && $v['shorten_service_backup'] == 'j.mp') ||
     ($v['shorten_service'] == 'j.mp' && $v['shorten_service_backup'] == 'bit.ly')) {
-    form_set_error('shorten_service_backup', t('j.mp and bit.ly are the same service. '.
-      'You must select a backup abbreviation service that is different than your primary service.'));
+    form_set_error('shorten_service_backup', t('j.mp and bit.ly are the same service.') .' '.
+      t('You must select a backup abbreviation service that is different than your primary service.'));
   }
   if ($v['shorten_service'] == 'none' && $v['shorten_service_backup'] != 'none') {
-    drupal_set_message(t('You have selected a backup URL abbreviation service, but no primary service. '.
-      'Your URLs will not be abbreviated with these settings.'));
+    drupal_set_message(t('You have selected a backup URL abbreviation service, but no primary service.') .' '.
+      t('Your URLs will not be abbreviated with these settings.'));
+  }
+  if ($v['shorten_cache_duration'] !== '' && (
+    !is_numeric($v['shorten_cache_duration']) ||
+    round($v['shorten_cache_duration']) != $v['shorten_cache_duration'] ||
+    $v['shorten_cache_duration'] < 0
+  )) {
+    form_set_error('shorten_cache_duration', t('The cache duration must be a positive integer or left blank.'));
   }
 }
 
@@ -139,8 +157,8 @@ function shorten_admin_validate($form, &$form_state) {
  * Submit handler for shorten_admin().
  */
 function shorten_admin_submit($form, &$form_state) {
-  //Clear the general cache because changed settings may mean that different URLs should be used.
-  cache_clear_all('*', 'cache', TRUE);
+  //Changed settings usually mean that different URLs should be used.
+  cache_clear_all('*', 'cache_shorten', TRUE);
 }
 
 /**

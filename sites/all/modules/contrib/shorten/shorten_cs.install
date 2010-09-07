@@ -1,0 +1,73 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   Install, update, and uninstall functions for the Shorten URLs Custom Services module.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function shorten_cs_schema() {
+  $schema = array();
+  $schema['shorten_cs'] = array(
+    'description' => 'Stores custom services for the Shorten URLs module.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+        'description' => 'The Service ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The name of the URL shortening service.',
+      ),
+      'url' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The API endpoint URL.',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The type of API response.',
+      ),
+      'tag' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The XML tag or JSON key identifying the shortened URL from the API response, if applicable.',
+      ),
+    ),
+    'indexes' => array(),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+    'primary key' => array('sid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function shorten_cs_install() {
+  drupal_install_schema('shorten_cs');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function shorten_cs_uninstall() {
+  drupal_uninstall_schema('shorten_cs');
+}

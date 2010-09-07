@@ -1,5 +1,5 @@
 <?php
-// $Id: shorturl.install,v 1.1.2.3 2010/06/16 05:52:09 inadarei Exp $
+// $Id: shorturl.install,v 1.1.2.4 2010/08/17 23:16:09 inadarei Exp $
 /*
 * @File shorturl.install
 */
@@ -13,7 +13,7 @@ function shorturl_schema() {
     'description' => 'ShortURL Links Table.',
     'fields' => array(
       'lid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'length' => 22),
-      'orig_url' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'orig_url' => array('type' => 'varchar', 'length' => 2048, 'not null' => TRUE, 'default' => ''),
       'created' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'remote_ip' => array('type' => 'varchar', 'length' => 20, 'not null' => FALSE, 'default' => ''),        
       ),
@@ -27,7 +27,7 @@ function shorturl_schema() {
     'fields' => array(
       'aid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'url_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'length' => 22),      
-      'url_key' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'url_key' => array('type' => 'varchar', 'length' => 2048, 'not null' => TRUE, 'default' => ''),
       'remote_ip' => array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => ''),
       'referer' => array('type' => 'text', 'not null' => TRUE, 'size' => 'normal'),      
       'browser' => array('type' => 'text', 'not null' => TRUE, 'size' => 'normal'),            
@@ -70,6 +70,23 @@ function shorturl_update_6001() {
   
   if ($db_type == 'mysql' || $db_type == 'mysqli') {
     $ret[] = update_sql("ALTER TABLE {shorturl_link} MODIFY COLUMN `lid` int(10) unsigned NOT NULL");
+  }
+
+  return $ret;
+}
+
+/**
+* Fixes: http://drupal.org/node/861042
+* I can only test on MySQL so this fix is MySQL-specific. 
+* If you want a fix for other DBs, please contribute code.
+*/
+function shorturl_update_6002() {
+  global $db_type;
+  
+  $ret = array();
+  
+  if ($db_type == 'mysql' || $db_type == 'mysqli') {
+    $ret[] = update_sql("ALTER TABLE {shorturl_link} MODIFY COLUMN `orig_url` varchar(2048) NOT NULL DEFAULT '' ");
   }
 
   return $ret;

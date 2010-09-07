@@ -1,5 +1,5 @@
 <?php
-/* $Id: forward.module,v 1.55.2.34 2010/03/22 19:14:41 seanr Exp $ */
+/* $Id: forward.module,v 1.55.2.43 2010/08/30 21:29:00 seanr Exp $ */
 
 /**
  * @file
@@ -220,6 +220,26 @@ function forward_admin_settings() {
     '#default_value' => $defaults,
     '#description' => t('Choose which content types to display the Forward link on.'),
   );
+  $form['forward_options']['forward_thankyou_send'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Send a thank you email'),
+    '#return_value' => 1,
+    '#default_value' => variable_get('forward_thankyou_send', FALSE),
+    '#description' => t('If checked, Forward will send a thank you email to the user.'),
+  );
+  $form['forward_options']['forward_thankyou_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Thank you email subject'),
+    '#default_value' => variable_get('forward_thankyou_subject', 'Thank you for spreading the word about !site'),
+  );
+  $form['forward_options']['forward_thankyou_text'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Thank you email text'),
+    '#default_value' => variable_get('forward_thankyou_text', "Dear !name,\n\nThank you for your help in spreading the word about !site.  We appreciate your help."),
+    '#cols' => 40,
+    '#rows' => 10,
+    '#description' => t('This message will be emailed to the user if the Send a thank you email checkbox above is checked.  The token !site will be replaced with the site name and !name will be replaced with the user\'s name supplied on the forward form.'),
+  );
 
   // Page Text Values
   $form['forward_text_values'] = array(
@@ -246,14 +266,14 @@ function forward_admin_settings() {
   );
 
   // Forward Form Default Values
-  $form['forward_page_defaults'] = array(
+  $form['forward_email_defaults'] = array(
     '#type' => 'fieldset',
     '#title' => t('Default Values for Email This Page'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#description' => t('These options will set the default values for the "email this page" form.')
   );
-  $form['forward_page_defaults']['forward_width'] = array(
+  $form['forward_email_defaults']['forward_width'] = array(
     '#type' => 'textfield',
     '#title' => t('Email width'),
     '#default_value' => variable_get('forward_width', 400),
@@ -261,7 +281,7 @@ function forward_admin_settings() {
     '#description' => t('Set a width for the table in the email template.  Ideally, this should be somewhere between 400 and 600 pixels to avoid breaking the layout in various email clients.'),
     '#attributes' => FALSE,
   );
-  $form['forward_page_defaults']['forward_header_image'] = array(
+  $form['forward_email_defaults']['forward_header_image'] = array(
     '#type' => 'textfield',
     '#title' => t('Header Image for Email'),
     '#default_value' => variable_get('forward_header_image', ''),
@@ -270,7 +290,7 @@ function forward_admin_settings() {
     '#description' => t('Enter the URL of the image to as a logo at the top of forwarded pages.'),
     '#attributes' => FALSE,
   );
-  $form['forward_page_defaults']['forward_page_title'] = array(
+  $form['forward_email_defaults']['forward_email_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Forward Page Title'),
     '#default_value' => variable_get('forward_page_title', t('Forward this page')),
@@ -278,7 +298,7 @@ function forward_admin_settings() {
     '#maxlength' => 256,
     '#description' => t('Title to display above the Forward page form'),
   );
-  $form['forward_page_defaults']['forward_page_subject'] = array(
+  $form['forward_email_defaults']['forward_email_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Forward Message Subject'),
     '#default_value' => variable_get('forward_page_subject', t('!name has forwarded a page to you from !site')),
@@ -286,7 +306,7 @@ function forward_admin_settings() {
     '#maxlength' => 256,
     '#description' => t('Email subject line.  The sender\'s name will appear in place of !name in the subject.  The web site name will be inserted in place of !site.'),
   );
-  $form['forward_page_defaults']['forward_page_message'] = array(
+  $form['forward_email_defaults']['forward_email_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Forward Message Body'),
     '#default_value' => variable_get('forward_page_message', t('!name thought you would like to see this page from the !site web site.')),
@@ -294,7 +314,7 @@ function forward_admin_settings() {
     '#rows' => 10,
     '#description' => t('Email message body.  The sender\'s name will appear in place of !name in the message body.  The web site name will be inserted in place of !site.  The sender will be able to add their own message after this.'),
   );
-  $form['forward_page_defaults']['forward_full_body'] = array(
+  $form['forward_email_defaults']['forward_full_body'] = array(
     '#type' => 'checkbox',
     '#title' => t('Include full node'),
     '#return_value' => 1,
@@ -539,12 +559,14 @@ function forward_form(&$form_state, $path = NULL, $title = NULL, $nodeapi = FALS
     '#title' => t('Message Subject'),
     '#value' => t(variable_get('forward_'. $emailtype .'_subject', '!name has sent you a message from !site'), array('!name' => t('(Your Name)'), '!site' => variable_get('site_name', 'drupal'))),
     '#description' => '',
+    '#attributes' => array('id' => 'forward-page-subject'),
   );
   $form['message']['body'] = array(
     '#type' => 'item',
     '#title' => t('Message Body'),
     '#value' => t(variable_get('forward_'. $emailtype .'_message', '!name thought you would like to see the !site web site.'), array('!name' => t('(Your Name)'), '!site' => variable_get('site_name', 'drupal'))),
     '#description' => '',
+    '#attributes' => array('id' => 'forward-page-body'),
   );
   if (variable_get('forward_message', 1) != 0) {
     $form['message']['message'] = array(
@@ -698,7 +720,7 @@ function forward_form_submit($form, &$form_state) {
     $returnurl = '';
   }
   else {
-    $emailtype = 'page';
+    $emailtype = 'email';
     $returnurl = $form_state['values']['path'];
     $path_array = explode('/', $form_state['values']['path']);
     if (($path_array[0] == 'node') && (!empty($path_array[1])) && (is_numeric($path_array[1]))) {
@@ -769,10 +791,11 @@ function forward_form_submit($form, &$form_state) {
     'site_url' => url('forward/emailref', array('absolute' => TRUE, 'query' => 'path='. $returnurl . $form_state['values']['path_cid'])),
     'width' => variable_get('forward_width', 400),
     'logo' => (!empty($logo)) ? '<img src="'. url($logo, array('absolute' => TRUE)). '" alt="" />' : '',
-    'title' => ($emailtype == 'page') ? l($content->title, 'forward/emailref', array('absolute' => TRUE, 'query' => 'path='. $returnurl)) : FALSE,
+    'title' => ($emailtype == 'email') ? l($content->title, 'forward/emailref', array('absolute' => TRUE, 'query' => 'path='. $returnurl)) : FALSE,
     'submitted' => (theme_get_setting('toggle_node_info_'. $content->type)) ? t('by %author', array('%author' => $content->name)) : FALSE,
-    'node' => ($emailtype == 'page') ? $content->teaser : FALSE,
-    'link' => ($emailtype == 'page') ? l(t('Click here to read more on our site'), 'forward/emailref', array('absolute' => TRUE, 'query' => 'path='. $returnurl . $form_state['values']['path_cid'])) : FALSE,
+    'teaser' => ($emailtype == 'email') ? $content->teaser : FALSE,
+    'node' => ($emailtype == 'email') ? $content : FALSE,
+    'link' => ($emailtype == 'email') ? l(t('Click here to read more on our site'), 'forward/emailref', array('absolute' => TRUE, 'query' => 'path='. $returnurl . $form_state['values']['path_cid'])) : FALSE,
   );
 
   if (variable_get('forward_theme_template', 0)) {
@@ -791,10 +814,11 @@ function forward_form_submit($form, &$form_state) {
     $from = variable_get('site_mail', '');
   }
 
-  $params['from'] = trim($form_state['values']['name'] .' <'. $from .'>');
-  $params['headers']['Reply-To'] = trim($form_state['values']['name'] .' <'. $form_state['values']['email'] .'>');
+  $params['from'] = trim(mime_header_encode($form_state['values']['name'] .' <'. $from .'>'));
+  $params['headers']['Reply-To'] = trim(mime_header_encode($form_state['values']['name'] .' <'. $form_state['values']['email'] .'>'));
 
   $recipients = trim($form_state['values']['recipients']);
+  $recipients = preg_replace('/,,+/', ',', trim($recipients,','));
   $recipients = str_replace(array("\r\n", "\n", "\r"), ',', $recipients);
   $recipients = explode(',', $recipients);
   foreach ($recipients as $to) {
@@ -814,6 +838,15 @@ function forward_form_submit($form, &$form_state) {
   variable_set('forward_recipients', variable_get('forward_recipients', 0) + count($recipients));
 
   drupal_set_message(check_plain(t(variable_get('forward_thankyou', 'Thank you for your help in spreading the word about !site. We appreciate your help.'), array('!site' => variable_get('site_name', 'drupal')))), 'status');
+  
+  if (variable_get('forward_thankyou_send', FALSE)) {
+    $thankyou_params = array(
+      'from' => variable_get('forward_sender_address', variable_get('site_mail', '')),
+      'subject' => t(variable_get('forward_thankyou_subject', 'Thank you for spreading the word about !site'), array('!site' => variable_get('site_name', 'drupal'))),
+      'body' => t(variable_get('forward_thankyou_text', "Dear !name,\n\nThank you for your help in spreading the word about !site.  We appreciate your help."), array('!site' => variable_get('site_name', 'drupal'), '!name' => check_plain($form_state['values']['name']))),
+    );
+    drupal_mail('forward', 'forward_thankyou', trim($form_state['values']['email']), language_default(), $thankyou_params, $thankyou_params['from']);
+  }
 
   $form_state['redirect'] = ($returnurl != '') ? $returnurl : variable_get('forward_epostcard_return', '');
 
@@ -872,8 +905,11 @@ function forward_mail($key, &$message, $params) {
   $message['body'][] = $params['body'];
   
   $message['headers']['Reply-To'] = $params['headers']['Reply-To'];
-  $message['headers']['MIME-Version'] = '1.0';
-  $message['headers']['Content-Type'] = 'text/html; charset=utf-8';
+  
+  if ($key != 'forward_thankyou') {
+    $message['headers']['MIME-Version'] = '1.0';
+    $message['headers']['Content-Type'] = 'text/html; charset=utf-8';
+  }
 }
 
 
@@ -881,13 +917,12 @@ function forward_mail($key, &$message, $params) {
  * Generate links for pages
  */
 function forward_link($type, $node=0, $teaser=0) {
-  if (('comment' == $type && !variable_get('forward_display_comments', FALSE))
-    ||('node' == $type && (!variable_get('forward_display_nodes', TRUE) && !$teaser))) {
+  if (('comment' == $type && !variable_get('forward_display_comments', FALSE)) || ('node' == $type && (!variable_get('forward_display_nodes', TRUE) && !$teaser))) {
     return;
   }
   
-  if ((($type == 'node' && variable_get('forward_display_'. $node->type, '1')) || $type == 'comment')
-    && user_access('access forward') && variable_get('forward_form_type', 'link') == 'link') {
+  if ((($type == 'node' && variable_get('forward_display_'. $node->type, '1') && variable_get('forward_form_type', 'link') == 'link') || $type == 'comment')
+    && user_access('access forward')) {
     $links = array();
 
     // This var is set in the settings section under the admin/modules/forward section
@@ -915,14 +950,16 @@ function forward_link($type, $node=0, $teaser=0) {
           break;
       }
       $form_state['values']['path'] = 'node/'. $node->nid;
-      $cid = ($type == 'comment') ? '&cid='. $node->cid : NULL;
       $links['forward_links'] = array(
         'title'      => $title,
         'href'       => 'forward',
         'html'       => $html,
         'attributes' => array('title' => variable_get('forward_page_title', t('Forward this page to a friend')), 'class' => 'forward-page'),
-        'query'      => array('path' => $form_state['values']['path'] . $cid),
+        'query'      => array('path' => $form_state['values']['path']),
       );
+      if (!empty($node->cid)) {
+        $links['forward_links']['query']['cid'] = $node->cid;
+      }
       return $links;
     }
   }

@@ -34,6 +34,14 @@ Step 3)
 
 Step 4)
   Go to "administer >> site configuration >> forward" to configure the module.
+  
+  If you wish to customize the emails, copy 'forward.tpl.php' into your theme directory.
+  Then you can customize the function as needed and those changes will only appear went
+  sent by a user using that theme.
+
+  If you upgraded from an earlier version of Forward, your site may be configured
+  to use the older theme functions in forward.theme (you can change this in the
+  forward settings page).  If so, follow these instructions:
 
   Edit 'forward.theme' to change the look and feel of your emails.  You can also
   create different themes for different phptemplate themes with by copying the

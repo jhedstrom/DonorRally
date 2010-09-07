@@ -1,0 +1,86 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   Allows users to specify custom services for the Shorten URLs module.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function shorten_cs_menu() {
+  $items = array();
+  $items['admin/settings/shorten/custom'] = array(
+    'title' => 'Custom services',
+    'description' => 'Specify information about any service to expose it to Shorten URLs.',
+    'page callback' => 'theme',
+    'page arguments' => array('shorten_cs_admin'),
+    'access arguments' => array('administer Shorten URLs custom services'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/settings/shorten/custom/edit/%shorten_cs'] = array(
+    'title' => 'Edit custom service',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shorten_cs_edit', 5),
+    'access arguments' => array('administer Shorten URLs custom services'),
+    'type' => MENU_CALLBACK,
+    'file' => 'shorten_cs.admin.inc',
+  );
+  $items['admin/settings/shorten/custom/delete/%shorten_cs'] = array(
+    'title' => 'Custom services',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shorten_cs_delete', 5),
+    'access arguments' => array('administer Shorten URLs custom services'),
+    'type' => MENU_CALLBACK,
+    'file' => 'shorten_cs.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_shorten_service().
+ */
+function shorten_cs_shorten_service() {
+  $result = db_query("SELECT * FROM {shorten_cs}");
+  $services = array();
+  while ($service = db_fetch_object($result)) {
+    $services[$service->name] = array(
+      'custom' => $service->type == 'text' ? FALSE : $service->type,
+      'url' => $service->url,
+    );
+    if ($service->type == 'xml') {
+      $services[$service->name]['tag'] = $service->tag;
+    }
+    elseif ($service->type == 'json') {
+      $services[$service->name]['json'] = $service->tag;
+    }
+  }
+  return $services;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function shorten_cs_theme($existing, $type, $theme, $path) {
+  return array(
+    'shorten_cs_admin' => array(
+      'arguments' => array(),
+      'file' => 'shorten_cs.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function shorten_cs_perm() {
+  return array('administer Shorten URLs custom services');
+}
+
+/**
+ * Implementation of hook_load().
+ */
+function shorten_cs_load($sid) {
+  return db_fetch_object(db_query("SELECT * FROM {shorten_cs} WHERE sid = %d", $sid));
+}

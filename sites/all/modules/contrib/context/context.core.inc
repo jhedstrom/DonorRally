@@ -1,101 +1,29 @@
 <?php
-// $Id: context.core.inc,v 1.1.2.3.2.20.2.18 2010/05/25 21:57:44 yhahn Exp $
+// $Id: context.core.inc,v 1.1.2.3.2.20.2.29 2010/08/05 08:03:29 yhahn Exp $
 
 /**
- * Implementation of hook_context_registry().
+ * Implementation of hook_help().
  */
-function context_context_registry() {
-  $registry = array();
-  $registry['conditions'] = array(
-    'node' => array(
-      'title' => t('Node type'),
-      'description' => t('Set this context when viewing a node page or using the add/edit form of one of these content types.'),
-      'plugin' => 'context_condition_node',
-    ),
-    'sitewide' => array(
-      'title' => t('Sitewide context'),
-      'description' => t('Should this context always be set? If <strong>true</strong>, this context will be active across your entire site.'),
-      'plugin' => 'context_condition_sitewide',
-    ),
-    'path' => array(
-      'title' => t('Path'),
-      'description' => t('Set this context when any of the paths above match the page path. Put each path on a separate line. You can use the "*" character as a wildcard and &lt;front&gt; for the front page.'),
-      'plugin' => 'context_condition_path',
-    ),
-    'user' => array(
-      'title' => t('User role'),
-      'description' => t('Set this context when the current user has one of the selected role(s).'),
-      'plugin' => 'context_condition_user',
-    ),
-    'menu' => array(
-      'title' => t('Menu'),
-      'description' => t('Set this context when any of the selected menu items belong to the current active menu trail.'),
-      'plugin' => 'context_condition_menu',
-    ),
-  );
-  if (module_exists('views')) {
-    $registry['conditions']['views'] = array(
-      'title' => t('Views'),
-      'description' => t('Set this context when displaying the page of one of these views.'),
-      'plugin' => 'context_condition_views',
-    );
+function context_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#context':
+      $output = file_get_contents(drupal_get_path('module', 'context') .'/README.txt');
+      return module_exists('markdown') ? filter_xss_admin(module_invoke('markdown', 'filter', 'process', 0, -1, $output)) : '<pre>'. check_plain($output) .'</pre>';
   }
-  if (module_exists('book')) {
-    $registry['conditions']['book'] = array(
-      'title' => t('Book'),
-      'description' => t('Set this context when a node in the selected book is viewed.'),
-      'plugin' => 'context_condition_book',
-    );
-    $registry['conditions']['bookroot'] = array(
-      'title' => t('Book root'),
-      'description' => t('Set this context when viewing a node whose root book is of the selected type.'),
-      'plugin' => 'context_condition_bookroot',
-    );
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ * If core block handling is disabled, remove menu items.
+ */
+function context_menu_alter(&$items) {
+  if (variable_get('context_reaction_block_disable_core', FALSE)) {
+    foreach ($items as $path => $item) {
+      if (strpos($path, 'admin/build/block') === 0) {
+        unset($items[$path]);
+      }
+    }
   }
-  if (module_exists('locale')) {
-    $registry['conditions']['language'] = array(
-      'title' => t('Language'),
-      'description' => t('Set this context when viewing the site in the selected language.'),
-      'plugin' => 'context_condition_language',
-    );
-  }
-  if (module_exists('taxonomy')) {
-    $registry['conditions']['node_taxonomy'] = array(
-      'title' => t('Taxonomy'),
-      'description' => t('Set this context when viewing a node with the selected taxonomy terms.'),
-      'plugin' => 'context_condition_node_taxonomy',
-    );
-  }
-  $registry['reactions'] = array(
-    'block' => array(
-      'title' => t('Blocks'),
-      'description' => t('Control block visibility using context.'),
-      'plugin' => 'context_reaction_block',
-    ),
-    'menu' => array(
-      'title' => t('Menu'),
-      'description' => t('Control menu active class using context.'),
-      'plugin' => 'context_reaction_menu',
-    ),
-    'theme' => array(
-      'title' => t('Theme'),
-      'description' => t('Control theme variables using context.'),
-      'plugin' => 'context_reaction_theme',
-    ),
-    'debug' => array(
-      'title' => t('Debug'),
-      'description' => t('Debug output reaction for SimpleTest.'),
-      'plugin' => 'context_reaction_debug',
-    ),
-  );
-  if (module_exists('css_injector')) {
-    $registry['reactions']['css_injector'] = array(
-      'title' => t('CSS Injector'),
-      'description' => t('Inject the selected css when this context is set.'),
-      'plugin' => 'context_reaction_css_injector',
-    );
-  }
-  return $registry;
 }
 
 /**
@@ -137,7 +65,7 @@ function context_theme() {
     'file' => 'context_reaction_block.theme.inc',
   );
   $items['context_block_editable_region'] = array(
-    'arguments' => array('region' => '', 'blocks' => array()),
+    'arguments' => array('region' => '', 'blocks' => array(), 'editable' => FALSE),
     'path' => drupal_get_path('module', 'context') . '/theme',
     'template' => 'context-block-editable-region',
     'file' => 'context_reaction_block.theme.inc',
@@ -221,6 +149,12 @@ function context_form_alter(&$form, $form_state, $form_id) {
   else if ($form_id == 'system_modules') {
     context_invalidate_cache();
   }
+  // Clear out block info cache when an admin area form is submitted.
+  if (arg(0) === 'admin' && !empty($form_state['post']) && (!isset($form_state['method']) || $form_state['method'] !== 'get')) {
+    if ($plugin = context_get_plugin('reaction', 'block')) {
+      $plugin->rebuild_needed(TRUE);
+    }
+  }
 }
 
 /**
@@ -244,6 +178,8 @@ function context_node_condition(&$node, $op) {
       $plugin->execute($node, $op);
     }
   }
+  // Allow other plugins to easily be triggered on node-related events.
+  drupal_alter('context_node_condition', $node, $op);
 }
 
 /**
@@ -251,8 +187,8 @@ function context_node_condition(&$node, $op) {
  */
 function context_form_comment_form_alter(&$form, $form_state) {
   if ($nid = $form['nid']['#value']) {
-    $plugin = context_get_plugin('condition', 'node');
-    $plugin->execute($node = node_load($nid), 'comment');
+    $node = node_load($nid);
+    context_node_condition($node, 'comment');
   }
 }
 
@@ -262,6 +198,17 @@ function context_form_comment_form_alter(&$form, $form_state) {
 function context_views_pre_view($view, $args) {
   if ($plugin = context_get_plugin('condition', 'views')) {
     $plugin->execute($view);
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function context_user($op, &$edit, &$account, $category = NULL) {
+  if (in_array($op, array('view', 'form', 'register'))) {
+    if ($plugin = context_get_plugin('condition', 'user_page')) {
+      $plugin->execute($account, $op);
+    }
   }
 }
 
@@ -339,12 +286,18 @@ function context_context_page_condition() {
   if ($plugin = context_get_plugin('condition', 'sitewide')) {
     $plugin->execute(1);
   }
+  if ($plugin = context_get_plugin('condition', 'context')) {
+    $plugin->execute();
+  }
 }
 
 /**
  * Implementation of hook_context_page_reaction().
  */
 function context_context_page_reaction() {
+  if ($plugin = context_get_plugin('reaction', 'breadcrumb')) {
+    $plugin->execute();
+  }
   if ($plugin = context_get_plugin('reaction', 'css_injector')) {
     $plugin->execute();
   }
@@ -357,11 +310,12 @@ function context_context_page_reaction() {
  * Implementation of preprocess_page().
  */
 function context_preprocess_page(&$vars) {
-  $plugin = context_get_plugin('reaction', 'menu');
-  $plugin->execute($vars);
-  $plugin = context_get_plugin('reaction', 'theme');
-  $plugin->execute($vars);
-
+  if ($plugin = context_get_plugin('reaction', 'menu')) {
+    $plugin->execute($vars);
+  }
+  if ($plugin = context_get_plugin('reaction', 'theme')) {
+    $plugin->execute($vars);
+  }
   if ($context_links = context_links()) {
     $vars['context_links'] = theme('links', $context_links);
   }

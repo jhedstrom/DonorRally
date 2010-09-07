@@ -1,5 +1,5 @@
 <?php
-//$Id: shorturl.module,v 1.1.2.6 2010/06/16 05:20:19 inadarei Exp $
+//$Id: shorturl.module,v 1.1.2.7 2010/08/17 23:16:09 inadarei Exp $
 /**
 * @File shorturl.module
 *   the module file for shorturl
@@ -124,6 +124,19 @@ function shorturl_default_domain() {
 */
 function _shorturl_get_token($long_url) {
 
+	//-- Let modules alter original URL if/as necessary
+	$hook = 'shorturl_originalurl_alter';
+  foreach (module_implements($hook) as $module) {
+  	$func_name = $module .'_'. $hook;
+  	$func_name($long_url);
+  }
+  
+	$parsed_url = @parse_url($long_url);
+	//-- we should not try to shorten URLs that are malformed or empty to begin with
+	if (empty($parsed_url['host'])) {
+		return NULL;
+	}
+
   //Do we already have this URL?
   $existing_id = db_result(db_query('SELECT lid FROM {shorturl_link} WHERE orig_url=\'%s\' ', $long_url));
   if (!empty($existing_id)) {
@@ -131,7 +144,6 @@ function _shorturl_get_token($long_url) {
     return $encoded;
   }
   
-  $found_vacant = FALSE;
   $remote_ip = (empty($_SERVER['REMOTE_ADDR'])) ? '' : $_SERVER['REMOTE_ADDR']; 
 
   $link = new stdClass();
@@ -141,9 +153,19 @@ function _shorturl_get_token($long_url) {
   
   $last_id = db_result(db_query('SELECT max(lid) FROM {shorturl_link}'));
   if ($last_id < SHORTURL_START_FROM) {$last_id = SHORTURL_START_FROM;}
-  $last_id++;  
+  
+  $last_id++; 
+  $iteration = 0;
+  $found_vacant = FALSE;  
   
   while (! $found_vacant ) {
+  	
+  	$iteration++;
+  	//-- force-quit a possible, accidental endless loop.
+  	if ($iteration > 10) { 
+  		return NULL;
+  	}
+  	
     $encoded = shorturl_encode_url($last_id);
     $found_vacant = shorturl_check_availability($encoded);
     if (!$found_vacant) {
@@ -154,11 +176,18 @@ function _shorturl_get_token($long_url) {
     else {
       $link->lid = $last_id;
       $status = @drupal_write_record('shorturl_link', $link);
-      if ($status === FALSE) {
+      if (!$status) {
         $found_vacant = FALSE;
         $last_id++;
       }
     }
+  }
+  
+  //-- Let modules alter final (shortened) URL if/as necessary
+	$hook = 'shorturl_shortenedurl_alter';
+  foreach (module_implements($hook) as $module) {
+  	$func_name = $module .'_'. $hook;
+  	$encoded = $func_name($encoded, $long_url);
   }
   
   return $encoded;
@@ -168,7 +197,7 @@ function shorturl_check_availability($token) {
   $reserved = shorturl_reserved_tokens();
   
   foreach ($reserved as $key) {
-    if (stripos($token, $key)!==FALSE) {  // contains reserved word!
+    if (stripos($token, $key)!== FALSE) {  // contains reserved word!
       return FALSE;
     }
   }
@@ -178,7 +207,7 @@ function shorturl_check_availability($token) {
   
   $alias_found = db_result(db_query('SELECT count(*) FROM {url_alias} WHERE dst = \'%s\' ', $token));
   
-  if (!empty($alias_found)) { return FALSE; } // such alias already exists!
+  if (is_numeric($alias_found) && $alias_found > 0) { return FALSE; } // such alias already exists!
   
   return TRUE;
 }

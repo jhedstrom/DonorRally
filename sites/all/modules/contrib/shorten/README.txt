@@ -7,7 +7,8 @@ SUMMARY
 This module allows shortening URLs via almost any service. This is accomplished
 either via the API or with an included block or page. Over 25 services are
 available by default and additional services are easily added. If the shorturl
-module is installed, that can be used to shorten URLs as well.
+module or the shurly module is installed, they can be used to shorten URLs
+on your own domain as well.
 
 =======
 DETAILS
@@ -27,6 +28,17 @@ You can also choose whether to allow users to choose which shortening service to
 use on the block and page. Note however that since shortened URLs are cached,
 requesting the same shortened URL from different services may return results
 from the first service in both instances.
+
+
+==========
+SUBMODULES
+==========
+
+This package contains two submodules: Record Shortened URLs and Shorten URLs
+Custom Services. The first keeps track of which URLs have been shortened and
+displays them to administrators at admin/settings/shorten/records; the second
+allows administrators to add custom URL shortening services through the
+user interface (instead of using the API).
 
 ===
 API

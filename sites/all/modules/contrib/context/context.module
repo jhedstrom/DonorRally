@@ -1,5 +1,5 @@
 <?php
-// $Id: context.module,v 1.6.2.6.2.6.2.16 2010/05/25 15:40:50 yhahn Exp $
+// $Id: context.module,v 1.6.2.6.2.6.2.25 2010/08/06 17:56:50 yhahn Exp $
 
 require('context.core.inc');
 
@@ -57,7 +57,7 @@ function context_context($op = CONTEXT_GET, $namespace = NULL, $attribute = NULL
           return TRUE;
         }
         // set to true if key is a usable identifier. otherwise, allow a key or object to be inserted
-        if (!$value) {
+        if ($value === NULL) {
           if (is_string($attribute) || is_int($attribute)) {
             $context[(string) $namespace][(string) $attribute] = TRUE;
             return TRUE;
@@ -68,7 +68,7 @@ function context_context($op = CONTEXT_GET, $namespace = NULL, $attribute = NULL
           }
         }
         // set value if key is valid
-        if ((is_string($attribute) || is_int($attribute)) && $value) {
+        if ((is_string($attribute) || is_int($attribute)) && $value !== NULL) {
           $context[$namespace][$attribute] = $value;
           return TRUE;
         }
@@ -131,15 +131,6 @@ function context_clear() {
  */
 
 /**
- * Implementation of hook_ctools_plugin_api().
- */
-function context_ctools_plugin_api($module, $api) {
-  if ($module == 'context' && $api == 'plugins') {
-    return array('version' => 3);
-  }
-}
-
-/**
  * Implementation of hook_ctools_plugin_plugins().
  */
 function context_ctools_plugin_plugins() {
@@ -159,19 +150,27 @@ function context_context_plugins() {
   return _context_context_plugins();
 }
 
+
+/**
+ * Implementation of hook_context_registry().
+ */
+function context_context_registry() {
+  module_load_include('inc', 'context', 'context.plugins');
+  return _context_context_registry();
+}
+
 /**
  * Implementation of hook_init().
  */
 function context_init() {
-  $map = context_condition_map();
-  if (!empty($map['path']) && $plugin = context_get_plugin('condition', 'path')) {
+  if ($plugin = context_get_plugin('condition', 'path')) {
     $plugin->execute();
   }
-  if (!empty($map['language']) && $plugin = context_get_plugin('condition', 'language')) {
+  if ($plugin = context_get_plugin('condition', 'language')) {
     global $language;
     $plugin->execute($language->language);
   }
-  if (!empty($map['user']) && $plugin = context_get_plugin('condition', 'user')) {
+  if ($plugin = context_get_plugin('condition', 'user')) {
     global $user;
     $plugin->execute($user);
   }
@@ -261,6 +260,30 @@ function context_delete($context) {
 }
 
 /**
+ * Exports the specified context.
+ */
+function context_export($context, $indent = '') {
+  $output = ctools_export_object('context', $context, $indent);
+  $translatables = array();
+  foreach (array('description', 'tag') as $key) {
+    if (!empty($context->{$key})) {
+      $translatables[] = $context->{$key};
+    }
+  }
+  $translatables = array_filter(array_unique($translatables));
+  if (!empty($translatables)) {
+    $output .= "\n";
+    $output .= "{$indent}// Translatables\n";
+    $output .= "{$indent}// Included for use with string extractors like potx.\n";
+    sort($translatables);
+    foreach ($translatables as $string) {
+      $output .= "{$indent}t(" . ctools_var_export($string) . ");\n";
+    }
+  }
+  return $output;
+}
+
+/**
  * API FUNCTIONS ======================================================
  */
 
@@ -274,22 +297,6 @@ function context_context_list() {
     $list[$context->name] = $context->name;
   }
   return $list;
-}
-
-/**
- * CTools export function.
- */
-function context_export_context($context, $indent = '') {
-  $strings = array();
-  foreach (array('description', 'tag') as $id) {
-    if (!empty($context->$id)) {
-      $strings[] = $indent . "  t('" . str_replace("'", "\'", $context->$id) . "'),";
-    }
-  }
-  sort($strings);
-  $extra = implode("\n", array_unique($strings));
-  $extra = "\n". $indent ."\$translatables['" . $context->name . "'] = array(\n". $extra . "\n" . $indent . ");\n";
-  return ctools_export_object('context', $context, $indent) . $extra;
 }
 
 /**
@@ -381,7 +388,7 @@ function context_condition_map($reset = FALSE) {
       $condition_map = $cache;
     }
     else {
-      foreach (array_keys(context_conditions('condition')) as $condition) {
+      foreach (array_keys(context_conditions()) as $condition) {
         if ($plugin = context_get_plugin('condition', $condition)) {
           foreach (context_enabled_contexts() as $context) {
             $values = $plugin->fetch_from_context($context, 'values');
@@ -402,9 +409,19 @@ function context_condition_map($reset = FALSE) {
 
 /**
  * Invalidates all context caches().
+ * @TODO: Update to use a CTools API function for clearing plugin caches
+ * when/if it becomes available.
  */
 function context_invalidate_cache() {
   cache_clear_all('context', 'cache', TRUE);
+  cache_clear_all('plugins:context', 'cache', TRUE);
+}
+
+/**
+ * Implementation of hook_flush_caches().
+ */
+function context_flush_caches() {
+  context_invalidate_cache();
 }
 
 /**

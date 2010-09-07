@@ -2,9 +2,10 @@
 name = Record Shorten
 description = "Records shortened URLs from the Shorten module."
 core = 6.x
-; Information added by drupal.org packaging script on 2010-06-21
-version = "6.x-1.9"
+dependencies[] = shorten
+; Information added by drupal.org packaging script on 2010-09-06
+version = "6.x-1.10"
 core = "6.x"
 project = "shorten"
-datestamp = "1277099408"
+datestamp = "1283750207"
 

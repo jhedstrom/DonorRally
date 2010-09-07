@@ -1,5 +1,5 @@
 <?php
-// $Id: forward.theme,v 1.7.2.7 2010/03/09 18:46:34 seanr Exp $
+// $Id: forward.theme,v 1.7.2.8 2010/08/20 18:03:28 seanr Exp $
 
 /**
  * @addtogroup themeable
@@ -14,7 +14,7 @@
  * @param node
  *  The node object being forwarded.
  */
-function theme_forward_page($form, $node) {
+function theme_forward_page($form, $node = NULL) {
   return $form;
 }
 

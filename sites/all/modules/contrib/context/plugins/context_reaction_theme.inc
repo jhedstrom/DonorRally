@@ -1,5 +1,5 @@
 <?php
-// $Id: context_reaction_theme.inc,v 1.1.2.1 2009/12/14 22:34:05 yhahn Exp $
+// $Id: context_reaction_theme.inc,v 1.1.2.3 2010/08/09 15:13:03 yhahn Exp $
 
 /**
  * Expose themes as context reactions.
@@ -63,23 +63,18 @@ class context_reaction_theme extends context_reaction {
    * additional classes onto the 'body_classes'.
    */
   function execute(&$vars) {
-    $contexts = context_active_contexts();
     $classes = array();
-
-    foreach ($contexts as $k => $v) {
+    foreach ($this->get_contexts() as $k => $v) {
       if (!empty($v->reactions[$this->plugin]['title']) && !isset($vars['section_title'])) {
-        $vars['section_title'] = $v->reactions[$this->plugin]['title'];
+        $vars['section_title'] = t($v->reactions[$this->plugin]['title']);
       }
-
       if (!empty($v->reactions[$this->plugin]['subtitle']) && !isset($vars['section_subtitle'])) {
-        $vars['section_subtitle'] = $v->reactions[$this->plugin]['subtitle'];
+        $vars['section_subtitle'] = t($v->reactions[$this->plugin]['subtitle']);
       }
-
       if (!empty($v->reactions[$this->plugin]['class'])) {
         $classes[$v->reactions[$this->plugin]['class']] = $v->reactions[$this->plugin]['class'];
       }
     }
-
     $vars['body_classes'] .= !empty($classes) ? ' '. implode(' ', $classes) : '';
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: context_reaction_menu.inc,v 1.1.2.2 2010/02/04 00:31:12 yhahn Exp $
+// $Id: context_reaction_menu.inc,v 1.1.2.6 2010/07/30 17:25:28 yhahn Exp $
 
 /**
  * Expose menu items as context reactions.
@@ -18,8 +18,12 @@ class context_reaction_menu extends context_reaction {
       }
       else {
         $link = menu_link_load($id[1]);
+        $identifier = $link['link_path'];
         $root_menu = $root_menus[$id[0]];
-        $menus[$root_menu][$link['link_path']] = $name;
+        while (isset($menus[$root_menu][$identifier])) {
+          $identifier .= "'";
+        }
+        $menus[$root_menu][$identifier] = $name;
       }
       unset($menus[$key]);
     }
@@ -34,13 +38,21 @@ class context_reaction_menu extends context_reaction {
   }
 
   /**
+   * Override of options_form_submit().
+   * Trim any identifier padding for non-unique path menu items.
+   */
+  function options_form_submit($values) {
+    return trim($values, "'");
+  }
+
+  /**
    * If primary + secondary links are pointed at the same menu, provide
    * contextual trailing by default.
    */
   function execute(&$vars) {
     if (variable_get('menu_primary_links_source', 'primary-links') == variable_get('menu_secondary_links_source', 'secondary-links')) {
-      $vars['primary_links'] = $this->menu_navigation_links(variable_get('menu_primary_links_source', 'primary-links'));
-      $vars['secondary_links'] = $this->menu_navigation_links(variable_get('menu_secondary_links_source', 'secondary-links'), 1);
+      $vars['primary_links'] = theme_get_setting('toggle_primary_links') ? $this->menu_navigation_links(variable_get('menu_primary_links_source', 'primary-links')) : $vars['primary_links'];
+      $vars['secondary_links'] = theme_get_setting('toggle_secondary_links') ? $this->menu_navigation_links(variable_get('menu_secondary_links_source', 'secondary-links'), 1) : $vars['secondary_links'];
     }
 
     $vars['primary_links'] = $this->menu_set_active($vars['primary_links']);
@@ -48,9 +60,8 @@ class context_reaction_menu extends context_reaction {
   }
 
   function get_active_paths() {
-    $contexts = context_active_contexts();
     $active_paths = array();
-    foreach ($contexts as $context) {
+    foreach ($this->get_contexts() as $context) {
       if (isset($context->reactions[$this->plugin])) {
         $active_paths[] = $context->reactions[$this->plugin];
       }
@@ -80,7 +91,7 @@ class context_reaction_menu extends context_reaction {
       // that includes active classes
       foreach ($links as $key => $link) {
         if (!empty($link['href']) && in_array($link['href'], $active_paths)) {
-          if (isset($links['attributes']['class'])) {
+          if (isset($link['attributes']['class'])) {
             $link['attributes']['class'] .= ' active';
           }
           else {
@@ -107,10 +118,8 @@ class context_reaction_menu extends context_reaction {
     // Retrieve original path so we can repair it after our hack.
     $original_path = $_GET['q'];
 
-    $active_paths = $this->get_active_paths();
-    $contexts = context_active_contexts();
     // Retrieve the first active menu path found.
-    if (!empty($active_paths)) {
+    if ($active_paths = $this->get_active_paths()) {
       $path = current($active_paths);
       if (menu_get_item($path)) {
         menu_set_active_item($path);
