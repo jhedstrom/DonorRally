@@ -150,7 +150,7 @@ function donor_rally_install_profile_tasks(&$task, $url) {
     variable_set('admin_theme', 'rubik');
 
     // Default footer.
-    variable_set('site_footer', st('Powered by <a href="!url">Donor Rally</a>', array('!url' => url('http://donorrally.com'))));
+    variable_set('site_footer', st('Donor Rally&trade; &mdash; built by <a href="!url">OpenSourcery</a>', array('!url' => url('http://www.opensourcery.com'))));
 
     // Set default theme. This needes some more set up on next page load
     // We cannot do everything here because of _system_theme_data() static cache
