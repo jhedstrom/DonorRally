@@ -27,6 +27,9 @@ projects[context][version] = "3.0"
 projects[ctools][subdir] = "contrib"
 projects[ctools][version] = "1.7"
 
+projects[donor_rally_features][location] = "http://code.opensourcery.com/fserver"
+projects[donor_rally_features][version] = "1.0-alpha1"
+
 projects[features][subdir] = "contrib"
 projects[features][version] = "1.0"
 
