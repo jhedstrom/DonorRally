@@ -53,7 +53,7 @@ projects[imagefield_tokens][subdir] = "contrib"
 projects[imagefield_tokens][version] = "1.0"
 
 projects[jquery_ui][subdir] = "contrib"
-projects[jquery_ui][version] = "1.3"
+projects[jquery_ui][version] = "1.4"
 
 projects[location][subdir] = "contrib"
 projects[location][version] = "3.1"
